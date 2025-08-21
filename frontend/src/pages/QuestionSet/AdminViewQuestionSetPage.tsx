@@ -1,0 +1,90 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import "../../styles/AttemptQuizForm.css";
+
+interface IAdminChoice {
+  label: string;
+  text: string;
+  correctAnswer: boolean;
+  _id: string;
+}
+
+interface IAdminQuestion {
+  _id: string;
+  questionText: string;
+  choices: IAdminChoice[];
+}
+
+interface IAdminQuestionSet {
+  _id: string;
+  title: string;
+  questions: IAdminQuestion[];
+}
+
+function AdminViewQuestionSetPage() {
+  const { id } = useParams();
+  const [data, setData] = useState<IAdminQuestionSet | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken || !id) {
+      setIsLoading(false);
+      return;
+    }
+
+    axios
+      .get(`http://localhost:3000/api/admin/questionset/${id}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+      .then((res) => {
+        setData(res.data.questionSet);
+      })
+      .finally(() => setIsLoading(false));
+  }, [id]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (!data) return <div>Not found</div>;
+
+  return (
+    <div className="quiz-container">
+      <div className="quiz-header">
+        <h1 className="quiz-title">{data.title}</h1>
+        <p className="quiz-subtitle">Admin view (answers visible)</p>
+      </div>
+
+      <div className="questions-container">
+        {data.questions.map((q, qi) => (
+          <div key={q._id} className="question-item">
+            <h3 className="question-text">
+              Q{qi + 1}: {q.questionText}
+            </h3>
+            <div className="choices-container">
+              {q.choices.map((c) => (
+                <div
+                  key={c._id}
+                  className={`choice-item ${
+                    c.correctAnswer ? "choice-correct" : ""
+                  }`}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <span className="choice-text">{c.text}</span>
+                  {c.correctAnswer && (
+                    <span className="badge badge-success">✓ Correct</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default AdminViewQuestionSetPage;

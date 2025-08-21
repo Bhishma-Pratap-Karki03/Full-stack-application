@@ -1,0 +1,457 @@
+/* Profile.css */
+.profile-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #212529;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.profile-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #212529;
+}
+
+.profile-subtitle {
+  font-size: 1.1rem;
+  color: #6c757d;
+}
+
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.profile-card,
+.quiz-results-card {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.quiz-results-card h2 {
+  margin-bottom: 1.5rem;
+  color: #212529;
+  font-size: 1.5rem;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-picture-container {
+  margin-bottom: 1.5rem;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #e9ecef;
+}
+
+.profile-picture-placeholder {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 3rem;
+  font-weight: bold;
+  border: 4px solid #e9ecef;
+}
+
+.profile-details {
+  width: 100%;
+}
+
+.user-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: #212529;
+  text-align: center;
+}
+
+.user-email {
+  color: #6c757d;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.user-role {
+  text-align: center;
+  text-transform: capitalize;
+  background-color: #e9ecef;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  display: inline-block;
+  margin: 0 auto 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.user-bio,
+.user-skills {
+  margin-bottom: 1.5rem;
+}
+
+.user-bio h3,
+.user-skills h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #212529;
+}
+
+.user-bio p {
+  color: #495057;
+  line-height: 1.5;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill-tag {
+  background-color: #e9ecef;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.skill-level {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.social-link {
+  color: #0d6efd;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* No hover effects in contents per preference */
+
+/* Quiz Results Styling */
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.take-quiz-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #0d6efd;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* No hover state */
+
+/* Edit profile form */
+.edit-controls {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.edit-profile-card {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #212529;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #212529;
+}
+
+.form-textarea {
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.result-info {
+  flex: 1;
+}
+
+.quiz-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #212529;
+}
+
+.quiz-date {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.result-stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.score-circle {
+  position: relative;
+}
+
+.circle-chart {
+  width: 60px;
+  height: 60px;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #e9ecef;
+  stroke-width: 3.8;
+}
+
+.circle {
+  fill: none;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  animation: fillAnimation 1s ease-in-out forwards;
+  stroke: #198754;
+}
+
+@keyframes fillAnimation {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+}
+
+.percentage {
+  font-size: 0.35rem;
+  font-weight: 700;
+  fill: #198754;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.score-details {
+  text-align: center;
+}
+
+.score-text {
+  margin: 0;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.score-number {
+  font-weight: 700;
+  color: #198754;
+  font-size: 1.1rem;
+}
+
+.total-number {
+  font-weight: 600;
+  color: #212529;
+}
+
+/* Loading and Auth States */
+.loading-container,
+.auth-required {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 123, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #0d6efd;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.auth-required h2 {
+  color: #dc3545;
+  margin-bottom: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .profile-content {
+    grid-template-columns: 1fr;
+  }
+
+  .result-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .result-stats {
+    flex-direction: column;
+  }
+
+  .profile-info {
+    text-align: center;
+  }
+
+  .social-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* Admin Profile Specific Styles */
+.admin-profile {
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.admin-content {
+  grid-template-columns: 1fr;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.admin-content .profile-card {
+  text-align: center;
+}
+
+.admin-content .profile-info {
+  align-items: center;
+}
+
+.admin-content .profile-details {
+  text-align: center;
+}
+
+.admin-content .user-bio,
+.admin-content .user-skills {
+  text-align: center;
+}
+
+.admin-content .skills-list {
+  justify-content: center;
+}
+
+.admin-content .social-links {
+  justify-content: center;
+}
+
+/* Ensure admin profile content is centered when no quiz results */
+.admin-content .profile-card {
+  margin: 0 auto;
+}

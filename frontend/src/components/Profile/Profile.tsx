@@ -1,0 +1,393 @@
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../../App";
+import axios from "axios";
+import "../../styles/Profile.css";
+
+interface IQuizResult {
+  questionSet: {
+    _id: string;
+    title: string;
+  };
+  score: number;
+  total: number;
+  percentage: number;
+  attemptedAt: string;
+}
+
+interface IUserProfile {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  profilePicture: string;
+  bio?: string;
+  skills?: Array<{
+    name: string;
+    level: string;
+  }>;
+  github?: string;
+  linkedin?: string;
+  portfolioUrl?: string;
+  createdAt: string;
+}
+
+function Profile() {
+  const [userData, setUserData] = useState<IUserProfile | null>(null);
+  const [quizResults, setQuizResults] = useState<IQuizResult[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { isAuth, roleState } = useContext(AuthContext);
+
+  // Editing state
+  const [isEditing, setIsEditing] = useState(false);
+  const [bioInput, setBioInput] = useState("");
+  const [githubInput, setGithubInput] = useState("");
+  const [linkedinInput, setLinkedinInput] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (!isAuth) return;
+
+    const accessToken = localStorage.getItem("accessToken");
+
+    axios
+      .get("http://localhost:3000/users/profile/me", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then((response) => {
+        setUserData(response.data.user);
+
+        if (roleState !== "admin") {
+          return axios.get("http://localhost:3000/api/quiz/results", {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+        }
+        return null;
+      })
+      .then((response) => {
+        if (response) {
+          setQuizResults(response.data.results || []);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching profile data:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [isAuth, roleState]);
+
+  const startEditing = () => {
+    setBioInput(userData?.bio || "");
+    setGithubInput(userData?.github || "");
+    setLinkedinInput(userData?.linkedin || "");
+    setIsEditing(true);
+  };
+
+  const cancelEditing = () => {
+    setIsEditing(false);
+  };
+
+  const saveProfile = async () => {
+    try {
+      setIsSaving(true);
+      const accessToken = localStorage.getItem("accessToken");
+
+      const formData = new FormData();
+      // Allow empty bio; controller updates when field is defined
+      formData.append("bio", bioInput);
+      formData.append("github", githubInput);
+      formData.append("linkedin", linkedinInput);
+
+      const response = await axios.put(
+        "http://localhost:3000/users/profile",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      const { profile } = response.data;
+      setUserData((prev) =>
+        prev
+          ? {
+              ...prev,
+              bio: profile.bio,
+              github: profile.github,
+              linkedin: profile.linkedin,
+              profilePicture: profile.profilePicture || prev.profilePicture,
+            }
+          : prev
+      );
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      alert("Failed to save profile. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (!isAuth) {
+    return (
+      <div className="profile-container">
+        <div className="auth-required">
+          <h2>Authentication Required</h2>
+          <p>Please log in to view your profile.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="profile-container">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`profile-container ${
+        roleState === "admin" ? "admin-profile" : ""
+      }`}
+    >
+      <div className="profile-header">
+        <h1 className="profile-title">Your Profile</h1>
+        <p className="profile-subtitle">
+          Manage your account and track your progress
+        </p>
+      </div>
+
+      <div
+        className={`profile-content ${
+          roleState === "admin" ? "admin-content" : ""
+        }`}
+      >
+        <div className="profile-card">
+          <div className="profile-info">
+            <div className="profile-picture-container">
+              {userData?.profilePicture ? (
+                <img
+                  src={`http://localhost:3000/uploads/profile-pictures/${userData.profilePicture}`}
+                  alt="Profile"
+                  className="profile-picture"
+                />
+              ) : (
+                <div className="profile-picture-placeholder">
+                  {userData?.name?.charAt(0).toUpperCase() || "U"}
+                </div>
+              )}
+            </div>
+
+            <div className="profile-details">
+              <h2 className="user-name">{userData?.name}</h2>
+              <p className="user-email">{userData?.email}</p>
+              <p className="user-role">{userData?.role}</p>
+
+              {userData?.bio && (
+                <div className="user-bio">
+                  <h3>About Me</h3>
+                  <p>{userData.bio}</p>
+                </div>
+              )}
+
+              {userData?.skills && userData.skills.length > 0 && (
+                <div className="user-skills">
+                  <h3>Skills</h3>
+                  <div className="skills-list">
+                    {userData.skills.map((skill, index) => (
+                      <span key={index} className="skill-tag">
+                        {skill.name}{" "}
+                        <span className="skill-level">({skill.level})</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="social-links">
+                {userData?.github && (
+                  <a
+                    href={userData.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link"
+                  >
+                    GitHub
+                  </a>
+                )}
+                {userData?.linkedin && (
+                  <a
+                    href={userData.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link"
+                  >
+                    LinkedIn
+                  </a>
+                )}
+                {userData?.portfolioUrl && (
+                  <a
+                    href={userData.portfolioUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link"
+                  >
+                    Portfolio
+                  </a>
+                )}
+              </div>
+
+              {roleState === "professional" && (
+                <div className="edit-controls">
+                  {!isEditing ? (
+                    <button className="btn-primary" onClick={startEditing}>
+                      Edit Profile
+                    </button>
+                  ) : null}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {roleState === "professional" && isEditing && (
+          <div className="edit-profile-card">
+            <h2>Edit Profile</h2>
+            <div className="profile-form">
+              <div className="form-group">
+                <label className="form-label" htmlFor="bio">
+                  Bio (optional)
+                </label>
+                <textarea
+                  id="bio"
+                  className="form-textarea"
+                  placeholder="Write something about yourself..."
+                  value={bioInput}
+                  onChange={(e) => setBioInput(e.target.value)}
+                  rows={4}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="github">
+                  GitHub URL
+                </label>
+                <input
+                  id="github"
+                  type="url"
+                  className="form-input"
+                  placeholder="https://github.com/username"
+                  value={githubInput}
+                  onChange={(e) => setGithubInput(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="linkedin">
+                  LinkedIn URL
+                </label>
+                <input
+                  id="linkedin"
+                  type="url"
+                  className="form-input"
+                  placeholder="https://www.linkedin.com/in/username"
+                  value={linkedinInput}
+                  onChange={(e) => setLinkedinInput(e.target.value)}
+                />
+              </div>
+              <div className="form-actions">
+                <button
+                  className="btn-primary"
+                  onClick={saveProfile}
+                  disabled={isSaving}
+                >
+                  {isSaving ? "Saving..." : "Save"}
+                </button>
+                <button className="btn-secondary" onClick={cancelEditing}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {roleState !== "admin" && (
+          <div className="quiz-results-card">
+            <h2>Quiz Results</h2>
+
+            {quizResults.length === 0 ? (
+              <div className="no-results">
+                <p>You haven't attempted any quizzes yet.</p>
+                <a href="/questionset/list" className="take-quiz-button">
+                  Take a Quiz
+                </a>
+              </div>
+            ) : (
+              <div className="results-list">
+                {quizResults.map((result, index) => (
+                  <div key={index} className="result-item">
+                    <div className="result-info">
+                      <h3 className="quiz-title">{result.questionSet.title}</h3>
+                      <p className="quiz-date">
+                        Attempted on:{" "}
+                        {new Date(result.attemptedAt).toLocaleDateString()}
+                      </p>
+                    </div>
+
+                    <div className="result-stats">
+                      <div className="score-circle">
+                        <svg
+                          className="circle-chart"
+                          viewBox="0 0 36 36"
+                          width="80"
+                          height="80"
+                        >
+                          <path
+                            className="circle-bg"
+                            d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                          />
+                          <path
+                            className="circle"
+                            strokeDasharray={`${result.percentage}, 100`}
+                            d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                          />
+                          <text x="18" y="20.35" className="percentage">
+                            {result.percentage}%
+                          </text>
+                        </svg>
+                      </div>
+
+                      <div className="score-details">
+                        <p className="score-text">
+                          <span className="score-number">{result.score}</span>{" "}
+                          out of{" "}
+                          <span className="total-number">{result.total}</span>{" "}
+                          questions
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default Profile;
