@@ -31,6 +31,11 @@ interface IUserProfile {
   createdAt: string;
 }
 
+interface ISkill {
+  name: string;
+  level: string;
+}
+
 function Profile() {
   const [userData, setUserData] = useState<IUserProfile | null>(null);
   const [quizResults, setQuizResults] = useState<IQuizResult[]>([]);
@@ -42,6 +47,9 @@ function Profile() {
   const [bioInput, setBioInput] = useState("");
   const [githubInput, setGithubInput] = useState("");
   const [linkedinInput, setLinkedinInput] = useState("");
+  const [skillsInput, setSkillsInput] = useState<ISkill[]>([]);
+  const [newSkillName, setNewSkillName] = useState("");
+  const [newSkillLevel, setNewSkillLevel] = useState("Beginner");
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
@@ -84,11 +92,48 @@ function Profile() {
     setBioInput(userData?.bio || "");
     setGithubInput(userData?.github || "");
     setLinkedinInput(userData?.linkedin || "");
+    setSkillsInput(userData?.skills || []);
     setIsEditing(true);
   };
 
   const cancelEditing = () => {
     setIsEditing(false);
+    setNewSkillName("");
+    setNewSkillLevel("Beginner");
+  };
+
+  const addSkill = () => {
+    if (newSkillName.trim() && newSkillLevel) {
+      const skillExists = skillsInput.some(
+        (skill) =>
+          skill.name.toLowerCase() === newSkillName.trim().toLowerCase()
+      );
+
+      if (skillExists) {
+        alert("This skill already exists in your profile.");
+        return;
+      }
+
+      setSkillsInput([
+        ...skillsInput,
+        {
+          name: newSkillName.trim(),
+          level: newSkillLevel,
+        },
+      ]);
+      setNewSkillName("");
+      setNewSkillLevel("Beginner");
+    }
+  };
+
+  const removeSkill = (index: number) => {
+    setSkillsInput(skillsInput.filter((_, i) => i !== index));
+  };
+
+  const updateSkillLevel = (index: number, level: string) => {
+    const updatedSkills = [...skillsInput];
+    updatedSkills[index].level = level;
+    setSkillsInput(updatedSkills);
   };
 
   const saveProfile = async () => {
@@ -97,10 +142,10 @@ function Profile() {
       const accessToken = localStorage.getItem("accessToken");
 
       const formData = new FormData();
-      // Allow empty bio; controller updates when field is defined
       formData.append("bio", bioInput);
       formData.append("github", githubInput);
       formData.append("linkedin", linkedinInput);
+      formData.append("skills", JSON.stringify(skillsInput));
 
       const response = await axios.put(
         "http://localhost:3000/users/profile",
@@ -118,6 +163,7 @@ function Profile() {
           ? {
               ...prev,
               bio: profile.bio,
+              skills: profile.skills,
               github: profile.github,
               linkedin: profile.linkedin,
               profilePicture: profile.profilePicture || prev.profilePicture,
@@ -125,6 +171,8 @@ function Profile() {
           : prev
       );
       setIsEditing(false);
+      setNewSkillName("");
+      setNewSkillLevel("Beginner");
     } catch (error) {
       console.error("Error saving profile:", error);
       alert("Failed to save profile. Please try again.");
@@ -278,6 +326,76 @@ function Profile() {
                   rows={4}
                 />
               </div>
+
+              {/* Skills Section */}
+              <div className="form-group">
+                <label className="form-label">Skills</label>
+                <div className="skills-editor">
+                  <div className="add-skill-section">
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Enter skill name (e.g., React, MongoDB, Java)"
+                      value={newSkillName}
+                      onChange={(e) => setNewSkillName(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          addSkill();
+                        }
+                      }}
+                    />
+                    <select
+                      className="form-select"
+                      value={newSkillLevel}
+                      onChange={(e) => setNewSkillLevel(e.target.value)}
+                    >
+                      <option value="Beginner">Beginner</option>
+                      <option value="Intermediate">Intermediate</option>
+                      <option value="Advanced">Advanced</option>
+                    </select>
+                    <button
+                      type="button"
+                      className="btn-add-skill"
+                      onClick={addSkill}
+                    >
+                      Add Skill
+                    </button>
+                  </div>
+
+                  {skillsInput.length > 0 && (
+                    <div className="current-skills">
+                      <h4>Current Skills</h4>
+                      <div className="skills-list-edit">
+                        {skillsInput.map((skill, index) => (
+                          <div key={index} className="skill-item-edit">
+                            <span className="skill-name">{skill.name}</span>
+                            <select
+                              className="skill-level-select"
+                              value={skill.level}
+                              onChange={(e) =>
+                                updateSkillLevel(index, e.target.value)
+                              }
+                            >
+                              <option value="Beginner">Beginner</option>
+                              <option value="Intermediate">Intermediate</option>
+                              <option value="Advanced">Advanced</option>
+                            </select>
+                            <button
+                              type="button"
+                              className="btn-remove-skill"
+                              onClick={() => removeSkill(index)}
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="form-group">
                 <label className="form-label" htmlFor="github">
                   GitHub URL

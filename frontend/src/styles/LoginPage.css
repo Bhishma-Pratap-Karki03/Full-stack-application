@@ -1,0 +1,150 @@
+/* LoginPage.css - Horizontal layout with illustration and form */
+.login-page-container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-page-content {
+  display: flex;
+  max-width: 1200px;
+  width: 100%;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  min-height: 600px;
+}
+
+.login-illustration {
+  flex: 1;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-illustration::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.login-illustration-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
+}
+
+.login-illustration-text {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  right: 40px;
+  color: white;
+  z-index: 3;
+  text-align: center;
+}
+
+.login-illustration-text h2 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.login-illustration-text p {
+  font-size: 18px;
+  opacity: 0.9;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.login-form-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background-color: white;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .login-page-content {
+    flex-direction: column;
+    max-width: 500px;
+  }
+
+  .login-illustration {
+    flex: none;
+    height: 200px;
+    padding: 20px;
+  }
+
+  .login-illustration-text {
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+  }
+
+  .login-illustration-text h2 {
+    font-size: 24px;
+  }
+
+  .login-illustration-text p {
+    font-size: 16px;
+  }
+
+  .login-form-section {
+    flex: none;
+    padding: 30px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-page-container {
+    padding: 10px;
+  }
+
+  .login-page-content {
+    border-radius: 8px;
+  }
+
+  .login-illustration {
+    height: 150px;
+    padding: 15px;
+  }
+
+  .login-illustration-text {
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+  }
+
+  .login-illustration-text h2 {
+    font-size: 20px;
+  }
+
+  .login-illustration-text p {
+    font-size: 14px;
+  }
+
+  .login-form-section {
+    padding: 20px 15px;
+  }
+}

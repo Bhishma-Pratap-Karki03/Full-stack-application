@@ -1,10 +1,26 @@
 import RegisterForm from "../RegisterForm";
-import "../styles/RegisterForm.css";
+import "../styles/RegisterPage.css";
+import registerImage from "../assets/images/Register Image.png";
 
 function RegisterPage() {
   return (
     <div className="register-page-container">
-      <RegisterForm />
+      <div className="register-page-content">
+        <div className="register-illustration">
+          <img
+            src={registerImage}
+            alt="Register Illustration"
+            className="register-illustration-img"
+          />
+          <div className="register-illustration-text">
+            <h2>Join Our Community</h2>
+            <p>Create your account and start your learning journey today</p>
+          </div>
+        </div>
+        <div className="register-form-section">
+          <RegisterForm />
+        </div>
+      </div>
     </div>
   );
 }

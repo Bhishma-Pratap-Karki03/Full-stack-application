@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 import "../styles/Navbar.css";
+import skillSyncLogo from "../assets/images/SkillSync Logo Design.png";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,7 +34,11 @@ function Navbar() {
           className="nav-logo"
           onClick={() => setIsMenuOpen(false)}
         >
-          Nissan
+          <img
+            src={skillSyncLogo}
+            alt="SkillSync Logo"
+            className="nav-logo-img"
+          />
         </NavLink>
 
         <button className="nav-toggle" onClick={toggleMenu}>

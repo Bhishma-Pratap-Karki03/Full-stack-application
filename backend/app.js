@@ -39,6 +39,49 @@ app.use("/api/contact", contactRouter);
 app.use("/api/quiz", quizResultsRouter);
 app.use("/api/quiz", quizResultsRouter);
 
+// Global error handling middleware
+app.use((err, req, res, next) => {
+  console.error("Error:", err);
+
+  // Handle mongoose validation errors
+  if (err.name === "ValidationError") {
+    return res.status(400).json({
+      message: "Validation Error",
+      errors: Object.values(err.errors).map((e) => e.message),
+    });
+  }
+
+  // Handle mongoose cast errors (invalid ObjectId)
+  if (err.name === "CastError") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  // Handle duplicate key errors
+  if (err.code === 11000) {
+    return res.status(409).json({
+      message: "Duplicate entry found",
+    });
+  }
+
+  // Default error response
+  res.status(500).json({
+    message: "Internal Server Error",
+    error:
+      process.env.NODE_ENV === "development"
+        ? err.message
+        : "Something went wrong",
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    message: "Route not found",
+  });
+});
+
 // getting-started.js
 const mongoose = require("mongoose");
 

@@ -2,7 +2,7 @@ const QuestionSet = require("../model/QuestionSetModel");
 
 async function createQuestionSetController(req, res) {
   try {
-    const { title, questions } = req.body || {};
+    const { title, questions, isActive } = req.body || {};
 
     if (!title || typeof title !== "string" || !title.trim()) {
       return res.status(400).json({ message: "Title is required" });
@@ -48,6 +48,7 @@ async function createQuestionSetController(req, res) {
         })),
       })),
       createdBy: id,
+      isActive: typeof isActive === "boolean" ? isActive : true,
     };
 
     const createSet = new QuestionSet(finalData);
@@ -75,7 +76,39 @@ async function getQuestionSetWithAnswersController(req, res) {
   }
 }
 
+async function toggleQuestionSetStatusController(req, res) {
+  try {
+    const { id } = req.params;
+    const { isActive } = req.body || {};
+
+    const update = {};
+    if (typeof isActive === "boolean") {
+      update.isActive = isActive;
+    }
+
+    if (Object.keys(update).length === 0) {
+      return res.status(400).json({ message: "isActive boolean is required" });
+    }
+
+    const updated = await QuestionSet.findByIdAndUpdate(id, update, {
+      new: true,
+    }).select("_id title isActive");
+
+    if (!updated) {
+      return res.status(404).json({ message: "Question set not found" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Status updated", questionSet: updated });
+  } catch (error) {
+    console.error("Error toggling question set status:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 module.exports = {
   createQuestionSetController,
   getQuestionSetWithAnswersController,
+  toggleQuestionSetStatusController,
 };

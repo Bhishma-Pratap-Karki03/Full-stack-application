@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles/RegisterForm.css"; // Import the CSS styles
+import skillSyncLogo from "./assets/images/SkillSync Logo Design.png";
 
 function RegisterForm() {
   const [name, setName] = useState("");
@@ -68,7 +69,14 @@ function RegisterForm() {
   return (
     <div className="register-container">
       <div className="register-card">
-        <h1 className="register-title">Register Form</h1>
+        <div className="register-logo">
+          <img
+            src={skillSyncLogo}
+            alt="SkillSync Logo"
+            className="register-logo-img"
+          />
+        </div>
+        <h1 className="register-title">Join Us Today</h1>
         <p className="register-subtitle">Create your account</p>
 
         <form

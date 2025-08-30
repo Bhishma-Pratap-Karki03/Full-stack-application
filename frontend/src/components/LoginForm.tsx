@@ -2,13 +2,14 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "../App";
 import "../styles/LoginForm.css";
+import skillSyncLogo from "../assets/images/SkillSync Logo Design.png";
 
 function LoginForm() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const { isAuth, setAuthState } = useContext(AuthContext);
+  const { setAuthState } = useContext(AuthContext);
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -46,7 +47,14 @@ function LoginForm() {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1 className="login-title">Login Form</h1>
+        <div className="login-logo">
+          <img
+            src={skillSyncLogo}
+            alt="SkillSync Logo"
+            className="login-logo-img"
+          />
+        </div>
+        <h1 className="login-title">Welcome Back</h1>
         <p className="login-subtitle">Login to Continue</p>
 
         <form onSubmit={handleSubmit} className="login-form">

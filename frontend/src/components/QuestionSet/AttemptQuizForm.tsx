@@ -31,6 +31,7 @@ function AttemptQuizForm({
     total: 0,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // If backend says already attempted, show summary instead of form
@@ -56,6 +57,28 @@ function AttemptQuizForm({
     );
   }
 
+  // Validate questionSet structure
+  if (
+    !questionSet ||
+    !(questionSet as IAttempQuestionForm)._id ||
+    !(questionSet as IAttempQuestionForm).questions
+  ) {
+    return (
+      <div className="quiz-container">
+        <div className="result-container">
+          <h2 className="result-title">Error Loading Quiz</h2>
+          <p>Unable to load the quiz. Please try again.</p>
+          <button
+            className="try-again-button"
+            onClick={() => navigate("/questionset/list")}
+          >
+            Back to Quizzes
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const defaultValues: IAttempQuestionForm = {
     ...(questionSet as IAttempQuestionForm),
   };
@@ -63,40 +86,70 @@ function AttemptQuizForm({
 
   const { register, handleSubmit } = methods;
 
-  const onSubmitHandler = (data: IAttempQuestionForm) => {
+  const onSubmitHandler = async (data: IAttempQuestionForm) => {
     setIsSubmitting(true);
+    setError(null);
+
     const accessToken = localStorage.getItem("accessToken");
 
-    const finalData: IAttemptQuizFinalData = {
-      questionSet: data?._id,
-      responses: data?.questions?.map((question) => {
-        return {
-          questionId: question?._id,
-          selectedChoiceIds: question?.choices
-            ?.filter((choice) => choice?.selected)
-            ?.map((ch) => ch?._id),
-        };
-      }),
-    };
+    if (!accessToken) {
+      setError("Authentication required. Please log in again.");
+      setIsSubmitting(false);
+      return;
+    }
 
-    axios
-      .post("http://localhost:3000/api/questions/answer/attempt", finalData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((res) => {
+    try {
+      // Validate data before sending
+      if (!data?._id || !data?.questions) {
+        throw new Error("Invalid quiz data");
+      }
+
+      const finalData: IAttemptQuizFinalData = {
+        questionSet: data._id,
+        responses: data.questions
+          .filter((question) => question?._id && question?.choices)
+          .map((question) => {
+            return {
+              questionId: question._id,
+              selectedChoiceIds: question.choices
+                .filter((choice) => choice?.selected && choice?._id)
+                .map((ch) => ch._id),
+            };
+          }),
+      };
+
+      const response = await axios.post(
+        "http://localhost:3000/api/questions/answer/attempt",
+        finalData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (response.data?.data) {
+        setAnswer(response.data.data);
         alert("Answer Submitted Successfully!");
-        const data = res.data.data;
-        setAnswer(data);
-      })
-      .catch((err) => {
-        console.error("Submission error:", err);
-        alert("Failed to submit answers. Please try again.");
-      })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      } else {
+        throw new Error("Invalid response from server");
+      }
+    } catch (err: any) {
+      console.error("Submission error:", err);
+
+      let errorMessage = "Failed to submit answers. Please try again.";
+
+      if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
+      setError(errorMessage);
+      alert(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (answer?.total > 0) {
@@ -128,6 +181,22 @@ function AttemptQuizForm({
           Test your skills and prove your expertise
         </p>
       </div>
+
+      {error && (
+        <div
+          className="error-message"
+          style={{
+            backgroundColor: "#ffebee",
+            color: "#c62828",
+            padding: "1rem",
+            margin: "1rem 0",
+            borderRadius: "4px",
+            border: "1px solid #ffcdd2",
+          }}
+        >
+          {error}
+        </div>
+      )}
 
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmitHandler)} className="quiz-form">
@@ -171,6 +240,16 @@ function CreateQuestions() {
     name: "questions",
   });
 
+  if (!fields || fields.length === 0) {
+    return (
+      <div className="questions-container">
+        <p style={{ color: "#fff", textAlign: "center" }}>
+          No questions available in this quiz.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="questions-container">
       <h2 style={{ color: "#fff", marginBottom: "1.5rem", fontSize: "1.5rem" }}>
@@ -180,7 +259,8 @@ function CreateQuestions() {
         return (
           <div key={index} className="question-item">
             <h3 className="question-text">
-              Q{index + 1}: {field?.questionText}
+              Q{index + 1}:{" "}
+              {field?.questionText || "Question text not available"}
             </h3>
             <CreateChoices questionIndex={index} />
           </div>
@@ -198,6 +278,16 @@ function CreateChoices({ questionIndex }: { questionIndex: number }) {
     name: `questions.${questionIndex}.choices`,
   });
 
+  if (!fields || fields.length === 0) {
+    return (
+      <div className="choices-container">
+        <p style={{ color: "#ccc", fontStyle: "italic" }}>
+          No choices available for this question.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="choices-container">
       {fields?.map((field, index) => {
@@ -210,7 +300,9 @@ function CreateChoices({ questionIndex }: { questionIndex: number }) {
                 `questions.${questionIndex}.choices.${index}.selected`
               )}
             />
-            <span className="choice-text">{field?.text}</span>
+            <span className="choice-text">
+              {field?.text || "Choice text not available"}
+            </span>
           </label>
         );
       })}

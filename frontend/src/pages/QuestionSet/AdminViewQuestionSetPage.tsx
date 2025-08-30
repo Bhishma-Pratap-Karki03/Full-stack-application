@@ -18,6 +18,7 @@ interface IAdminQuestion {
 
 interface IAdminQuestionSet {
   _id: string;
+  isActive?: boolean;
   title: string;
   questions: IAdminQuestion[];
 }
@@ -52,6 +53,45 @@ function AdminViewQuestionSetPage() {
       <div className="quiz-header">
         <h1 className="quiz-title">{data.title}</h1>
         <p className="quiz-subtitle">Admin view (answers visible)</p>
+        <div
+          className="toggle-row"
+          style={{ justifyContent: "center", marginTop: "0.5rem" }}
+        >
+          <input
+            id={`isActive-${id}`}
+            type="checkbox"
+            defaultChecked={Boolean(data.isActive)}
+            className="switch-input"
+            onChange={async (e) => {
+              const accessToken = localStorage.getItem("accessToken");
+              if (!accessToken || !id) return;
+              const next = e.currentTarget.checked;
+              await axios.patch(
+                `http://localhost:3000/api/admin/questionset/${id}/status`,
+                { isActive: next },
+                { headers: { Authorization: `Bearer ${accessToken}` } }
+              );
+              const res = await axios.get(
+                `http://localhost:3000/api/admin/questionset/${id}`,
+                { headers: { Authorization: `Bearer ${accessToken}` } }
+              );
+              setData(res.data.questionSet);
+            }}
+          />
+          <label
+            htmlFor={`isActive-${id}`}
+            className="switch"
+            aria-label="Toggle Active"
+          >
+            <span className="switch-track"></span>
+            <span className="switch-thumb"></span>
+          </label>
+          <span
+            className={`switch-text ${data.isActive ? "active" : "inactive"}`}
+          >
+            {data.isActive ? "Active" : "Inactive"}
+          </span>
+        </div>
       </div>
 
       <div className="questions-container">

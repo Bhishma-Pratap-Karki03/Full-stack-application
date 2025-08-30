@@ -9,6 +9,7 @@ import createAccountImg from "../../assets/images/Create Account.jpg";
 import professionalImg1 from "../../assets/images/Professional 1.jpg";
 import professionalImg2 from "../../assets/images/Diya.jpg";
 import heroimage from "../../assets/images/digital.png";
+import skillSyncLogo from "../../assets/images/SkillSync Logo Design.png";
 
 function UnAuthHomePage() {
   const navigate = useNavigate();
@@ -18,6 +19,13 @@ function UnAuthHomePage() {
       <section className="hero">
         <div className="hero-content">
           <div className="hero-text">
+            <div className="hero-logo">
+              <img
+                src={skillSyncLogo}
+                alt="SkillSync Logo"
+                className="hero-logo-img"
+              />
+            </div>
             <h1 className="hero-title">
               Master Your Skills with Professional Quizzes
             </h1>

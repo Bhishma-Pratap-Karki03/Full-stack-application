@@ -9,6 +9,7 @@ import "../../styles/AttemptQuizForm.css";
 import { useNavigate } from "react-router-dom";
 interface QuestionSetForm {
   title: string;
+  isActive?: boolean;
   questions: {
     questionText: string;
     choices: { label: string; text: string; correctAnswer: boolean }[];
@@ -19,6 +20,7 @@ function CreateQuestionSetForm() {
   const navigate = useNavigate();
   const defaultValues: QuestionSetForm = {
     title: "",
+    isActive: true,
     questions: [
       {
         choices: [],
@@ -95,6 +97,33 @@ function CreateQuestionSetForm() {
               className="form-input"
               required
             />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Status</label>
+            <div className="toggle-row">
+              <input
+                id="isActive"
+                type="checkbox"
+                defaultChecked
+                {...register("isActive")}
+                className="switch-input"
+              />
+              <label
+                htmlFor="isActive"
+                className="switch"
+                aria-label="Toggle Active"
+              >
+                <span className="switch-track"></span>
+                <span className="switch-thumb"></span>
+              </label>
+              <span
+                className={`switch-text ${
+                  watch("isActive") ? "active" : "inactive"
+                }`}
+              >
+                {watch("isActive") ? "Active" : "Inactive"}
+              </span>
+            </div>
           </div>
           <CreateQuestions />
           <div style={{ display: "flex", gap: "1rem" }}>

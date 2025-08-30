@@ -18,6 +18,17 @@
   margin-bottom: 1.5rem;
 }
 
+.footer-logo {
+  margin-bottom: 1rem;
+}
+
+.footer-logo-img {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1); /* Makes the logo white */
+}
+
 .footer-section h3 {
   color: white;
   margin-bottom: 1rem;

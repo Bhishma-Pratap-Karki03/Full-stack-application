@@ -1,12 +1,19 @@
 import React from "react";
 import "./Footer.css";
+import skillSyncLogo from "../../assets/images/SkillSync Logo Design.png";
 
 const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-section">
-          <h3>Nissan</h3>
+          <div className="footer-logo">
+            <img
+              src={skillSyncLogo}
+              alt="SkillSync Logo"
+              className="footer-logo-img"
+            />
+          </div>
           <p>Connecting clients with top professionals in every field</p>
         </div>
 
@@ -27,16 +34,13 @@ const Footer = () => {
 
         <div className="footer-section">
           <h4>Contact Us</h4>
-          <p>Email: contact@searchpros.com</p>
+          <p>Email: contact@skillsync.com</p>
           <p>Phone: (123) 456-7890</p>
         </div>
       </div>
 
       <div className="footer-bottom">
-        <p>
-          &copy; {new Date().getFullYear()} Search the Professionals. All rights
-          reserved.
-        </p>
+        <p>&copy; {new Date().getFullYear()} SkillSync. All rights reserved.</p>
       </div>
     </footer>
   );

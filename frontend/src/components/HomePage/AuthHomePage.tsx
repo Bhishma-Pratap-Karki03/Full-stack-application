@@ -214,7 +214,7 @@ function AuthHomePage() {
                       className="edit-profile-btn"
                       onClick={() => navigate("/profile")}
                     >
-                      Edit Profile
+                      View Profile
                     </button>
                   )}
                 </div>
