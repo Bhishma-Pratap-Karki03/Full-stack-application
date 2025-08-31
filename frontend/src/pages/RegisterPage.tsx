@@ -1,10 +1,12 @@
 import RegisterForm from "../RegisterForm";
+import PageTitle from "../components/PageTitle";
 import "../styles/RegisterPage.css";
 import registerImage from "../assets/images/Register Image.png";
 
 function RegisterPage() {
   return (
     <div className="register-page-container">
+      <PageTitle title="Register" />
       <div className="register-page-content">
         <div className="register-illustration">
           <img

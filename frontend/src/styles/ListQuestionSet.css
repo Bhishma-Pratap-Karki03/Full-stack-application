@@ -173,6 +173,39 @@
   transform: none;
 }
 
+/* Style for already attempted quiz button */
+.take-quiz-button:disabled {
+  background: linear-gradient(45deg, #9ca3af, #6b7280);
+  color: #ffffff;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.take-quiz-button:disabled:hover {
+  background: linear-gradient(45deg, #9ca3af, #6b7280);
+  transform: none;
+  opacity: 0.8;
+}
+
+/* Attempt summary styling */
+.attempt-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.score-pill {
+  background: linear-gradient(45deg, #fbbf24, #f59e0b);
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  text-align: center;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+}
+
 /* Admin status toggle styles */
 .admin-actions {
   display: flex;
