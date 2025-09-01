@@ -126,7 +126,7 @@ function CreateQuestionSetForm() {
             </div>
           </div>
           <CreateQuestions />
-          <div style={{ display: "flex", gap: "1rem" }}>
+          <div className="button-container">
             <button type="submit" className="submit-button">
               Create Question Set
             </button>

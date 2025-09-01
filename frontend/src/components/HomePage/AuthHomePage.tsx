@@ -151,7 +151,9 @@ function AuthHomePage() {
               <div className="profile-details">
                 <h3 className="user-name">{currentUserProfile.name}</h3>
                 <p className="user-email">{currentUserProfile.email}</p>
-                <p className="user-role">{currentUserProfile.role}</p>
+                <p className={`user-role ${currentUserProfile.role}`}>
+                  {currentUserProfile.role}
+                </p>
 
                 {currentUserProfile.bio && (
                   <div className="user-bio">

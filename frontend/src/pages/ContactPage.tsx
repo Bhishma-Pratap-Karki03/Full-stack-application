@@ -9,6 +9,7 @@ function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     subject: "",
     message: "",
   });
@@ -22,19 +23,63 @@ function ContactPage() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    // Special handling for phone number - only allow digits and limit to 10 characters
+    if (name === "phone") {
+      const phoneValue = value.replace(/\D/g, "").slice(0, 10);
+      setFormData({
+        ...formData,
+        [name]: phoneValue,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+
+  const validateForm = () => {
+    if (!formData.name.trim()) {
+      alert("Name is required");
+      return false;
+    }
+    if (!formData.email.trim()) {
+      alert("Email is required");
+      return false;
+    }
+    if (!formData.phone.trim()) {
+      alert("Phone number is required");
+      return false;
+    }
+    if (formData.phone.length !== 10) {
+      alert("Phone number must be exactly 10 digits");
+      return false;
+    }
+    if (!formData.subject.trim()) {
+      alert("Subject is required");
+      return false;
+    }
+    if (!formData.message.trim()) {
+      alert("Message is required");
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus(null);
 
     try {
-      const response = await fetch("http://localhost:3000/contact/create", {
+      const response = await fetch("http://localhost:3000/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,7 +92,13 @@ function ContactPage() {
           success: true,
           message: "Message sent successfully! We'll get back to you soon.",
         });
-        setFormData({ name: "", email: "", subject: "", message: "" });
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+        });
       } else {
         const errorData = await response.json();
         setSubmitStatus({
@@ -123,7 +174,7 @@ function ContactPage() {
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="name">Name</label>
+                <label htmlFor="name">Name *</label>
                 <input
                   type="text"
                   id="name"
@@ -135,7 +186,7 @@ function ContactPage() {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email">Email *</label>
                 <input
                   type="email"
                   id="email"
@@ -147,7 +198,24 @@ function ContactPage() {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="subject">Subject</label>
+                <label htmlFor="phone">Phone Number *</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="10-digit phone number"
+                  pattern="[0-9]{10}"
+                  maxLength={10}
+                  required
+                />
+                <small className="form-help">
+                  Enter exactly 10 digits (e.g., 9823209901)
+                </small>
+              </div>
+              <div className="form-group">
+                <label htmlFor="subject">Subject *</label>
                 <input
                   type="text"
                   id="subject"
@@ -159,7 +227,7 @@ function ContactPage() {
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="message">Message</label>
+                <label htmlFor="message">Message *</label>
                 <textarea
                   id="message"
                   name="message"

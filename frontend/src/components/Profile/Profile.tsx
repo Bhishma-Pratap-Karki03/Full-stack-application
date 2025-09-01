@@ -240,7 +240,7 @@ function Profile() {
             <div className="profile-details">
               <h2 className="user-name">{userData?.name}</h2>
               <p className="user-email">{userData?.email}</p>
-              <p className="user-role">{userData?.role}</p>
+              <p className={`user-role ${userData?.role}`}>{userData?.role}</p>
 
               {userData?.bio && (
                 <div className="user-bio">

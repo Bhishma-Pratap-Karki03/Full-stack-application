@@ -32,16 +32,16 @@ function AboutUsPage() {
             </p>
             <div className="hero-stats">
               <div className="stat-item">
-                <span className="stat-number">500+</span>
-                <span className="stat-label">Professionals</span>
+                <div className="stat-number">500+</div>
+                <div className="stat-label">PROFESSIONALS</div>
               </div>
               <div className="stat-item">
-                <span className="stat-number">1000+</span>
-                <span className="stat-label">Happy Clients</span>
+                <div className="stat-number">1000+</div>
+                <div className="stat-label">HAPPY CLIENTS</div>
               </div>
               <div className="stat-item">
-                <span className="stat-number">98%</span>
-                <span className="stat-label">Satisfaction Rate</span>
+                <div className="stat-number">98%</div>
+                <div className="stat-label">SATISFACTION RATE</div>
               </div>
             </div>
           </div>

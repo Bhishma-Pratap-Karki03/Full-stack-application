@@ -1,4 +1,3 @@
-
 * {
   margin: 0;
   padding: 0;
@@ -33,12 +32,18 @@
   margin-bottom: 3rem;
 }
 
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 .contact-card,
 .contact-hours {
   background-color: #f8f9fa;
   padding: 2rem;
   border-radius: 8px;
-  margin-bottom: 2rem;
+  margin-bottom: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -50,17 +55,54 @@
   font-size: 1.5rem;
 }
 
+.contact-card h3 {
+  color: #4f46e5;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
 .contact-detail {
   display: flex;
   align-items: center;
   margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-direction: row;
 }
 
 .contact-icon {
   width: 24px;
   height: 24px;
-  margin-right: 1rem;
+  flex-shrink: 0;
   object-fit: contain;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.contact-detail span {
+  color: #374151;
+  font-size: 1rem;
+  line-height: 1.5;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.contact-hours .contact-detail {
+  margin-bottom: 0;
+}
+
+.contact-hours .contact-detail div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.contact-hours .contact-detail p {
+  margin: 0;
+  color: #374151;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .contact-form {
@@ -101,6 +143,14 @@
 .form-group textarea {
   resize: vertical;
   min-height: 120px;
+}
+
+.form-help {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-style: italic;
 }
 
 .submit-btn {
@@ -158,10 +208,47 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-card .contact-detail {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  gap: 1rem;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.contact-card .contact-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.contact-card .contact-detail span {
+  color: #374151;
+  font-size: 1rem;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.contact-hours {
+  margin-top: 1rem;
+}
+
 @media (max-width: 768px) {
   .contact-content {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+
+  .contact-info {
+    gap: 1.5rem;
   }
 
   .contact-header h1 {
@@ -172,6 +259,22 @@
   .contact-hours,
   .contact-form {
     padding: 1.5rem;
+  }
+
+  .contact-card .contact-detail {
+    gap: 0.75rem;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .contact-card .contact-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .contact-card .contact-detail span {
+    font-size: 0.95rem;
   }
 }
 

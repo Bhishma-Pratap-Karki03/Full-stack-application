@@ -6,7 +6,7 @@ import skillSyncLogo from "../assets/images/SkillSync Logo Design.png";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuth, setAuthState } = useContext(AuthContext);
+  const { isAuth, roleState, setAuthState } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const logoutHandler = () => {
@@ -57,29 +57,36 @@ function Navbar() {
               Home
             </NavLink>
           </li>
-          <li className="nav-item">
-            <NavLink
-              to="/about"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "active" : ""}`
-              }
-              onClick={() => setIsMenuOpen(false)}
-            >
-              About Us
-            </NavLink>
-          </li>
 
-          <li className="nav-item">
-            <NavLink
-              to="/contact"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "active" : ""}`
-              }
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Contact
-            </NavLink>
-          </li>
+          {/* Show About Us only for non-admin users */}
+          {roleState !== "admin" && (
+            <li className="nav-item">
+              <NavLink
+                to="/about"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+                onClick={() => setIsMenuOpen(false)}
+              >
+                About Us
+              </NavLink>
+            </li>
+          )}
+
+          {/* Show Contact Us only for non-admin users */}
+          {roleState !== "admin" && (
+            <li className="nav-item">
+              <NavLink
+                to="/contact"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Contact Us
+              </NavLink>
+            </li>
+          )}
 
           {isAuth ? (
             <>
@@ -105,6 +112,35 @@ function Navbar() {
                   Question Sets
                 </NavLink>
               </li>
+
+              {/* Admin-specific navigation */}
+              {roleState === "admin" && (
+                <>
+                  <li className="nav-item">
+                    <NavLink
+                      to="/admin/contacts"
+                      className={({ isActive }) =>
+                        `nav-link ${isActive ? "active" : ""}`
+                      }
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Manage Contacts
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink
+                      to="/admin/question/set/create"
+                      className={({ isActive }) =>
+                        `nav-link ${isActive ? "active" : ""}`
+                      }
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Create Quiz
+                    </NavLink>
+                  </li>
+                </>
+              )}
+
               <li className="nav-item">
                 <button className="nav-button" onClick={logoutHandler}>
                   Logout

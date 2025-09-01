@@ -12,6 +12,7 @@ import CreateQuestionSetPage from "./pages/QuestionSet/CreateQuestionSetPage";
 import ListQuestionSetPage from "./pages/QuestionSet/ListQuestionSetPage";
 import AttemptQuizPage from "./pages/QuestionSet/AttemptQuizPage";
 import AdminViewQuestionSetPage from "./pages/QuestionSet/AdminViewQuestionSetPage";
+import AdminContactManagementPage from "./pages/AdminContactManagementPage";
 import { jwtDecode } from "jwt-decode";
 import ContactPage from "./pages/ContactPage";
 import Profile from "./components/Profile/Profile";
@@ -129,6 +130,10 @@ function App() {
                 <Route
                   path="/admin/questionset/:id/view"
                   element={<AdminViewQuestionSetPage />}
+                />
+                <Route
+                  path="/admin/contacts"
+                  element={<AdminContactManagementPage />}
                 />
               </>
             )}

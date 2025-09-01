@@ -1,5 +1,3 @@
-
-
 .unauth-home {
   min-height: 100vh;
   background: #ffffff;
@@ -211,8 +209,6 @@
   transition: transform 0.3s ease;
 }
 
-/* Removed hero image/overlay hover selectors for cleaner UX */
-
 /* Features Section - Card-based Layout */
 .features {
   padding: 8rem 0;
@@ -271,12 +267,6 @@
   overflow: hidden;
 }
 
-/* feature-card top-line hover effect removed */
-
-/* feature-card hover before removed */
-
-/* feature-card hover elevation removed */
-
 .feature-icon {
   margin-bottom: 2.5rem;
   display: flex;
@@ -291,8 +281,6 @@
   box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
   transition: transform 0.4s ease;
 }
-
-/* feature image hover effect removed */
 
 .feature-title {
   font-size: 1.5rem;
@@ -309,7 +297,6 @@
   margin: 0 auto;
 }
 
-/* How it Works Section - Timeline Style */
 .how-it-works {
   padding: 8rem 0;
   background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
@@ -334,8 +321,6 @@
   position: relative;
 }
 
-/* Timeline connection line removed - keeping clean design */
-
 .step {
   text-align: center;
   padding: 3rem 2rem;
@@ -349,13 +334,6 @@
   z-index: 1;
 }
 
-/* step top-line hover effect removed */
-
-/* step hover before removed */
-
-/* step hover elevation removed */
-
-/* Step numbers removed - keeping clean design */
 .step-number {
   display: none;
 }
@@ -375,8 +353,6 @@
   transition: transform 0.4s ease;
 }
 
-/* step image hover effect removed */
-
 .step h4 {
   font-size: 1.5rem;
   font-weight: 800;
@@ -392,7 +368,6 @@
   margin: 0 auto;
 }
 
-/* Testimonials Section - Modern Cards */
 .testimonials {
   padding: 8rem 0;
   background: #f8fafc;
@@ -426,12 +401,6 @@
   overflow: hidden;
 }
 
-/* testimonial top-line hover effect removed */
-
-/* testimonial hover before removed */
-
-/* testimonial hover elevation removed */
-
 .testimonial-content {
   padding: 3rem 2.5rem;
   text-align: center;
@@ -461,8 +430,6 @@
   transition: transform 0.4s ease;
 }
 
-/* testimonial avatar hover effect removed */
-
 .testimonial blockquote {
   font-size: 1.25rem;
   line-height: 1.7;
@@ -481,7 +448,6 @@
   letter-spacing: 1px;
 }
 
-/* CTA Section - Enhanced Design */
 .cta {
   padding: 8rem 0;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

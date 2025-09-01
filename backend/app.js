@@ -10,6 +10,7 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/userRoutes");
 var adminRouter = require("./routes/adminRoutes");
 var contactRouter = require("./routes/contactRoute");
+var adminContactRouter = require("./routes/adminContactRoutes");
 var quizResultsRouter = require("./routes/quizResultsRoute");
 
 var app = express();
@@ -35,8 +36,8 @@ app.use("/", indexRouter);
 app.use("/api/questions", questionRouter);
 app.use("/users", usersRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/admin/contacts", adminContactRouter);
 app.use("/api/contact", contactRouter);
-app.use("/api/quiz", quizResultsRouter);
 app.use("/api/quiz", quizResultsRouter);
 
 // Global error handling middleware
