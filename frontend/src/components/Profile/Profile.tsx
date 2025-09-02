@@ -51,6 +51,8 @@ function Profile() {
   const [newSkillName, setNewSkillName] = useState("");
   const [newSkillLevel, setNewSkillLevel] = useState("Beginner");
   const [isSaving, setIsSaving] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isAuth) return;
@@ -89,10 +91,14 @@ function Profile() {
   }, [isAuth, roleState]);
 
   const startEditing = () => {
-    setBioInput(userData?.bio || "");
-    setGithubInput(userData?.github || "");
-    setLinkedinInput(userData?.linkedin || "");
-    setSkillsInput(userData?.skills || []);
+    if (roleState !== "admin") {
+      setBioInput(userData?.bio || "");
+      setGithubInput(userData?.github || "");
+      setLinkedinInput(userData?.linkedin || "");
+      setSkillsInput(userData?.skills || []);
+    }
+    setSelectedFile(null);
+    setPreviewUrl(null);
     setIsEditing(true);
   };
 
@@ -100,6 +106,39 @@ function Profile() {
     setIsEditing(false);
     setNewSkillName("");
     setNewSkillLevel("Beginner");
+    setSelectedFile(null);
+    setPreviewUrl(null);
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+      
+      // Validate file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB');
+        return;
+      }
+      
+      setSelectedFile(file);
+      
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewUrl(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeSelectedFile = () => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
   };
 
   const addSkill = () => {
@@ -142,10 +181,23 @@ function Profile() {
       const accessToken = localStorage.getItem("accessToken");
 
       const formData = new FormData();
-      formData.append("bio", bioInput);
-      formData.append("github", githubInput);
-      formData.append("linkedin", linkedinInput);
-      formData.append("skills", JSON.stringify(skillsInput));
+      
+      // For admin users, only allow profile picture updates
+      if (roleState === "admin") {
+        if (selectedFile) {
+          formData.append("profilePicture", selectedFile);
+        }
+      } else {
+        // For non-admin users, allow all profile updates
+        formData.append("bio", bioInput);
+        formData.append("github", githubInput);
+        formData.append("linkedin", linkedinInput);
+        formData.append("skills", JSON.stringify(skillsInput));
+        
+        if (selectedFile) {
+          formData.append("profilePicture", selectedFile);
+        }
+      }
 
       const response = await axios.put(
         "http://localhost:3000/users/profile",
@@ -162,10 +214,10 @@ function Profile() {
         prev
           ? {
               ...prev,
-              bio: profile.bio,
-              skills: profile.skills,
-              github: profile.github,
-              linkedin: profile.linkedin,
+              bio: roleState === "admin" ? prev.bio : profile.bio,
+              skills: roleState === "admin" ? prev.skills : profile.skills,
+              github: roleState === "admin" ? prev.github : profile.github,
+              linkedin: roleState === "admin" ? prev.linkedin : profile.linkedin,
               profilePicture: profile.profilePicture || prev.profilePicture,
             }
           : prev
@@ -173,6 +225,8 @@ function Profile() {
       setIsEditing(false);
       setNewSkillName("");
       setNewSkillLevel("Beginner");
+      setSelectedFile(null);
+      setPreviewUrl(null);
     } catch (error) {
       console.error("Error saving profile:", error);
       alert("Failed to save profile. Please try again.");
@@ -296,132 +350,182 @@ function Profile() {
                 )}
               </div>
 
-              {roleState === "professional" && (
-                <div className="edit-controls">
-                  {!isEditing ? (
-                    <button className="btn-primary" onClick={startEditing}>
-                      Edit Profile
-                    </button>
-                  ) : null}
-                </div>
-              )}
+              <div className="edit-controls">
+                {!isEditing ? (
+                  <button className="btn-primary" onClick={startEditing}>
+                    Edit Profile
+                  </button>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>
 
-        {roleState === "professional" && isEditing && (
+        {isEditing && (
           <div className="edit-profile-card">
-            <h2>Edit Profile</h2>
+            <h2>{roleState === "admin" ? "Edit Profile Picture" : "Edit Profile"}</h2>
             <div className="profile-form">
+              {/* Profile Picture Upload Section */}
               <div className="form-group">
-                <label className="form-label" htmlFor="bio">
-                  Bio (optional)
-                </label>
-                <textarea
-                  id="bio"
-                  className="form-textarea"
-                  placeholder="Write something about yourself..."
-                  value={bioInput}
-                  onChange={(e) => setBioInput(e.target.value)}
-                  rows={4}
-                />
-              </div>
-
-              {/* Skills Section */}
-              <div className="form-group">
-                <label className="form-label">Skills</label>
-                <div className="skills-editor">
-                  <div className="add-skill-section">
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="Enter skill name (e.g., React, MongoDB, Java)"
-                      value={newSkillName}
-                      onChange={(e) => setNewSkillName(e.target.value)}
-                      onKeyPress={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          addSkill();
-                        }
-                      }}
-                    />
-                    <select
-                      className="form-select"
-                      value={newSkillLevel}
-                      onChange={(e) => setNewSkillLevel(e.target.value)}
-                    >
-                      <option value="Beginner">Beginner</option>
-                      <option value="Intermediate">Intermediate</option>
-                      <option value="Advanced">Advanced</option>
-                    </select>
-                    <button
-                      type="button"
-                      className="btn-add-skill"
-                      onClick={addSkill}
-                    >
-                      Add Skill
-                    </button>
-                  </div>
-
-                  {skillsInput.length > 0 && (
-                    <div className="current-skills">
-                      <h4>Current Skills</h4>
-                      <div className="skills-list-edit">
-                        {skillsInput.map((skill, index) => (
-                          <div key={index} className="skill-item-edit">
-                            <span className="skill-name">{skill.name}</span>
-                            <select
-                              className="skill-level-select"
-                              value={skill.level}
-                              onChange={(e) =>
-                                updateSkillLevel(index, e.target.value)
-                              }
-                            >
-                              <option value="Beginner">Beginner</option>
-                              <option value="Intermediate">Intermediate</option>
-                              <option value="Advanced">Advanced</option>
-                            </select>
-                            <button
-                              type="button"
-                              className="btn-remove-skill"
-                              onClick={() => removeSkill(index)}
-                            >
-                              ×
-                            </button>
-                          </div>
-                        ))}
+                <label className="form-label">Profile Picture</label>
+                <div className="profile-picture-upload">
+                  <div className="current-picture">
+                    {previewUrl ? (
+                      <img src={previewUrl} alt="Preview" className="profile-picture-preview" />
+                    ) : userData?.profilePicture ? (
+                      <img
+                        src={`http://localhost:3000/uploads/profile-pictures/${userData.profilePicture}`}
+                        alt="Current Profile"
+                        className="profile-picture-preview"
+                      />
+                    ) : (
+                      <div className="profile-picture-placeholder-large">
+                        {userData?.name?.charAt(0).toUpperCase() || "U"}
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
+                  <div className="upload-controls">
+                    <input
+                      type="file"
+                      id="profilePictureInput"
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      style={{ display: 'none' }}
+                    />
+                    <label htmlFor="profilePictureInput" className="btn-upload">
+                      Choose New Picture
+                    </label>
+                    {(selectedFile || previewUrl) && (
+                      <button
+                        type="button"
+                        className="btn-remove"
+                        onClick={removeSelectedFile}
+                      >
+                        Remove Selected
+                      </button>
+                    )}
+                  </div>
+                  <p className="upload-hint">
+                    Supported formats: JPG, PNG, GIF. Max size: 5MB
+                  </p>
                 </div>
               </div>
 
-              <div className="form-group">
-                <label className="form-label" htmlFor="github">
-                  GitHub URL
-                </label>
-                <input
-                  id="github"
-                  type="url"
-                  className="form-input"
-                  placeholder="https://github.com/username"
-                  value={githubInput}
-                  onChange={(e) => setGithubInput(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label" htmlFor="linkedin">
-                  LinkedIn URL
-                </label>
-                <input
-                  id="linkedin"
-                  type="url"
-                  className="form-input"
-                  placeholder="https://www.linkedin.com/in/username"
-                  value={linkedinInput}
-                  onChange={(e) => setLinkedinInput(e.target.value)}
-                />
-              </div>
+              {/* Only show additional fields for non-admin users */}
+              {roleState !== "admin" && (
+                <>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="bio">
+                      Bio (optional)
+                    </label>
+                    <textarea
+                      id="bio"
+                      className="form-textarea"
+                      placeholder="Write something about yourself..."
+                      value={bioInput}
+                      onChange={(e) => setBioInput(e.target.value)}
+                      rows={4}
+                    />
+                  </div>
+
+                  {/* Skills Section */}
+                  <div className="form-group">
+                    <label className="form-label">Skills</label>
+                    <div className="skills-editor">
+                      <div className="add-skill-section">
+                        <input
+                          type="text"
+                          className="form-input"
+                          placeholder="Enter skill name (e.g., React, MongoDB, Java)"
+                          value={newSkillName}
+                          onChange={(e) => setNewSkillName(e.target.value)}
+                          onKeyPress={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              addSkill();
+                            }
+                          }}
+                        />
+                        <select
+                          className="form-select"
+                          value={newSkillLevel}
+                          onChange={(e) => setNewSkillLevel(e.target.value)}
+                        >
+                          <option value="Beginner">Beginner</option>
+                          <option value="Intermediate">Intermediate</option>
+                          <option value="Advanced">Advanced</option>
+                        </select>
+                        <button
+                          type="button"
+                          className="btn-add-skill"
+                          onClick={addSkill}
+                        >
+                          Add Skill
+                        </button>
+                      </div>
+
+                      {skillsInput.length > 0 && (
+                        <div className="current-skills">
+                          <h4>Current Skills</h4>
+                          <div className="skills-list-edit">
+                            {skillsInput.map((skill, index) => (
+                              <div key={index} className="skill-item-edit">
+                                <span className="skill-name">{skill.name}</span>
+                                <select
+                                  className="skill-level-select"
+                                  value={skill.level}
+                                  onChange={(e) =>
+                                    updateSkillLevel(index, e.target.value)
+                                  }
+                                >
+                                  <option value="Beginner">Beginner</option>
+                                  <option value="Intermediate">Intermediate</option>
+                                  <option value="Advanced">Advanced</option>
+                                </select>
+                                <button
+                                  type="button"
+                                  className="btn-remove-skill"
+                                  onClick={() => removeSkill(index)}
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="github">
+                      GitHub URL
+                    </label>
+                    <input
+                      id="github"
+                      type="url"
+                      className="form-input"
+                      placeholder="https://github.com/username"
+                      value={githubInput}
+                      onChange={(e) => setGithubInput(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="linkedin">
+                      LinkedIn URL
+                    </label>
+                    <input
+                      id="linkedin"
+                      type="url"
+                      className="form-input"
+                      placeholder="https://www.linkedin.com/in/username"
+                      value={linkedinInput}
+                      onChange={(e) => setLinkedinInput(e.target.value)}
+                    />
+                  </div>
+                </>
+              )}
+              
               <div className="form-actions">
                 <button
                   className="btn-primary"

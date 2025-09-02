@@ -211,7 +211,7 @@ function AuthHomePage() {
                 </div>
 
                 <div className="profile-actions">
-                  {currentUserProfile.role === "professional" && (
+                  {(currentUserProfile.role === "professional" || currentUserProfile.role === "admin") && (
                     <button
                       className="edit-profile-btn"
                       onClick={() => navigate("/profile")}
