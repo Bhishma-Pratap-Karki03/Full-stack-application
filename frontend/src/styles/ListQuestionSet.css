@@ -95,16 +95,13 @@
   font-size: 1.1rem;
 }
 
-/* Remove duplicate rules - handled by final rule below */
 
-/* Suggestions section uses the same sets-grid and set-card styling as main question sets */
 .skill-suggestion-group .sets-grid {
   /* Inherits all styles from .sets-grid */
   margin-top: 1rem;
 }
 
 .skill-suggestion-group .set-card {
-  /* Inherits all styles from .set-card */
 }
 
 .question-sets-container {
@@ -449,5 +446,5 @@
     font-size: 1.1rem;
   }
 
-  /* Suggestions section inherits responsive styles from main sets-grid and set-card */
+
 }

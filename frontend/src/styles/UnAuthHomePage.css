@@ -2,8 +2,7 @@
   min-height: 100vh;
   background: #ffffff;
   color: #1a202c;
-  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto,
-    sans-serif;
+  font-family: 'Poppins', sans-serif;
   line-height: 1.6;
   overflow-x: hidden;
 }
@@ -414,7 +413,7 @@
   left: 30px;
   font-size: 5rem;
   color: #e2e8f0;
-  font-family: serif;
+  font-family: 'Poppins', serif;
   line-height: 1;
   opacity: 0.3;
 }
@@ -703,12 +702,7 @@ html {
   outline-offset: 3px;
 }
 
-/* Animations removed for cleaner design */
 
-/* Hover Effects for Interactive Elements */
-/* removed pointer cursor on non-interactive blocks */
-
-/* Custom Scrollbar */
 .unauth-home::-webkit-scrollbar {
   width: 8px;
 }
@@ -722,4 +716,3 @@ html {
   border-radius: 4px;
 }
 
-/* Removed scrollbar thumb hover effect */

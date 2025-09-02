@@ -65,6 +65,10 @@ function AdminContactManagementPage() {
         }
       );
       fetchContacts(); // Refresh the list
+      // Update selectedContact if it's the same contact
+      if (selectedContact?._id === contactId) {
+        setSelectedContact({ ...selectedContact, status: "read" });
+      }
     } catch (error) {
       console.error("Error marking contact as read:", error);
       alert("Error updating contact status");
@@ -84,6 +88,10 @@ function AdminContactManagementPage() {
         }
       );
       fetchContacts(); // Refresh the list
+      // Update selectedContact if it's the same contact
+      if (selectedContact?._id === contactId) {
+        setSelectedContact({ ...selectedContact, status: "replied" });
+      }
     } catch (error) {
       console.error("Error marking contact as replied:", error);
       alert("Error updating contact status");
