@@ -42,7 +42,7 @@ const Footer = () => {
         <div className="footer-section">
           <h4>Contact Us</h4>
           <p>Email: contact@skillsync.com</p>
-          <p>Phone: (123) 456-7890</p>
+          <p>Phone: 456-7890</p>
         </div>
 
         {/* Admin-specific footer section */}

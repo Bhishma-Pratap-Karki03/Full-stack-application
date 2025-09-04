@@ -115,7 +115,7 @@ function AdminViewQuestionSetPage() {
                 >
                   <span className="choice-text">{c.text}</span>
                   {c.correctAnswer && (
-                    <span className="badge badge-success">✓ Correct</span>
+                    <span className="badge badge-success">Correct</span>
                   )}
                 </div>
               ))}

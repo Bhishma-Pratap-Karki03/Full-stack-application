@@ -1,0 +1,256 @@
+.quiz-results-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: white;
+  min-height: 100vh;
+}
+
+.loading-container, .error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.error-container {
+  color: #333;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.results-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.results-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 0.5rem;
+}
+
+.results-subtitle {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.score-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.score-card {
+  background: white;
+  color: #000;
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e1e8ed;
+}
+
+.score-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.score-number {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.score-divider {
+  font-size: 2rem;
+  opacity: 0.8;
+}
+
+.total-number {
+  font-size: 2rem;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+.score-percentage {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.score-label {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.attempt-info {
+  color: #333;
+}
+
+.attempt-date {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.questions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.question-item {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e1e8ed;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.question-text {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+  flex: 1;
+}
+
+.result-indicator {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.result-indicator.correct {
+  background-color:#28a745;
+  color: white;
+  border: 1px solid #c3e6cb;
+}
+
+.result-indicator.incorrect {
+  background-color: #e0493e;
+  color: white;
+  border: 1px solid #dee2e6;
+}
+
+.choices-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.choice-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 2px solid #e1e8ed;
+  background-color: white;
+  transition: all 0.2s ease;
+}
+
+.choice-item.choice-correct {
+  border-color: #28a745;
+  background-color: #d4edda;
+}
+
+.choice-item.choice-incorrect {
+  border-color: #dc3545;
+  background-color: white;
+}
+
+.choice-item.choice-selected {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.choice-text {
+  font-size: 1rem;
+  color: #000;
+  flex: 1;
+}
+
+.choice-indicators {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-error {
+  background-color: #fb3131;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .quiz-results-container {
+    padding: 1rem;
+  }
+  
+  .results-title {
+    font-size: 2rem;
+  }
+  
+  .question-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .result-indicator {
+    align-self: flex-start;
+  }
+  
+  .choice-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .choice-indicators {
+    align-self: flex-end;
+  }
+}

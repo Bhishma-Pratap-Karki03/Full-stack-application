@@ -452,12 +452,13 @@
 .score-number {
   font-weight: 700;
   color: #198754;
-  font-size: 1.1rem;
+  font-size: 2rem;
 }
 
 .total-number {
-  font-weight: 600;
+  font-weight: 700;
   color: #212529;
+  font-size: 2rem;
 }
 
 /* Loading and Auth States */

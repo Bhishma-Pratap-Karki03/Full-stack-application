@@ -40,6 +40,9 @@ function ListQuestionSet() {
   const [userProfile, setUserProfile] = useState<IUserProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isProfileLoading, setIsProfileLoading] = useState<boolean>(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredQuestionSets, setFilteredQuestionSets] = useState<IListQuestionSet[]>([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
   const navigate = useNavigate();
   const { roleState } = useContext(AuthContext);
   const isAdmin = roleState === "admin";
@@ -67,6 +70,44 @@ function ListQuestionSet() {
     return userSkills.filter((skill) =>
       titleLower.includes(skill.name.toLowerCase())
     );
+  };
+
+  // Search functionality
+  const handleSearch = (query: string) => {
+    if (!query.trim()) {
+      setShowSearchResults(false);
+      setFilteredQuestionSets([]);
+      return;
+    }
+
+    const filtered = questionSets.filter((questionSet) =>
+      questionSet.title.toLowerCase().includes(query.toLowerCase())
+    );
+    
+    setFilteredQuestionSets(filtered);
+    setShowSearchResults(true);
+  };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    
+    // Debounce search
+    if (query.trim()) {
+      const timeoutId = setTimeout(() => {
+        handleSearch(query);
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    } else {
+      setShowSearchResults(false);
+      setFilteredQuestionSets([]);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setFilteredQuestionSets([]);
+    setShowSearchResults(false);
   };
 
   // Function to organize question sets into suggested and overall
@@ -268,9 +309,17 @@ function ListQuestionSet() {
               {questionSet.score}/{questionSet.total} ({questionSet.percentage}
               %)
             </div>
-            <button className="take-quiz-button" disabled>
-              Already Attempted
-            </button>
+            <div className="attempt-actions">
+              <button className="take-quiz-button" disabled>
+                Already Attempted
+              </button>
+              <button 
+                className="take-quiz-button"
+                onClick={() => navigate(`/quiz/result/${questionSet._id}`)}
+              >
+                View Result
+              </button>
+            </div>
           </div>
         ) : (
           <button className="take-quiz-button" onClick={TakeQuizHandler}>
@@ -386,6 +435,55 @@ function ListQuestionSet() {
             >
               Create Question Set
             </button>
+          </div>
+        )}
+      </div>
+
+      {/* Search Section */}
+      <div className="search-section">
+        <div className="search-header">
+          <h2 className="search-title">Search Question Sets</h2>
+          <p className="search-subtitle">Find question sets by title</p>
+        </div>
+        
+        <div className="search-container">
+          <div className="search-input-wrapper">
+            <input
+              type="text"
+              placeholder="Search question sets by title..."
+              value={searchQuery}
+              onChange={handleSearchInputChange}
+              className="search-input"
+            />
+            {searchQuery && (
+              <button
+                onClick={clearSearch}
+                className="clear-search-btn"
+                aria-label="Clear search"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Search Results */}
+        {showSearchResults && (
+          <div className="search-results">
+            <div className="search-results-header">
+              <h3>Search Results</h3>
+              <p>{filteredQuestionSets.length} question set{filteredQuestionSets.length !== 1 ? "s" : ""} found</p>
+            </div>
+            
+            {filteredQuestionSets.length > 0 ? (
+              <div className="sets-grid">
+                {filteredQuestionSets.map(renderQuestionSetCard)}
+              </div>
+            ) : (
+              <div className="no-results">
+                <p>No question sets found matching "{searchQuery}"</p>
+              </div>
+            )}
           </div>
         )}
       </div>

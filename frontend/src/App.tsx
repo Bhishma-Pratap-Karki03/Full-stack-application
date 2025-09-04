@@ -12,6 +12,7 @@ import CreateQuestionSetPage from "./pages/QuestionSet/CreateQuestionSetPage";
 import ListQuestionSetPage from "./pages/QuestionSet/ListQuestionSetPage";
 import AttemptQuizPage from "./pages/QuestionSet/AttemptQuizPage";
 import AdminViewQuestionSetPage from "./pages/QuestionSet/AdminViewQuestionSetPage";
+import ViewQuizResultsPage from "./pages/QuestionSet/ViewQuizResultsPage";
 import AdminContactManagementPage from "./pages/AdminContactManagementPage";
 import { jwtDecode } from "jwt-decode";
 import ContactPage from "./pages/ContactPage";
@@ -113,6 +114,10 @@ function App() {
                 <Route
                   path="questionset/:id/attempt"
                   element={<AttemptQuizPage />}
+                />
+                <Route
+                  path="/quiz/result/:questionSetId"
+                  element={<ViewQuizResultsPage />}
                 />
                 <Route path="/profile" element={<Profile />} />
                 {/* Add this route for viewing other users' profiles */}

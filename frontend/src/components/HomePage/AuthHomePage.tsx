@@ -37,6 +37,9 @@ function AuthHomePage() {
     useState<IUserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isProfileLoading, setIsProfileLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState<IAuthUserList[]>([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
   let currentRole: string | null = null;
@@ -109,6 +112,45 @@ function AuthHomePage() {
 
   const handleViewProfile = (userId: string) => {
     navigate(`/profile/${userId}`);
+  };
+
+  // Search functionality
+  const handleSearch = (query: string) => {
+    if (!query.trim()) {
+      setShowSearchResults(false);
+      setFilteredUsers([]);
+      return;
+    }
+
+    const filtered = users.filter((user) =>
+      user.name.toLowerCase().includes(query.toLowerCase()) ||
+      user.email.toLowerCase().includes(query.toLowerCase())
+    );
+    
+    setFilteredUsers(filtered);
+    setShowSearchResults(true);
+  };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    
+    // Debounce search
+    if (query.trim()) {
+      const timeoutId = setTimeout(() => {
+        handleSearch(query);
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    } else {
+      setShowSearchResults(false);
+      setFilteredUsers([]);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setFilteredUsers([]);
+    setShowSearchResults(false);
   };
 
   if (isLoading) {
@@ -233,48 +275,141 @@ function AuthHomePage() {
         </p>
       </div>
 
-      <div className="users-grid">
-        {users.map((user, index) => (
-          <div key={user._id} className="user-card">
-            <div className="user-avatar">
-              {user.profilePicture ? (
-                <img
-                  src={`http://localhost:3000/uploads/profile-pictures/${user.profilePicture}`}
-                  alt={user.name}
-                  className="profile-picture"
-                  onError={(e) => {
-                    // Fallback to initials if image fails to load
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = "none";
-                    const fallback = document.createElement("div");
-                    fallback.className = "avatar-fallback";
-                    fallback.textContent = user.name.charAt(0).toUpperCase();
-                    target.parentNode?.appendChild(fallback);
-                  }}
-                />
-              ) : (
-                <div className="avatar-fallback">
-                  {user.name.charAt(0).toUpperCase()}
-                </div>
-              )}
-            </div>
-
-            <div className="user-info">
-              <h3 className="user-name">{user.name}</h3>
-              <p className="user-email">{user.email}</p>
-              <span className={`user-role ${user.role}`}>{user.role}</span>
-            </div>
-
-            <div className="user-actions">
+      {/* Search Section */}
+      <div className="search-section">
+        <div className="search-header">
+          <h2 className="search-title">Search Professionals</h2>
+          <p className="search-subtitle">Find professionals by name or email</p>
+        </div>
+        
+        <div className="search-container">
+          <div className="search-input-wrapper">
+            <input
+              type="text"
+              placeholder="Search professionals by name or email..."
+              value={searchQuery}
+              onChange={handleSearchInputChange}
+              className="search-input"
+            />
+            {searchQuery && (
               <button
-                className="view-profile-btn"
-                onClick={() => handleViewProfile(user._id)}
+                onClick={clearSearch}
+                className="clear-search-btn"
+                aria-label="Clear search"
               >
-                View Profile
+                ×
               </button>
-            </div>
+            )}
           </div>
-        ))}
+        </div>
+
+        {/* Search Results */}
+        {showSearchResults && (
+          <div className="search-results">
+            <div className="search-results-header">
+              <h3>Search Results</h3>
+              <p>{filteredUsers.length} professional{filteredUsers.length !== 1 ? "s" : ""} found</p>
+            </div>
+            
+            {filteredUsers.length > 0 ? (
+              <div className="users-grid">
+                {filteredUsers.map((user) => (
+                  <div key={user._id} className="user-card">
+                    <div className="user-avatar">
+                      {user.profilePicture ? (
+                        <img
+                          src={`http://localhost:3000/uploads/profile-pictures/${user.profilePicture}`}
+                          alt={user.name}
+                          className="profile-picture"
+                          onError={(e) => {
+                            // Fallback to initials if image fails to load
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = "none";
+                            const fallback = document.createElement("div");
+                            fallback.className = "avatar-fallback";
+                            fallback.textContent = user.name.charAt(0).toUpperCase();
+                            target.parentNode?.appendChild(fallback);
+                          }}
+                        />
+                      ) : (
+                        <div className="avatar-fallback">
+                          {user.name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="user-info">
+                      <h3 className="user-name">{user.name}</h3>
+                      <p className="user-email">{user.email}</p>
+                      <span className={`user-role ${user.role}`}>{user.role}</span>
+                    </div>
+
+                    <div className="user-actions">
+                      <button
+                        className="view-profile-btn"
+                        onClick={() => handleViewProfile(user._id)}
+                      >
+                        View Profile
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="no-results">
+                <p>No professionals found matching "{searchQuery}"</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* All Professionals Section */}
+      <div className="all-professionals-container">
+        <h2 className="professionals-title">All Professionals</h2>
+        <div className="users-grid">
+          {users.map((user) => (
+            <div key={user._id} className="user-card">
+              <div className="user-avatar">
+                {user.profilePicture ? (
+                  <img
+                    src={`http://localhost:3000/uploads/profile-pictures/${user.profilePicture}`}
+                    alt={user.name}
+                    className="profile-picture"
+                    onError={(e) => {
+                      // Fallback to initials if image fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = "none";
+                      const fallback = document.createElement("div");
+                      fallback.className = "avatar-fallback";
+                      fallback.textContent = user.name.charAt(0).toUpperCase();
+                      target.parentNode?.appendChild(fallback);
+                    }}
+                  />
+                ) : (
+                  <div className="avatar-fallback">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+
+              <div className="user-info">
+                <h3 className="user-name">{user.name}</h3>
+                <p className="user-email">{user.email}</p>
+                <span className={`user-role ${user.role}`}>{user.role}</span>
+              </div>
+
+              <div className="user-actions">
+                <button
+                  className="view-profile-btn"
+                  onClick={() => handleViewProfile(user._id)}
+                >
+                  View Profile
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {users.length === 0 && (

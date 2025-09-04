@@ -132,7 +132,7 @@ function ContactPage() {
               <h2>Contact Information</h2>
               <div className="contact-detail">
                 <img src={PhoneIcon} alt="Phone" className="contact-icon" />
-                <span>+977 982320990</span>
+                <span>456-7890</span>
               </div>
               <div className="contact-detail">
                 <img

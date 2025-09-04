@@ -2,7 +2,7 @@
   min-height: 100vh;
   background: #ffffff;
   color: #1a202c;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   line-height: 1.6;
   overflow-x: hidden;
 }
@@ -413,7 +413,7 @@
   left: 30px;
   font-size: 5rem;
   color: #e2e8f0;
-  font-family: 'Poppins', serif;
+  font-family: "Poppins", serif;
   line-height: 1;
   opacity: 0.3;
 }
@@ -702,7 +702,6 @@ html {
   outline-offset: 3px;
 }
 
-
 .unauth-home::-webkit-scrollbar {
   width: 8px;
 }
@@ -715,4 +714,3 @@ html {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 4px;
 }
-
