@@ -25,7 +25,9 @@ function AboutUsPage() {
         {/* Hero Section */}
         <div className="about-hero">
           <div className="hero-content">
-            <h1 className="hero-title">About Search the Professionals</h1>
+            <h1 className="hero-title">About SkillSync
+              Search Professionals
+            </h1>
             <p className="hero-subtitle">
               Connecting clients with top professionals in every field through
               innovative technology and trusted relationships
@@ -84,7 +86,7 @@ function AboutUsPage() {
               <div className="mission-text">
                 <h2 className="section-title">Our Mission</h2>
                 <p className="mission-description">
-                  At Search the Professionals, we're dedicated to
+                  At SkillSync, we're dedicated to
                   revolutionizing how people find and connect with professional
                   service providers. Our platform bridges the gap between
                   clients seeking expertise and professionals looking to
