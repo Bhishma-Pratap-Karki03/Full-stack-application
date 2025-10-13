@@ -1,0 +1,127 @@
+/* AllQuizResults.css */
+.all-results-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.all-results-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* center the heading */
+  gap: 12px;
+}
+
+.all-results-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #4F46E5; /* brand */
+  margin: 0.25rem 0;
+}
+
+.all-results-subtitle {
+  color: #718096;
+  margin-top: 0.25rem;
+}
+
+.header-actions {
+  position: absolute;
+  left: 0; /* move action button to the left while title stays centered */
+}
+
+.header-actions .btn-secondary {
+  background: #ffffff;
+  color: #4F46E5;
+  border: 1.5px solid #4F46E5;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+}
+
+.profile-summary-card,
+.all-results-list-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  margin-bottom: 1.5rem;
+}
+
+/* Reuse existing Profile.css building blocks for avatar/details */
+.profile-summary-card .profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .profile-summary-card .profile-info {
+    flex-direction: column;
+  }
+}
+
+.list-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #212529;
+  border: none !important;         /* remove any border underline */
+  padding-bottom: 0 !important;    /* remove space reserved for underline */
+}
+
+/* Remove any global decorative underline (::after gradient bars, etc.) */
+.section-title::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Results list appearance mirrors card items on Profile */
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* a bit more space between attempts */
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem; /* slightly more horizontal breathing room */
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.result-info { flex: 1; }
+.quiz-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem; color: #111827; }
+.quiz-date { font-size: 0.9rem; color: #6c757d; }
+
+.result-stats { display: flex; align-items: center; gap: 1rem; }
+.circle-chart { width: 80px; height: 80px; }
+.circle-bg { fill: none; stroke: #e9ecef; stroke-width: 3.8; }
+.circle { fill: none; stroke-width: 2.8; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; stroke: #198754; }
+.percentage { font-size: 0.35rem; font-weight: 700; fill: #198754; text-anchor: middle; dominant-baseline: middle; }
+.score-text { margin: 0; color: #495057; }
+.score-number { font-weight: 700; color: #198754; font-size: 2rem; }
+.total-number { font-weight: 700; color: #212529; font-size: 2rem; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .title-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .result-item { flex-direction: column; align-items: stretch; gap: 1rem; }
+  .result-stats { justify-content: center; }
+}

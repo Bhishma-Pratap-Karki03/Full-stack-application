@@ -1,3 +1,41 @@
+/* Page container: increase side space and center content */
+.quiz-container {
+  max-width: 1200px; /* wider main body */
+  margin: 0 auto;    /* center */
+  padding: 1rem 32px; /* add left/right breathing room */
+}
+
+.quiz-header h1 {
+  font-size: 2rem;
+  color: #4f46e5;
+  margin-bottom: 1.25rem;
+  font-weight: 700;
+}
+
+.quiz-header {
+  margin-bottom: 1.25rem;
+}
+
+.suggestions-title {
+  color: #4f46e5 !important; /* Brand color */
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.question-sets-container {
+  margin-top: 1.5rem;
+}
+
+/* Slightly larger gaps on very wide screens */
+@media (min-width: 1400px) {
+  .quiz-container {
+    max-width: 1320px;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
 /* ListQuestionSet.css */
 .loading-container {
   display: flex;
@@ -51,10 +89,10 @@
 
 /* Suggestions Section Styles */
 .suggestions-container {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem; /* tighten space below suggestions */
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  padding: 2rem;
+  padding: 1.25rem; /* reduce padding to avoid large empty area */
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   width: 100%;
@@ -69,8 +107,8 @@
 }
 
 .skill-suggestion-group {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
+  margin-bottom: 1.25rem; /* reduce gaps between groups */
+  padding: 1.25rem;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -111,7 +149,7 @@
 }
 
 .sets-title {
-  color: #000000;
+  color: #4f46e5;
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
   text-align: center;
@@ -119,102 +157,216 @@
 
 .sets-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem; /* more breathing room between cards */
 }
 
 .set-card {
-  background: rgba(255, 255, 255, 0.1);
+  background: #ffffff; /* clean card */
   border-radius: 12px;
-  padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
+  padding: 1.5rem 1.5rem 1.25rem; /* increase inner padding */
+  border: 1px solid #E5E7EB; /* light gray border */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 1rem; /* more vertical space between elements */
+  overflow: hidden; /* keep children within card */
+  position: relative;
+  min-height: 160px;
+}
+
+.set-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
 .set-info {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;  /* more space below title area */
+  padding-bottom: 0.75rem; /* increase divider spacing */
+  position: relative;
+}
+
+.set-info::after {
+  content: "";
+  display: block;
+  height: 0;
+  border-bottom: 1px dashed #E5E7EB;
+  margin-top: 0.75rem; /* push divider slightly further */
 }
 
 .set-title {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #000000;
+  font-size: 1.1rem;
+  font-weight: 500; /* reduced from 600 to 500 for lighter weight */
+  margin: 0 0 0.35rem 0;
+  color: #111827;
+  letter-spacing: -0.01em; /* slightly tighter letter spacing for better readability */
 }
 
 .set-count {
-  color: rgba(0, 0, 0, 0.8);
-  font-size: 0.9rem;
+  display: inline-block;
+  background: #EEF2FF; /* light indigo */
+  color: #4F46E5;
+  border: 1px solid #E0E7FF;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  font-weight: 500; /* reduce weight */
+  font-size: 0.8rem;
 }
 
 .take-quiz-button {
   width: 100%;
   padding: 0.8rem;
-  background: linear-gradient(45deg, #4ecdc4, #44a08d);
-  color: rgb(0, 0, 0);
-  border: none;
+  background: #4F46E5; /* brand primary */
+  color: #ffffff;
+  border: 1.5px solid #4F46E5;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: none; /* no hover effects */
 }
 
 .take-quiz-button:hover {
-  /* Disable hover animation on list page */
-  background: linear-gradient(45deg, #4ecdc4, #44a08d);
+  /* keep identical on hover to match brand simplicity */
+  background: #4F46E5;
+  color: #ffffff;
+  border: 1.5px solid #4F46E5;
   transform: none;
+}
+
+/* Admin header "Create Question Set" button: compact width on this page only */
+.quiz-header .create-set-btn,
+.no-sets-container .create-set-btn {
+  width: auto;              /* override full width */
+  padding: 0.8rem 1.25rem;  /* slightly larger */
+  border-radius: 10px;      /* slightly more rounded */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 260px;         /* larger base width */
+  font-size: 1rem;          /* slightly bigger text */
 }
 
 /* Style for already attempted quiz button */
 .take-quiz-button:disabled {
-  background: linear-gradient(45deg, #9ca3af, #6b7280);
-  color: #ffffff;
+  background: #EEF2FF; /* light indigo */
+  color: #4F46E5;
+  border: 1.5px solid #4F46E5;
   cursor: not-allowed;
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .take-quiz-button:disabled:hover {
-  background: linear-gradient(45deg, #9ca3af, #6b7280);
+  background: #EEF2FF;
+  color: #4F46E5;
+  border: 1.5px solid #4F46E5;
   transform: none;
-  opacity: 0.8;
+  opacity: 1;
 }
 
 /* Attempt summary styling */
 .attempt-summary {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
-  align-items: stretch;
+  padding-top: 0.75rem; /* give space from divider */
+  border-top: 1px dashed #E5E7EB;
+  flex-wrap: nowrap; /* keep on a single line when there is space */
 }
 
 .attempt-actions {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
+  flex: 1 1 auto; /* take remaining space */
+  justify-content: flex-end; /* push actions to the right */
+  flex-wrap: wrap; /* wrap if needed */
 }
 
+/* Keep score on the left and actions pushed to the right within the row */
+.attempt-summary .score-pill { margin-right: auto; }
+
 .attempt-actions .take-quiz-button {
-  flex: 1;
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0.5rem 0.8rem; /* more compact */
+  border-radius: 10px;
+  font-size: 0.9rem;
+  min-width: 130px; /* consistent button width so labels don't get truncated */
+}
+
+/* Keep compact sizing consistent for disabled state inside actions */
+.attempt-actions .take-quiz-button:disabled {
+  padding: 0.5rem 0.8rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
 }
 
 .score-pill {
-  background: linear-gradient(45deg, #fbbf24, #f59e0b);
-  color: #ffffff;
-  padding: 0.5rem 1rem;
+  background: #F3F4FF; /* softer brand background */
+  color: #4F46E5;
+  padding: 0.45rem 0.9rem;
   border-radius: 20px;
-  font-weight: 600;
+  font-weight: 600; /* softer */
   text-align: center;
-  font-size: 0.9rem;
-  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
+  font-size: 0.85rem;
+  border: 1px solid #E0E7FF; /* light indigo stroke */
+  box-shadow: none;
+  flex: 0 0 auto; /* don't let it stretch */
+}
+
+/* Circular score styles (consistent with profile page) */
+.score-circle {
+  position: relative;
+  flex: 0 0 auto;
+  margin-left: 12px; /* shift slightly to the right on this page */
+}
+
+.circle-chart { width: 80px; height: 80px; }
+.circle-bg {
+  fill: none;
+  stroke: #e9ecef;
+  stroke-width: 3.8;
+}
+.circle {
+  fill: none;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  animation: fillAnimation 1s ease-in-out forwards;
+  stroke: #198754; /* green to match profile */
+}
+@keyframes fillAnimation {
+  0% { stroke-dasharray: 0 100; }
+}
+.percentage {
+  font-size: 0.35rem;
+  font-weight: 600; /* slightly thinner */
+  fill: #198754;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+/* Responsive tweaks for very narrow cards */
+@media (max-width: 640px) {
+  .attempt-summary {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .attempt-actions {
+    justify-content: flex-start;
+  }
 }
 
 /* Admin status toggle styles */
 .admin-actions {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem; /* more room between status/btn/toggle */
   align-items: stretch;
 }
 
@@ -263,7 +415,7 @@
 .toggle-row {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem; /* increase spacing around toggle */
 }
 
 .switch-input {
@@ -391,7 +543,7 @@
 
 .stat-number {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 600; /* slightly softer */
   color: #000000;
   margin-bottom: 0.5rem;
 }
@@ -404,16 +556,26 @@
   color: #7f1d1d;
 }
 
+/* Base label color for stats cards */
 .stat-label {
   font-size: 0.9rem;
-  font-weight: 600;
-  color: rgba(0, 0, 0, 0.8);
+  font-weight: 500;
+  color: black; /* slate-700 for visibility on light backgrounds */
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
+.status-label {
+  color: black;
+  font-size: 0.9rem;
+  font-weight: 500; /* reduce emphasis */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
 .stat-item.active .stat-label {
-  color: #065f46;
+  color: #065f46; /* deep green for active */
 }
 
 .stat-item.inactive .stat-label {
@@ -454,17 +616,17 @@
 
 .search-input-wrapper {
   position: relative;
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
 .search-input {
   width: 100%;
-  padding: 1rem 3rem 1rem 1.5rem;
-  border: 2px solid #667eea;
+  padding: 1rem 2.75rem 1rem 1.5rem; /* space on right for icons */
+  border: 2px solid #e2e8f0;
   border-radius: 12px;
   font-size: 1rem;
-  background: white;
+  background: #f8fafc;
   transition: all 0.3s ease;
   outline: none;
   color: #2d3748;
@@ -480,28 +642,41 @@
   color: #718096;
 }
 
+/* Right-side search icon (shown when input is idle) */
+.search-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-image: url('../assets/images/Search Icon.png');
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: none;
+}
+
+/* Clear button matches AuthHomePage: transparent, small, right-aligned */
 .clear-search-btn {
   position: absolute;
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  background: #e2e8f0;
+  background: transparent;
   border: none;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  width: 2rem;
-  height: 2rem;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  font-size: 1.25rem;
-  color: #718096;
-  transition: all 0.2s ease;
 }
 
 .clear-search-btn:hover {
-  background: #cbd5e0;
-  color: #4a5568;
+  background: #f1f5f9;
 }
 
 .search-results {

@@ -32,12 +32,11 @@ function LoginForm() {
         const token = response.data.accessToken;
         localStorage.setItem("accessToken", token);
         window.location.href = "/";
-        alert("User logged in successfully!");
       })
       .catch((error) => {
         console.log("error => ", error);
         const errors = error?.response?.data?.message || "An error occurred";
-        alert(errors);
+        console.error("Login error:", errors);
       })
       .finally(() => {
         setIsLoading(false);

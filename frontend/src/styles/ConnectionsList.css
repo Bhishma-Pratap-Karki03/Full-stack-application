@@ -1,0 +1,159 @@
+.connections-list {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.connections-list h2 {
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.no-connections {
+  text-align: center;
+  padding: 60px 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  color: #666;
+}
+
+.no-connections p {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+}
+
+.connections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.connection-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.connection-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.connection-card .profile-picture {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #e0e0e0;
+  margin: 0 auto 16px;
+  display: block;
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.connection-info h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 20px;
+}
+
+.connection-info .email {
+  color: #666;
+  margin: 0 0 8px 0;
+  font-size: 14px;
+}
+
+.connected-date {
+  color: #999;
+  font-size: 12px;
+  margin: 0 0 20px 0;
+}
+
+.connection-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.view-profile-btn, .message-btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.view-profile-btn {
+  background: #4f46e5;
+  color: white;
+  border: 2px solid #4f46e5;
+}
+
+.view-profile-btn:hover {
+  background: #4f46e5;
+  border-color: #4f46e5;
+  color: white;
+  text-decoration: none;
+}
+
+.message-btn {
+  background: transparent; /* icon-only */
+  border: none;
+  padding: 0; /* remove button padding */
+  width: 40px; /* tappable area */
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.message-btn:hover,
+.message-btn:focus,
+.message-btn:active {
+  background: transparent; /* no hover effect */
+  border: none;
+  color: inherit;
+  transform: none;
+}
+
+/* messenger image size */
+.message-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: inline-block;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .connections-list {
+    padding: 10px;
+  }
+  
+  .connections-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .connection-actions {
+    flex-direction: column;
+  }
+  
+  .view-profile-btn, .message-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

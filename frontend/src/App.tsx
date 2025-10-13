@@ -13,11 +13,16 @@ import ListQuestionSetPage from "./pages/QuestionSet/ListQuestionSetPage";
 import AttemptQuizPage from "./pages/QuestionSet/AttemptQuizPage";
 import AdminViewQuestionSetPage from "./pages/QuestionSet/AdminViewQuestionSetPage";
 import ViewQuizResultsPage from "./pages/QuestionSet/ViewQuizResultsPage";
+import QuizResultsAllPage from "./pages/QuizResultsAllPage";
 import AdminContactManagementPage from "./pages/AdminContactManagementPage";
 import { jwtDecode } from "jwt-decode";
 import ContactPage from "./pages/ContactPage";
 import Profile from "./components/Profile/Profile";
 import ViewUserProfile from "./components/Profile/ViewUserProfile"; // Add this import
+import ConnectionRequestsPage from "./pages/ConnectionRequestsPage";
+import ConnectionsPage from "./pages/ConnectionsPage";
+import MessagesPage from "./pages/MessagesPage";
+import ChatPage from "./pages/ChatPage";
 
 export interface IAuthState {
   isAuth: boolean;
@@ -60,7 +65,7 @@ function App() {
             Authorization: `Bearer ${accessToken}`,
           },
         })
-        .then((response) => {
+        .then(() => {
           const { role }: JWTDecode = jwtDecode(accessToken as string);
           setAuthState((prev) => ({
             ...prev,
@@ -69,7 +74,7 @@ function App() {
           }));
           setIsLoading(false);
         })
-        .catch((error) => {
+        .catch(() => {
           localStorage.clear();
           setIsLoading(false);
         });
@@ -119,9 +124,23 @@ function App() {
                   path="/quiz/result/:questionSetId"
                   element={<ViewQuizResultsPage />}
                 />
+                <Route
+                  path="/quiz/results/all"
+                  element={<QuizResultsAllPage />}
+                />
+                <Route
+                  path="/quiz/results/all/:userId"
+                  element={<QuizResultsAllPage />}
+                />
                 <Route path="/profile" element={<Profile />} />
                 {/* Add this route for viewing other users' profiles */}
                 <Route path="/profile/:id" element={<ViewUserProfile />} />
+                
+                {/* Professional networking routes */}
+                <Route path="/connections" element={<ConnectionsPage />} />
+                <Route path="/connection-requests" element={<ConnectionRequestsPage />} />
+                <Route path="/messages" element={<MessagesPage />} />
+                <Route path="/messages/:userId" element={<ChatPage />} />
               </>
             )}
 

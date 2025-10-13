@@ -1,14 +1,16 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./styles/RegisterForm.css"; // Import the CSS styles
 import skillSyncLogo from "./assets/images/SkillSync Logo Design.png";
+import profileIcon from "./assets/images/Profile.png";
 
 function RegisterForm() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -25,9 +27,18 @@ function RegisterForm() {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (e.target.files && e.target.files[0]) {
-      setProfilePicture(e.target.files[0]);
+      const file = e.target.files[0];
+      setProfilePicture(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,7 +59,6 @@ function RegisterForm() {
         },
       })
       .then((response) => {
-        alert("User registered successfully!");
         // Reset form
         setName("");
         setEmail("");
@@ -59,7 +69,7 @@ function RegisterForm() {
       .catch((error) => {
         console.log("error => ", error);
         const errors = error?.response?.data?.message || "An error occurred";
-        alert(errors);
+        console.error("Registration error:", errors);
       })
       .finally(() => {
         setIsLoading(false);
@@ -134,20 +144,42 @@ function RegisterForm() {
             <label htmlFor="profilePicture" className="form-label">
               Profile Picture:
             </label>
-            <input
-              type="file"
-              name="profilePicture"
-              accept="image/*"
-              onChange={handleProfilePictureChange}
-              className="form-input"
-            />
-            {profilePicture && (
-              <p
-                style={{ fontSize: "14px", color: "#4f46e5", marginTop: "5px" }}
-              >
-                Selected: {profilePicture.name}
-              </p>
-            )}
+            <div className="file-upload">
+              {previewUrl ? (
+                <img src={previewUrl} alt="Preview" className="avatar-preview" />
+              ) : (
+                <img src={profileIcon} alt="Default avatar" className="avatar-preview" />
+              )}
+
+              <input
+                id="profilePicture"
+                type="file"
+                name="profilePicture"
+                accept="image/*"
+                onChange={handleProfilePictureChange}
+                className="file-input-hidden"
+              />
+              <label htmlFor="profilePicture" className="file-upload-button">
+                Choose file
+              </label>
+              <span className="file-name">
+                {profilePicture ? profilePicture.name : "No file chosen"}
+              </span>
+              {profilePicture && (
+                <button
+                  type="button"
+                  className="file-remove-button"
+                  onClick={() => {
+                    setProfilePicture(null);
+                    if (previewUrl) URL.revokeObjectURL(previewUrl);
+                    setPreviewUrl(null);
+                  }}
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+            <p className="file-hint">PNG, JPG up to 2MB. Square images look best.</p>
           </div>
 
           <button

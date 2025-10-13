@@ -1,13 +1,48 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 import "../styles/Navbar.css";
 import skillSyncLogo from "../assets/images/SkillSync Logo Design.png";
+import axios from "axios";
+import menuIcon from "../assets/images/Menu.png";
+import requestIcon from "../assets/images/Request.png";
+import messageFriendIcon from "../assets/images/MessageFriend.png";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isNetworkingDrawerOpen, setIsNetworkingDrawerOpen] = useState(false);
+  const [pendingRequestsCount, setPendingRequestsCount] = useState(0);
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const { isAuth, roleState, setAuthState } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuth && roleState === "professional") {
+      fetchNotificationCounts();
+      // Set up polling for real-time updates
+      const interval = setInterval(fetchNotificationCounts, 30000); // Every 30 seconds
+      return () => clearInterval(interval);
+    }
+  }, [isAuth, roleState]);
+
+  const fetchNotificationCounts = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const [pendingResponse, unreadResponse] = await Promise.all([
+        axios.get("http://localhost:3000/api/connections/pending", { headers }),
+        axios.get("http://localhost:3000/api/messages/unread-count", {
+          headers,
+        }),
+      ]);
+
+      setPendingRequestsCount(pendingResponse.data.requests.length);
+      setUnreadMessagesCount(unreadResponse.data.unreadCount);
+    } catch (error) {
+      console.error("Error fetching notification counts:", error);
+    }
+  };
 
   const logoutHandler = () => {
     localStorage.removeItem("accessToken");
@@ -19,11 +54,22 @@ function Navbar() {
     setIsMenuOpen(false);
     // Navigate to home page to show UnAuthHomePage
     navigate("/");
-    alert("User logged out successfully!");
   };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleNetworkingDrawer = () => {
+    setIsNetworkingDrawerOpen(!isNetworkingDrawerOpen);
+  };
+
+  const closeDrawer = () => {
+    setIsNetworkingDrawerOpen(false);
+  };
+
+  const getTotalNotifications = () => {
+    return pendingRequestsCount + unreadMessagesCount;
   };
 
   return (
@@ -58,8 +104,8 @@ function Navbar() {
             </NavLink>
           </li>
 
-          {/* Show About Us only for non-admin users */}
-          {roleState !== "admin" && (
+          {/* Show About Us only when not logged in */}
+          {!isAuth && (
             <li className="nav-item">
               <NavLink
                 to="/about"
@@ -73,8 +119,8 @@ function Navbar() {
             </li>
           )}
 
-          {/* Show Contact Us only for non-admin users */}
-          {roleState !== "admin" && (
+          {/* Show Contact Us only when not logged in */}
+          {!isAuth && (
             <li className="nav-item">
               <NavLink
                 to="/contact"
@@ -93,6 +139,7 @@ function Navbar() {
               <li className="nav-item">
                 <NavLink
                   to="/profile"
+                  end
                   className={({ isActive }) =>
                     `nav-link ${isActive ? "active" : ""}`
                   }
@@ -112,6 +159,26 @@ function Navbar() {
                   Question Sets
                 </NavLink>
               </li>
+
+              {/* Professional-specific navigation - Network Menu Icon */}
+              {roleState === "professional" && (
+                <li className="nav-item">
+                  <button
+                    className="nav-link network-menu-btn"
+                    onClick={toggleNetworkingDrawer}
+                    title="Network Menu"
+                  >
+                    <span className="network-icon-wrap">
+                      <img src={menuIcon} alt="Network Menu" className="network-icon-img" />
+                      {getTotalNotifications() > 0 && (
+                        <span className="notification-badge">
+                          {getTotalNotifications()}
+                        </span>
+                      )}
+                    </span>
+                  </button>
+                </li>
+              )}
 
               {/* Admin-specific navigation */}
               {roleState === "admin" && (
@@ -175,6 +242,84 @@ function Navbar() {
           )}
         </ul>
       </div>
+
+      {/* Networking Side Drawer */}
+      {roleState === "professional" && (
+        <>
+          {/* Overlay */}
+          {isNetworkingDrawerOpen && (
+            <div className="drawer-overlay" onClick={closeDrawer} />
+          )}
+
+          {/* Side Drawer */}
+          <div
+            className={`networking-drawer ${
+              isNetworkingDrawerOpen ? "open" : ""
+            }`}
+          >
+            <div className="drawer-header">
+              <h3>Network Menu</h3>
+              <button className="drawer-close-btn" onClick={closeDrawer}>
+                ✕
+              </button>
+            </div>
+
+            <div className="drawer-content">
+              <NavLink
+                to="/connections"
+                className="drawer-item"
+                onClick={closeDrawer}
+              >
+                <span className="drawer-icon">👥</span>
+                <div className="drawer-item-content">
+                  <span className="drawer-item-title">Connections</span>
+                  <span className="drawer-item-desc">
+                    View your professional network
+                  </span>
+                </div>
+              </NavLink>
+
+              <NavLink
+                to="/connection-requests"
+                className="drawer-item"
+                onClick={closeDrawer}
+              >
+                <img src={requestIcon} alt="Friend Requests" className="drawer-icon-img" />
+                <div className="drawer-item-content">
+                  <span className="drawer-item-title">Friend Requests</span>
+                  <span className="drawer-item-desc">
+                    Manage connection requests
+                  </span>
+                  {pendingRequestsCount > 0 && (
+                    <span className="notification-badge">
+                      {pendingRequestsCount}
+                    </span>
+                  )}
+                </div>
+              </NavLink>
+
+              <NavLink
+                to="/messages"
+                className="drawer-item"
+                onClick={closeDrawer}
+              >
+                <img src={messageFriendIcon} alt="Messages" className="drawer-icon-img" />
+                <div className="drawer-item-content">
+                  <span className="drawer-item-title">Messages</span>
+                  <span className="drawer-item-desc">
+                    Chat with your connections
+                  </span>
+                  {unreadMessagesCount > 0 && (
+                    <span className="notification-badge">
+                      {unreadMessagesCount}
+                    </span>
+                  )}
+                </div>
+              </NavLink>
+            </div>
+          </div>
+        </>
+      )}
     </nav>
   );
 }

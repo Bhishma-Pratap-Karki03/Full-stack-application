@@ -1,10 +1,9 @@
-
 .navbar {
   background-color: #4f46e5;
   padding: 0.5rem 2rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  min-height: 100px;
-  max-height: 100px;
+  min-height: 120px;
+  max-height: 120px;
   overflow: hidden;
 }
 
@@ -28,10 +27,11 @@
 }
 
 .nav-logo-img {
-  height: 80px;
+  height: 110px;
   width: auto;
   object-fit: contain;
-  max-height: 80px;
+  max-height: 110px;
+  filter: brightness(0) invert(1);
 }
 
 .nav-menu {
@@ -93,6 +93,207 @@
   transform: translateY(-1px);
 }
 
+/* Network Menu Button */
+.network-menu-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: 500;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem;
+  height: 100%;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  position: relative; /* anchor for notification badge */
+}
+
+.network-menu-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.network-icon {
+  font-size: 1.5rem;
+}
+
+/* Image-based network icon (Menu.png) */
+.network-icon-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: inline-block;
+  filter: brightness(0) invert(1); /* make white to match navbar */
+}
+
+/* Wrapper to anchor the red badge to the icon */
+.network-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Side Drawer Styles */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.networking-drawer {
+  position: fixed;
+  top: 0;
+  right: -350px;
+  width: 350px;
+  height: 100%;
+  background-color: white;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transition: right 0.3s ease;
+  overflow-y: auto;
+}
+
+.networking-drawer.open {
+  right: 0;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #4f46e5;
+  color: white;
+}
+
+.drawer-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.drawer-close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.drawer-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.drawer-content {
+  padding: 1rem 0;
+}
+
+.drawer-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  color: #374151;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.drawer-item:hover {
+  background-color: #f9fafb;
+}
+
+.drawer-item:last-child {
+  border-bottom: none;
+}
+
+.drawer-icon {
+  font-size: 1.5rem;
+  min-width: 24px;
+}
+
+/* Image variant for drawer icons (e.g., Request.png) */
+.drawer-icon-img {
+  width: 24px;
+  height: 24px;
+  max-width: 24px;
+  max-height: 24px;
+  object-fit: contain;
+  display: inline-block;
+}
+
+.drawer-item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  position: relative;
+}
+
+.drawer-item-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #111827;
+}
+
+.drawer-item-desc {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Notification badge styles */
+.notification-badge {
+  position: absolute;
+  top: -4px;
+  right: 0;
+  background-color: #dc3545;
+  color: #ffffff;
+  border-radius: 9999px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.95); /* white ring for contrast */
+  z-index: 1;
+}
+
+/* Network icon badge */
+.network-icon-wrap .notification-badge {
+  top: -4px;
+  right: -6px;
+}
+
+/* Drawer item badge */
+.drawer-item-content .notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translateY(-25%);
+}
+
 /* Mobile menu toggle */
 .nav-toggle {
   display: none;
@@ -131,5 +332,22 @@
   .nav-button {
     width: 100%;
     padding: 0.5rem 1rem;
+  }
+
+  /* Mobile network menu button */
+  .network-menu-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+  }
+
+  /* Mobile drawer styles */
+  .networking-drawer {
+    width: 100%;
+    right: -100%;
+  }
+
+  .networking-drawer.open {
+    right: 0;
   }
 }

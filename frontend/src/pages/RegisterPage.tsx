@@ -1,7 +1,7 @@
 import RegisterForm from "../RegisterForm";
 import PageTitle from "../components/PageTitle";
 import "../styles/RegisterPage.css";
-import registerImage from "../assets/images/Register Image.png";
+import registerImage from "../assets/images/Register.jpg";
 
 function RegisterPage() {
   return (

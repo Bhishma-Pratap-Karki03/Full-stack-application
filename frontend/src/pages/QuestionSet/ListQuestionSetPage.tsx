@@ -3,6 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/ListQuestionSet.css"; // We'll create this CSS file
 import { AuthContext } from "../../App";
+import xIcon from "../../assets/images/X Icon.png";
 
 export interface IListQuestionSet {
   _id: string;
@@ -43,6 +44,7 @@ function ListQuestionSet() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredQuestionSets, setFilteredQuestionSets] = useState<IListQuestionSet[]>([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const navigate = useNavigate();
   const { roleState } = useContext(AuthContext);
   const isAdmin = roleState === "admin";
@@ -108,6 +110,9 @@ function ListQuestionSet() {
     setSearchQuery("");
     setFilteredQuestionSets([]);
     setShowSearchResults(false);
+    // keep focus for better UX
+    const el = document.querySelector<HTMLInputElement>(".search-input");
+    el?.focus();
   };
 
   // Function to organize question sets into suggested and overall
@@ -305,13 +310,34 @@ function ListQuestionSet() {
           </div>
         ) : questionSet.attempted ? (
           <div className="attempt-summary">
-            <div className="score-pill">
-              {questionSet.score}/{questionSet.total} ({questionSet.percentage}
-              %)
+            <div className="score-circle" aria-label={`Score ${questionSet.percentage}%`}>
+              <svg
+                className="circle-chart"
+                viewBox="0 0 36 36"
+                width="80"
+                height="80"
+              >
+                <path
+                  className="circle-bg"
+                  d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path
+                  className="circle"
+                  strokeDasharray={`${questionSet.percentage}, 100`}
+                  d="M18 2.0845
+                  a 15.9155 15.9155 0 0 1 0 31.831
+                  a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <text x="18" y="20.35" className="percentage">
+                  {questionSet.percentage}%
+                </text>
+              </svg>
             </div>
             <div className="attempt-actions">
               <button className="take-quiz-button" disabled>
-                Already Attempted
+                Attempted
               </button>
               <button 
                 className="take-quiz-button"
@@ -351,9 +377,9 @@ function ListQuestionSet() {
             <p className="quiz-subtitle">
               Create and review question sets with answers
             </p>
-            <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+            <div style={{ display: "flex", gap: "1rem", marginTop: "1rem", justifyContent: "center" }}>
               <button
-                className="take-quiz-button"
+                className="take-quiz-button create-set-btn"
                 onClick={() => navigate("/admin/question/set/create")}
               >
                 Create Question Set
@@ -428,9 +454,9 @@ function ListQuestionSet() {
         )}
 
         {isAdmin && (
-          <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+          <div style={{ display: "flex", gap: "1rem", marginTop: "1rem", justifyContent: "center" }}>
             <button
-              className="take-quiz-button"
+              className="take-quiz-button create-set-btn"
               onClick={() => navigate("/admin/question/set/create")}
             >
               Create Question Set
@@ -454,15 +480,21 @@ function ListQuestionSet() {
               value={searchQuery}
               onChange={handleSearchInputChange}
               className="search-input"
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
             />
-            {searchQuery && (
+            {isSearchFocused || searchQuery.trim().length > 0 ? (
               <button
                 onClick={clearSearch}
                 className="clear-search-btn"
                 aria-label="Clear search"
+                type="button"
+                title="Clear"
               >
-                ×
+                <img src={xIcon} alt="Clear" style={{ width: 16, height: 16 }} />
               </button>
+            ) : (
+              <span className="search-icon" aria-hidden="true"></span>
             )}
           </div>
         </div>

@@ -23,10 +23,10 @@
 }
 
 .footer-logo-img {
-  height: 80px;
+  height: 110px;
   width: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1); /* Makes the logo white */
+  filter: brightness(0) invert(1);
 }
 
 .footer-section h3 {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../App";
 import axios from "axios";
 import "../styles/AdminContactManagement.css";
@@ -46,7 +46,6 @@ function AdminContactManagementPage() {
       setContacts(response.data.contacts || []);
     } catch (error) {
       console.error("Error fetching contacts:", error);
-      alert("Error loading contact submissions");
     } finally {
       setIsLoading(false);
     }
@@ -71,7 +70,6 @@ function AdminContactManagementPage() {
       }
     } catch (error) {
       console.error("Error marking contact as read:", error);
-      alert("Error updating contact status");
     }
   };
 
@@ -94,7 +92,6 @@ function AdminContactManagementPage() {
       }
     } catch (error) {
       console.error("Error marking contact as replied:", error);
-      alert("Error updating contact status");
     }
   };
 
@@ -123,7 +120,6 @@ function AdminContactManagementPage() {
       }
     } catch (error) {
       console.error("Error deleting contact:", error);
-      alert("Error deleting contact submission");
     }
   };
 
@@ -225,40 +221,6 @@ function AdminContactManagementPage() {
                       {new Date(contact.createdAt).toLocaleDateString()} at{" "}
                       {new Date(contact.createdAt).toLocaleTimeString()}
                     </p>
-                  </div>
-                  <div className="contact-item-actions">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        markAsRead(contact._id);
-                      }}
-                      className="action-btn read-btn"
-                      disabled={
-                        contact.status === "read" ||
-                        contact.status === "replied"
-                      }
-                    >
-                      Mark Read
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        markAsReplied(contact._id);
-                      }}
-                      className="action-btn reply-btn"
-                      disabled={contact.status === "replied"}
-                    >
-                      Mark Replied
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        deleteContact(contact._id);
-                      }}
-                      className="action-btn delete-btn"
-                    >
-                      Delete
-                    </button>
                   </div>
                 </div>
               ))

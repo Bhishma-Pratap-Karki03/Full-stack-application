@@ -1,8 +1,7 @@
-import React from "react";
 import LoginForm from "../components/LoginForm";
 import PageTitle from "../components/PageTitle";
 import "../styles/LoginPage.css";
-import createAccountImage from "../assets/images/Create Account.jpg";
+import loginImage from "../assets/images/Login.jpg";
 
 function LoginPage() {
   return (
@@ -11,7 +10,7 @@ function LoginPage() {
       <div className="login-page-content">
         <div className="login-illustration">
           <img
-            src={createAccountImage}
+            src={loginImage}
             alt="Login Illustration"
             className="login-illustration-img"
           />

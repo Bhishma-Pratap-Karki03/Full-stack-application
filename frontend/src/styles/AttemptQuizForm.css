@@ -212,13 +212,43 @@
 
 /* Align the question remove button to the top-right cell */
 .question-item .remove-button {
-  align-self: start;
+  /* Match input height by stretching to the grid row height */
+  align-self: stretch;          /* fill the grid track height */
+  display: inline-flex;         /* center the text vertically */
+  align-items: center;
+  height: auto;                 /* let grid define height */
+  padding-top: 0;               /* rely on height from grid */
+  padding-bottom: 0;
 }
 
 /* Add spacing above the Add Choices button inside a question */
 .choices-container > .try-again-button {
   margin-top: 0.25rem;
   justify-self: start;
+  background-color: #1E3A8A; /* dark blue */
+  width: fit-content;
+  max-width: max-content;
+  display: inline-flex;
+  align-self: start;
+  place-self: start;
+  grid-column: auto;
+}
+
+.choices-container > .try-again-button:hover {
+  background-color: #1D4ED8; /* slightly brighter on hover */
+}
+
+/* Ensure Add Question stands out (keep green) */
+.questions-container > .try-again-button {
+  background-color: #198754; /* green */
+  width: fit-content;
+  max-width: max-content;
+  display: inline-block;
+  align-self: start;
+}
+
+.questions-container > .try-again-button:hover {
+  background-color: #157347;
 }
 
 .choice-checkbox {
@@ -262,7 +292,7 @@
 .submit-button {
   width: 100%;
   padding: 1rem;
-  background-color: #0d6efd;
+  background-color: #4F46E5; /* brand color */
   color: white;
   border: none;
   border-radius: 6px;
@@ -278,7 +308,7 @@
 }
 
 .submit-button:hover {
-  background-color: #0b5ed7;
+  background-color: #4338CA; /* darker brand shade */
 }
 
 .submit-button:disabled {
@@ -291,22 +321,26 @@
   display: flex;
   gap: 1rem;
   margin-top: 2rem;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: center;
   width: 100%;
 }
 
 .button-container .submit-button {
-  flex: 3;
+  /* Compact buttons inside the action row */
+  flex: 0 0 auto;
+  width: auto;
   max-width: none;
   margin-top: 0;
+  padding: 0.75rem 1.25rem;
 }
 
 .button-container .try-again-button {
-  flex: 1;
+  flex: 0 0 auto;
+  width: auto;
   max-width: none;
-  padding: 1rem;
-  font-size: 1.1rem;
+  padding: 0.75rem 1.25rem;
+  font-size: 1.05rem;
   font-weight: 600;
   background-color: #dc3545;
   color: white;
@@ -420,6 +454,16 @@
 
   .question-item {
     padding: 1.25rem;
+  }
+
+  /* On mobile, make action buttons full width and stacked */
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .button-container .submit-button,
+  .button-container .try-again-button {
+    width: 100%;
   }
 
   .result-score {

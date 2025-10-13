@@ -12,6 +12,8 @@ var adminRouter = require("./routes/adminRoutes");
 var contactRouter = require("./routes/contactRoute");
 var adminContactRouter = require("./routes/adminContactRoutes");
 var quizResultsRouter = require("./routes/quizResultsRoute");
+var connectionRouter = require("./routes/connectionRoutes");
+var messageRouter = require("./routes/messageRoutes");
 
 var app = express();
 app.use(cors());
@@ -39,6 +41,8 @@ app.use("/api/admin", adminRouter);
 app.use("/api/admin/contacts", adminContactRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/quiz", quizResultsRouter);
+app.use("/api/connections", connectionRouter);
+app.use("/api/messages", messageRouter);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {

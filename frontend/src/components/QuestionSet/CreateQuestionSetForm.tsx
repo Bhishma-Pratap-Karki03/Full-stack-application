@@ -37,27 +37,22 @@ function CreateQuestionSetForm() {
   const onSubmitHandler = (data: QuestionSetForm) => {
     // Client-side validation to prevent empty submissions
     if (!data.title || !data.title.trim()) {
-      alert("Title is required");
       return;
     }
     if (!Array.isArray(data.questions) || data.questions.length === 0) {
-      alert("At least one question is required");
       return;
     }
     for (let i = 0; i < data.questions.length; i++) {
       const q = data.questions[i];
       if (!q.questionText || !q.questionText.trim()) {
-        alert(`Question ${i + 1} text is required`);
         return;
       }
       if (!Array.isArray(q.choices) || q.choices.length === 0) {
-        alert(`Question ${i + 1} must have at least one choice`);
         return;
       }
       for (let j = 0; j < q.choices.length; j++) {
         const c = q.choices[j];
         if (!c.text || !c.text.trim()) {
-          alert(`Question ${i + 1} - Choice ${j + 1} text is required`);
           return;
         }
       }
@@ -71,11 +66,10 @@ function CreateQuestionSetForm() {
         },
       })
       .then(() => {
-        alert("Question set created successfully!");
         navigate("/questionset/list");
       })
       .catch(() => {
-        alert("Error creating question set");
+        console.error("Error creating question set");
       });
   };
   return (

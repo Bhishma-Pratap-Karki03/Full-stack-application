@@ -130,7 +130,6 @@ function AttemptQuizForm({
 
       if (response.data?.data) {
         setAnswer(response.data.data);
-        alert("Answer Submitted Successfully!");
       } else {
         throw new Error("Invalid response from server");
       }
@@ -146,7 +145,6 @@ function AttemptQuizForm({
       }
 
       setError(errorMessage);
-      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

@@ -1,8 +1,21 @@
+.admin-contact-container .contact-list .contact-item::after {
+  /* Vertical separator between left and right columns */
+  content: "";
+  position: absolute;
+  top: 8px;                    /* don’t touch outer stroke */
+  bottom: 8px;                 /* don’t touch outer stroke */
+  width: 2px;                  /* thin line */
+  background: #4F46E5;         /* brand color */
+  left: 52.4%;                 /* approx 1.1 / (1.1 + 1) */
+  transform: translateX(-1px); /* center the 2px line exactly */
+  opacity: 0.7;                /* subtle */
+  border-radius: 2px;
+}
 /* AdminContactManagement.css - Improved Layout */
 .admin-contact-container {
-  max-width: 1400px;
+  max-width: 1760px; /* allow more horizontal space */
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.25rem;  /* reduce side padding to free space */
   min-height: 100vh;
   background-color: #f8f9fa;
 }
@@ -18,7 +31,7 @@
 
 .admin-contact-header h1 {
   color: #4f46e5;
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 0.5rem;
 }
 
@@ -28,28 +41,34 @@
 }
 
 .admin-contact-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  /* Two-column layout on desktop: left list, right detail */
+  display: grid;
+  grid-template-columns: 520px 1fr; /* significantly wider left column */
+  gap: 1rem; /* tighter gap to reclaim space */
+  align-items: start;
   min-height: calc(100vh - 200px);
 }
 
 .contact-list-section {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  max-height: 500px;
+  height: 82vh; /* more vertical room for list */
 }
 
 .contact-list-header {
-  padding: 1.5rem;
+  padding: 1rem 1.25rem;
   border-bottom: 1px solid #e5e7eb;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: sticky; /* keep controls visible */
+  top: 0;
+  background: white;
+  z-index: 2;
 }
 
 .contact-list-header h2 {
@@ -86,6 +105,13 @@
   cursor: pointer;
   transition: all 0.2s ease;
   background: white;
+  display: grid;               /* two columns: left (subject), right (details) */
+  grid-template-columns: 1.1fr 1fr;
+  grid-template-rows: auto auto; /* Row 1: label+status, Row 2: subject */
+  column-gap: 1.25rem;         /* more space between columns */
+  row-gap: 0.25rem;
+  align-items: start;
+  position: relative;          /* enable separator positioning */
 }
 
 .contact-item:hover {
@@ -104,27 +130,50 @@
 }
 
 .contact-item-header {
+  /* Column stack: label (pseudo) → status → subject */
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: flex-start;
-  margin-bottom: 0.5rem;
+  gap: 0.15rem;
+  margin-bottom: 0.25rem;
+  grid-column: 1;             /* place header in LEFT column */
+  grid-row: 1;                /* lock to first row */
+}
+
+/* Inject small heading label without changing markup */
+.contact-item-header::before {
+  content: "Subject";
+  font-size: 0.7rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  order: 2; /* show after status */
 }
 
 .contact-subject {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 0.9rem;          /* decrease font size */
+  font-weight: 500;           /* not bold */
   color: #1f2937;
   margin: 0;
-  flex: 1;
+  line-height: 1.35;
+  order: 3;                   /* below status */
+  text-align: left;           /* ensure left alignment */
+  padding-right: 14px;        /* more distance from separator */
+  overflow-wrap: anywhere;    /* wrap when nearing the separator */
 }
 
+/* Remove previous subject label approach */
+.contact-subject::before { content: none; }
+
 .contact-status {
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: 0.15rem 0.5rem;    /* compact badge */
+  border-radius: 9999px;
+  font-size: 0.65rem;         /* smaller font */
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  align-self: flex-start;     /* top-left above label */
+  order: 1;
 }
 
 .contact-status.new {
@@ -143,59 +192,66 @@
 }
 
 .contact-item-details {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  grid-column: 2;             /* FIXED on the right side */
+  grid-row: 1 / span 2;       /* span both rows, always start at top */
+  align-self: start;          /* pin to top */
+  text-align: left;           /* left-align content */
+  padding-left: 14px;         /* add space from separator */
 }
 
 .contact-info-row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-  gap: 1rem;
+  flex-direction: column;     /* vertical order */
+  align-items: flex-start;
+  margin-bottom: 0.25rem;
+  gap: 0.25rem;
 }
 
 .contact-name {
-  font-weight: 500;
+  font-weight: 600;
   color: #374151;
   margin: 0;
-  flex: 1;
 }
 
 .contact-email {
   color: #6b7280;
-  font-size: 0.9rem;
-  margin: 0.25rem 0;
+  font-size: 0.85rem;         /* small font */
+  margin: 0.1rem 0;
 }
 
 .contact-phone {
   color: #6b7280;
-  font-size: 0.9rem;
+  font-size: 0.85rem;         /* small font */
   margin: 0;
   font-weight: 500;
-  flex-shrink: 0;
 }
 
 .contact-date {
   color: #9ca3af;
-  font-size: 0.8rem;
-  margin: 0.25rem 0;
+  font-size: 0.75rem;         /* smaller */
+  margin: 0.1rem 0;
 }
 
 .contact-item-actions {
-  display: flex;
+  display: flex;              /* same line */
   gap: 0.5rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;          /* keep in one row */
+  justify-content: space-between; /* balanced spacing left/right */
+  margin-top: 0.5rem;
 }
 
 .action-btn {
-  padding: 0.75rem 1.5rem;
+  padding: 0.45rem 0.75rem;   /* compact buttons */
   border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 500;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
   background: white;
   color: #374151;
+  flex: 1 1 0;                /* equal widths in the row */
+  text-align: center;
 }
 
 .action-btn:disabled {
@@ -225,26 +281,43 @@
 .contact-detail-section {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-height: 400px;
+  min-height: 78vh;
 }
 
-.contact-detail {
+.admin-contact-container .contact-detail {
+  /* Make this the SINGLE card wrapper for all details */
   padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  display: flex !important; /* override any grid/row from other pages */
+  flex-direction: column !important; /* enforce vertical stacking */
+  align-items: stretch;
+  gap: 1.25rem; /* consistent spacing between inner sections */
+}
+
+/* Force vertical stacking and full width for info + message blocks */
+.admin-contact-container .contact-detail > .contact-basic-info,
+.admin-contact-container .contact-detail > .contact-message {
+  width: 100% !important;
+  display: block !important;
+  float: none !important;
+}
+
+/* Actions row should align full width but keep its grid layout */
+.admin-contact-container .contact-detail > .contact-actions {
+  width: 100% !important;
+  float: none !important;
 }
 
 /* BASIC INFORMATION SECTION - TOP */
-.contact-basic-info {
-  background: #f8fafc;
-  padding: 1.5rem;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
+.admin-contact-container .contact-basic-info {
+  /* remove individual card look; keep vertical flow */
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
 }
 
 .contact-basic-info h2 {
@@ -309,52 +382,57 @@
 }
 
 /* MESSAGE CONTENT SECTION - MIDDLE */
-.contact-message {
-  background: #f8fafc;
-  padding: 1.5rem;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
+.admin-contact-container .contact-message {
+  background: transparent; /* no extra box */
+  padding: 0;
+  border-radius: 0;
+  border: none;
 }
 
-.contact-message h3 {
+.admin-contact-container .contact-message h3 {
   color: #1f2937;
-  margin-bottom: 1rem;
-  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
   font-weight: 600;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e5e7eb;
 }
 
-.message-content {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 6px;
+.admin-contact-container .message-content {
+  background: #ffffff;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
   line-height: 1.6;
   color: #374151;
   white-space: pre-wrap;
   font-size: 1rem;
   min-height: 120px;
-  border: 1px solid #e5e7eb;
-  margin-top: 1rem;
+  border: 1px solid #e5e7eb; /* keep a subtle box only for text */
 }
 
 /* ACTION BUTTONS SECTION - BOTTOM */
-.contact-actions {
-  background: #f8fafc;
-  padding: 1.5rem;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.admin-contact-container .contact-detail .contact-actions {
+  background: transparent; /* merge into single container */
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  display: grid !important; /* equal columns align to container edges */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-flow: column; /* force horizontal flow */
+  column-gap: 1rem; /* clearer spacing */
+  row-gap: 0;
   align-items: stretch;
+  align-self: stretch; /* span full width so edges align */
+  justify-items: stretch;
 }
 
-.contact-actions .action-btn {
-  min-width: 120px;
+.admin-contact-container .contact-detail .contact-actions .action-btn {
+  width: 100%; /* fill grid cell */
+  min-width: 0;
   font-size: 0.9rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 1.25rem;
   text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .no-selection {
@@ -432,15 +510,21 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .admin-contact-content {
-    gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
   }
 
-  .contact-list-section {
-    max-height: 400px;
-  }
+  .contact-list-section { height: auto; }
 
-  .contact-detail-section {
-    min-height: 350px;
+  .contact-detail-section { min-height: 350px; }
+}
+
+/* Extra-wide screens: give a bit more to the left column */
+@media (min-width: 1440px) {
+  .admin-contact-content {
+    grid-template-columns: 560px 1fr;
+    gap: 1.25rem;
   }
 }
 
@@ -463,9 +547,12 @@
     justify-content: center;
   }
 
-  .contact-actions {
-    flex-direction: column;
-    gap: 0.75rem;
+  .admin-contact-container .contact-detail .contact-actions {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-auto-flow: column;
+    column-gap: 0.75rem;
+    row-gap: 0;
   }
 
   .contact-detail {

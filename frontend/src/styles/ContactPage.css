@@ -32,6 +32,65 @@
   margin-bottom: 3rem;
 }
 
+/* Left-side redesigned info panel */
+.contact-left {
+  padding-top: 0.5rem;
+}
+
+.contact-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.1;
+  /* Brand gradient */
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 1rem;
+}
+
+.contact-subtext {
+  color: #374151;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  max-width: 42ch;
+  margin-bottom: 2rem;
+}
+
+.contact-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.contact-item-icon {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Make the raster icons look orange */
+.contact-item-icon .contact-icon {
+  width: 28px;
+  height: 28px;
+  /* Approximate purple to match brand (#4f46e5) */
+  filter: invert(22%) sepia(65%) saturate(2799%) hue-rotate(234deg) brightness(94%) contrast(94%);
+}
+
+.contact-item-text {
+  color: #111827;
+  font-size: 1.05rem;
+}
+
 .contact-info {
   display: flex;
   flex-direction: column;
@@ -106,10 +165,10 @@
 }
 
 .contact-form {
-  background-color: #f8f9fa;
+  background-color: transparent; /* remove gray background */
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: none; /* remove shadow */
 }
 
 .form-group {
@@ -245,6 +304,15 @@
   .contact-content {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+
+  .contact-title {
+    font-size: 1.9rem;
+  }
+
+  .contact-subtext {
+    font-size: 1rem;
+    max-width: none;
   }
 
   .contact-info {

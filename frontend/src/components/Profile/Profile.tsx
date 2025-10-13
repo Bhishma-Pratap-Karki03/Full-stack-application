@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../App";
 import axios from "axios";
 import "../../styles/Profile.css";
@@ -41,6 +42,7 @@ function Profile() {
   const [quizResults, setQuizResults] = useState<IQuizResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { isAuth, roleState } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   // Editing state
   const [isEditing, setIsEditing] = useState(false);
@@ -115,13 +117,13 @@ function Profile() {
     if (file) {
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
+        console.error('Please select an image file');
         return;
       }
       
       // Validate file size (5MB limit)
       if (file.size > 5 * 1024 * 1024) {
-        alert('File size must be less than 5MB');
+        console.error('File size must be less than 5MB');
         return;
       }
       
@@ -149,7 +151,6 @@ function Profile() {
       );
 
       if (skillExists) {
-        alert("This skill already exists in your profile.");
         return;
       }
 
@@ -229,7 +230,6 @@ function Profile() {
       setPreviewUrl(null);
     } catch (error) {
       console.error("Error saving profile:", error);
-      alert("Failed to save profile. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -299,7 +299,14 @@ function Profile() {
               {userData?.bio && (
                 <div className="user-bio">
                   <h3>About Me</h3>
-                  <p>{userData.bio}</p>
+                  <div className="bio-content" style={{ 
+                    whiteSpace: 'pre-line', 
+                    color: '#495057',
+                    fontSize: '0.9rem',
+                    lineHeight: '1.5'
+                  }}>
+                    {userData.bio}
+                  </div>
                 </div>
               )}
 
@@ -323,9 +330,9 @@ function Profile() {
                     href={userData.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="social-link"
+                    className="social-link github"
                   >
-                    GitHub
+                    GitHub Link
                   </a>
                 )}
                 {userData?.linkedin && (
@@ -333,9 +340,9 @@ function Profile() {
                     href={userData.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="social-link"
+                    className="social-link linkedin"
                   >
-                    LinkedIn
+                    LinkedIn Link
                   </a>
                 )}
                 {userData?.portfolioUrl && (
@@ -353,7 +360,7 @@ function Profile() {
               <div className="edit-controls">
                 {!isEditing ? (
                   <button className="btn-primary" onClick={startEditing}>
-                    Edit Profile
+                    Edit
                   </button>
                 ) : null}
               </div>
@@ -544,7 +551,17 @@ function Profile() {
 
         {roleState !== "admin" && (
           <div className="quiz-results-card">
-            <h2>Quiz Results</h2>
+            <div className="quiz-results-header-row">
+              <h2 className="quiz-results-title">Quiz Results</h2>
+              <button
+                type="button"
+                className="view-all-results-btn"
+                onClick={() => navigate("/quiz/results/all")}
+                title="View all results"
+              >
+                View All
+              </button>
+            </div>
 
             {quizResults.length === 0 ? (
               <div className="no-results">

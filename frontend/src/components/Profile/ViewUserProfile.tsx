@@ -1,8 +1,13 @@
 import { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { AuthContext } from "../../App";
 import axios from "axios";
 import "../../styles/Profile.css";
+import addUserIcon from "../../assets/images/add-user.png";
+import pendingIcon from "../../assets/images/Pending.png";
+import messengerIcon from "../../assets/images/messenger.png";
+import acceptIcon from "../../assets/images/Accept.png";
+import rejectIcon from "../../assets/images/Reject.png";
 
 interface IQuizResult {
   questionSet: {
@@ -36,39 +41,240 @@ function ViewUserProfile() {
   const [userData, setUserData] = useState<IUserProfile | null>(null);
   const [quizResults, setQuizResults] = useState<IQuizResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { isAuth } = useContext(AuthContext);
+  const [connectionStatus, setConnectionStatus] = useState<{
+    connected: boolean;
+    isPending: boolean;
+    isSender: boolean;
+    isReceiver: boolean;
+  }>({ 
+    connected: false, 
+    isPending: false, 
+    isSender: false, 
+    isReceiver: false 
+  });
+  const [sendingRequest, setSendingRequest] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [connectionId, setConnectionId] = useState<string | null>(null);
+  const { isAuth, roleState } = useContext(AuthContext);
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     if (!isAuth || !id) return;
 
     const accessToken = localStorage.getItem("accessToken");
+    
+    // Get current user ID
+    const currentId = getCurrentUserId();
+    setCurrentUserId(currentId);
 
-    // Fetch user profile data
-    Promise.all([
+    // Fetch user profile data and connection status
+    const requests = [
       axios.get(`http://localhost:3000/users/profile/${id}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken}` },
       }),
       axios.get(`http://localhost:3000/api/quiz/results/${id}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        headers: { Authorization: `Bearer ${accessToken}` },
       }),
-    ])
-      .then(([profileRes, resultsRes]) => {
+    ];
+
+    // Add connection check for professionals
+    if (roleState === "professional" && currentId !== id) {
+      requests.push(
+        axios.get(`http://localhost:3000/api/connections/check/${id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+      );
+    }
+
+    Promise.all(requests)
+      .then((responses) => {
+        const [profileRes, resultsRes] = responses;
         setUserData(profileRes.data.user);
         setQuizResults(resultsRes.data.results || []);
+        
+        if (responses[2] && roleState === "professional") {
+          const connectionData = responses[2].data;
+          setConnectionStatus({
+            connected: connectionData.connected,
+            isPending: connectionData.isPending,
+            isSender: connectionData.isSender,
+            isReceiver: connectionData.isReceiver,
+          });
+          if (connectionData.connection) {
+            setConnectionId(connectionData.connection._id);
+          }
+        }
       })
       .catch((error) => {
         console.error("Error fetching user profile or results:", error);
-        alert("Error loading user profile");
       })
       .finally(() => {
         setIsLoading(false);
       });
-  }, [isAuth, id]);
+  }, [isAuth, id, roleState]);
+
+  const getCurrentUserId = () => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setCurrentUserId(payload.id);
+        return payload.id;
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+    return null;
+  };
+
+  const sendConnectionRequest = async () => {
+    if (!id || sendingRequest) return;
+
+    setSendingRequest(true);
+    try {
+      const token = localStorage.getItem("accessToken");
+      const currentUserId = getCurrentUserId();
+      const response = await axios.post(
+        "http://localhost:3000/api/connections/send",
+        { 
+          receiverId: id, 
+          senderId: currentUserId, 
+          message: `Hi ${userData?.name}, I'd like to connect with you!` 
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      // Update connection status to show pending state
+      setConnectionStatus({
+        connected: false,
+        isPending: true,
+        isSender: true,
+        isReceiver: false
+      });
+      
+      if (response.data.connectionRequest) {
+        setConnectionId(response.data.connectionRequest._id);
+      }
+    } catch (error) {
+      console.error("Error sending connection request:", error);
+    } finally {
+      setSendingRequest(false);
+    }
+  };
+
+  // Function to get the appropriate connection button based on status
+  const renderConnectionButton = () => {
+    // If connected, show message button
+    if (connectionStatus.connected) {
+      return (
+        <Link
+          to={`/messages/${userData?._id}`}
+          className="icon-link"
+          title="Message"
+        >
+          <img src={messengerIcon} alt="Message" className="action-icon" />
+        </Link>
+      );
+    }
+    
+    // If there's a pending request
+    if (connectionStatus.isPending) {
+      // If current user is the sender, show pending state
+      if (connectionStatus.isSender) {
+        return (
+          <button 
+            className="connect-btn-small pending" 
+            disabled 
+            title="Request Sent"
+          >
+            <img src={pendingIcon} alt="Request Sent" className="action-icon" />
+            <span>Requested</span>
+          </button>
+        );
+      }
+      // If current user is the receiver, show accept/reject options
+      else if (connectionStatus.isReceiver) {
+        return (
+          <div className="connection-actions">
+            <button 
+              className="accept-request-btn"
+              onClick={() => handleAcceptRequest()}
+              title="Accept Request"
+            >
+              <img src={acceptIcon} alt="Accept" className="action-icon" />
+            </button>
+            <button 
+              className="reject-request-btn"
+              onClick={() => handleRejectRequest()}
+              title="Reject Request"
+            >
+              <img src={rejectIcon} alt="Reject" className="action-icon" />
+            </button>
+          </div>
+        );
+      }
+    }
+    
+    // Default: show connect button
+    return (
+      <button
+        onClick={sendConnectionRequest}
+        disabled={sendingRequest}
+        className="connect-btn"
+        title="Connect"
+      >
+        <img src={addUserIcon} alt="Connect" className="action-icon" />
+        {sendingRequest ? 'Sending...' : 'Connect'}
+      </button>
+    );
+  };
+  
+  const handleAcceptRequest = async () => {
+    if (!connectionId) return;
+    
+    try {
+      const token = localStorage.getItem("accessToken");
+      await axios.put(
+        `http://localhost:3000/api/connections/accept/${connectionId}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      // Update connection status to connected
+      setConnectionStatus({
+        connected: true,
+        isPending: false,
+        isSender: false,
+        isReceiver: false
+      });
+    } catch (error) {
+      console.error("Error accepting connection request:", error);
+    }
+  };
+  
+  const handleRejectRequest = async () => {
+    if (!connectionId) return;
+    
+    try {
+      const token = localStorage.getItem("accessToken");
+      await axios.put(
+        `http://localhost:3000/api/connections/reject/${connectionId}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      // Reset connection status
+      setConnectionStatus({
+        connected: false,
+        isPending: false,
+        isSender: false,
+        isReceiver: false
+      });
+      setConnectionId(null);
+    } catch (error) {
+      console.error("Error rejecting connection request:", error);
+    }
+  };
 
   if (!isAuth) {
     return (
@@ -135,7 +341,7 @@ function ViewUserProfile() {
               {userData.bio && (
                 <div className="user-bio">
                   <h3>About Me</h3>
-                  <p>{userData.bio}</p>
+                  <p style={{ whiteSpace: 'pre-line', fontSize: '0.9rem' }}>{userData.bio}</p>
                 </div>
               )}
 
@@ -159,9 +365,9 @@ function ViewUserProfile() {
                     href={userData.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="social-link"
+                    className="social-link github"
                   >
-                    GitHub
+                    GitHub Link
                   </a>
                 )}
                 {userData.linkedin && (
@@ -169,9 +375,9 @@ function ViewUserProfile() {
                     href={userData.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="social-link"
+                    className="social-link linkedin"
                   >
-                    LinkedIn
+                    LinkedIn Link
                   </a>
                 )}
                 {userData.portfolioUrl && (
@@ -185,12 +391,28 @@ function ViewUserProfile() {
                   </a>
                 )}
               </div>
+
+              {/* Connection and messaging actions for professionals */}
+              {roleState === "professional" && userData.role === "professional" && currentUserId !== id && (
+                <div className="connection-actions">
+                  {renderConnectionButton()}
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         <div className="quiz-results-card">
-          <h2>Quiz Results</h2>
+          <div className="quiz-results-header-row">
+            <h2 className="quiz-results-title">Quiz Results</h2>
+            <Link
+              to={`/quiz/results/all/${id}`}
+              className="view-all-results-btn"
+              title="View all results"
+            >
+              View All
+            </Link>
+          </div>
 
           {quizResults.length === 0 ? (
             <div className="no-results">

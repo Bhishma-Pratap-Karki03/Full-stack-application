@@ -27,12 +27,13 @@
 .profile-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #2d3748;
+  color: #4F46E5; /* brand indigo */
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+}
+
+/* Increase specificity so it wins over Profile.css which is imported after */
+.current-user-profile .profile-title {
+  color: #4F46E5; /* brand indigo */
 }
 
 .profile-subtitle {
@@ -42,10 +43,44 @@
 }
 
 .profile-card {
-  background: #f8fafc;
+  background: #ffffff; /* match Profile.css card */
   border-radius: 12px;
   padding: 1.5rem;
   border: 1px solid #e2e8f0;
+}
+
+/* Make sure absolute edit-controls inside current user card work */
+.current-user-profile .profile-card {
+  position: relative;
+}
+
+/* In current-user section, hide any legacy full-width View Profile buttons */
+.current-user-profile .view-profile-btn,
+.current-user-profile .social-link.view-profile {
+  display: none !important;
+}
+
+/* Use 'View Profile' icon for the top-right button */
+.current-user-profile .edit-controls .btn-primary {
+  background-image: url('../assets/images/View Profile.png');
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  background-size: 16px 16px;
+}
+
+/* Ensure identical look in all states for the top-right View Profile button */
+.current-user-profile .edit-controls .btn-primary,
+.current-user-profile .edit-controls .btn-primary:hover,
+.current-user-profile .edit-controls .btn-primary:active,
+.current-user-profile .edit-controls .btn-primary:focus,
+.current-user-profile .edit-controls .btn-primary:focus-visible {
+  background-color: #ffffff; /* use color only; do not reset background-image */
+  color: #4F46E5;
+  border: 1.5px solid #4F46E5;
+  box-shadow: none;
+  transform: none;
+  transition: none;
+  text-decoration: none;
 }
 
 .profile-info {
@@ -55,31 +90,28 @@
   text-align: center;
 }
 
-.profile-picture-container {
-  margin-bottom: 1.5rem;
-}
-
-.profile-picture {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid #e9d8fd;
-}
-
-.profile-picture-placeholder {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+/* Row holding the avatar: center it horizontally */
+.profile-picture-row {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 2.5rem;
-  font-weight: bold;
-  border: 4px solid #e9d8fd;
+  gap: 16px;
+  margin-bottom: 1rem;
 }
+
+/* Keep default spacing from Profile.css; no override needed for margin */
+
+/* Remove obsolete side button styles (now using .edit-controls like Profile page) */
+
+/* Keep current user's avatar size same as before (slightly larger) */
+.current-user-profile .profile-picture-container {
+  --avatar-size: 180px; /* larger than default 160px to match previous visual size */
+}
+
+/* Inherit avatar container look from Profile.css (remove overrides) */
+
+/* Use default .profile-picture-container, .profile-picture, and placeholders from Profile.css */
 
 .profile-details {
   width: 100%;
@@ -163,27 +195,6 @@
   color: #718096;
 }
 
-.social-links {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-}
-
-.social-link {
-  color: #667eea;
-  text-decoration: none;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border: 1px solid #667eea;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-}
-
-.social-link:hover {
-  background: #667eea;
-  color: white;
-}
 
 .profile-actions {
   text-align: center;
@@ -191,7 +202,7 @@
 
 .edit-profile-btn {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #4f46e5;
   color: white;
   border: none;
   border-radius: 10px;
@@ -217,12 +228,8 @@
 .auth-home-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2d3748;
+  color: #4F46E5; /* brand indigo */
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .auth-home-subtitle {
@@ -256,18 +263,18 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
-.user-avatar {
-  width: 80px;
-  height: 80px;
+.all-professionals-container .user-avatar {
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 4px solid #e9d8fd;
   overflow: hidden;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: transparent;
+  border: none;
 }
 
 .profile-picture {
@@ -276,9 +283,20 @@
   object-fit: cover;
   border-radius: 50%;
   transition: transform 0.3s ease;
+  display: block;
 }
 
-.profile-picture:hover {
+/* Ensure images inside All Professionals cards fill the avatar circle,
+   even if other global .profile-picture rules exist */
+.all-professionals-container .user-avatar .profile-picture {
+  width: 70%;
+  height: 70%;
+}
+
+/* Limit hover zoom to cards on Auth Home lists only */
+.all-professionals-container .profile-picture:hover,
+.search-results .profile-picture:hover,
+.users-grid .user-card .profile-picture:hover {
   transform: scale(1.05);
 }
 
@@ -296,21 +314,28 @@
 }
 
 .user-info {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.user-name {
-  font-size: 1.25rem;
-  font-weight: 600;
+/* Explicitly scope name size for cards on this page to avoid global overrides */
+.all-professionals-container .user-name,
+.search-results .user-name,
+.users-grid .user-card .user-name {
+  font-size: 24px;
+  font-weight: 600; /* softer weight for minimal look */
   color: #2d3748;
-  margin-bottom: 0.5rem;
+  margin: 0;
 }
 
 .user-email {
   color: #718096;
   font-size: 0.95rem;
-  margin-bottom: 1rem;
+  margin: 0;
   word-break: break-word;
 }
 
@@ -335,12 +360,13 @@
 
 .user-actions {
   width: 100%;
+  margin-top: 0.75rem;
 }
 
 .view-profile-btn {
   width: 100%;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #4f46e5;
   color: white;
   border: none;
   border-radius: 10px;
@@ -353,12 +379,47 @@
 }
 
 .view-profile-btn:hover {
+  background-color: #4f46e5; /* keep brand color on hover */
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 .view-profile-btn:active {
+  background-color: #4f46e5; /* keep brand color on active */
   transform: translateY(0);
+}
+
+.view-profile-btn:focus-visible {
+  outline: 2px solid #c7d2fe; /* indigo-200 */
+  outline-offset: 2px;
+}
+
+/* Current user "View Profile" button shares different class name */
+.edit-profile-btn {
+  background-color: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-profile-btn:hover {
+  background-color: #4f46e5; /* keep brand color on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.edit-profile-btn:active {
+  background-color: #4f46e5;
+  transform: translateY(0);
+}
+
+.edit-profile-btn:focus-visible {
+  outline: 2px solid #c7d2fe;
+  outline-offset: 2px;
 }
 
 .no-users {
@@ -417,12 +478,8 @@
 .search-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #2d3748;
+  color: #4F46E5; /* brand indigo */
   margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .search-subtitle {
@@ -459,28 +516,71 @@
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
+.search-icon {
+  position: absolute;
+  right: 1rem;          /* place on the right */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-image: url('../assets/images/Search Icon.png');
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease-in-out;
+}
+
 .clear-search-btn {
   position: absolute;
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
+  background: transparent;
   border: none;
-  font-size: 1.5rem;
-  color: #a0aec0;
   cursor: pointer;
-  width: 2rem;
-  height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  transition: all 0.2s ease;
+  background-image: url('../assets/images/X Icon.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 16px 16px;
+  opacity: 0;              /* hidden by default */
+  visibility: hidden;      /* hidden by default */
+  pointer-events: none;    /* disabled by default */
+  transition: opacity 0.15s ease-in-out, background-color 0.2s ease;
 }
 
 .clear-search-btn:hover {
   background: #f1f5f9;
-  color: #4a5568;
+}
+
+/* Visibility logic */
+/* Show search icon only when input is empty (placeholder-shown) and not focused */
+.search-input:placeholder-shown + .search-icon {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* When input has content or is focused, show clear button and hide search icon */
+.search-input:not(:placeholder-shown) ~ .clear-search-btn,
+.search-input:focus ~ .clear-search-btn {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.search-input:not(:placeholder-shown) + .search-icon,
+.search-input:focus + .search-icon {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Add left padding so text doesn't overlap the search icon when visible */
+.search-input {
+  padding-right: 2.75rem; /* space for right-side icons */
 }
 
 .search-results {
@@ -529,13 +629,142 @@
 .professionals-title {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #2d3748;
+  color: #4F46E5; /* brand indigo */
   margin-bottom: 2rem;
   text-align: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+}
+
+/* Connection actions styles */
+.connection-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  justify-content: center;
+}
+
+/* Action icons - ensure no borders or strokes */
+.action-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Base button styles for all action buttons */
+.connect-btn-small,
+.message-btn-small,
+.request-sent-btn-small,
+.accept-request-btn,
+.reject-request-btn {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none !important;
+  border-radius: 50%;
+  padding: 8px;
+  margin: 0;
+  cursor: not-allowed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 1;
+}
+
+/* Make pending icon darker */
+.request-sent-btn-small .action-icon {
+  filter: brightness(0.4) contrast(1.2);
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+/* Hover effect for better visibility */
+.request-sent-btn-small:hover .action-icon {
+  filter: brightness(0.3) contrast(1.3);
+}
+
+/* Hover effects */
+.connect-btn-small:hover,
+.message-btn-small:hover,
+.request-sent-btn-small:hover,
+.accept-request-btn:hover,
+.reject-request-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  transform: scale(1.1);
+}
+
+/* Active state */
+.connect-btn-small:active,
+.message-btn-small:active,
+.request-sent-btn-small:active,
+.accept-request-btn:active,
+.reject-request-btn:active {
+  transform: scale(0.95);
+}
+
+/* Focus state - using box-shadow instead of outline for better visual */
+.connect-btn-small:focus-visible,
+.message-btn-small:focus-visible,
+.request-sent-btn-small:focus-visible,
+.accept-request-btn:focus-visible,
+.reject-request-btn:focus-visible {
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.4) !important;
+}
+
+/* Ensure accept and reject buttons stay on the same line */
+.connection-request-actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure consistent button sizing */
+.accept-request-btn,
+.reject-request-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.accept-request-btn:hover {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.reject-request-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Ensure icons are properly sized */
+.accept-request-btn img,
+.reject-request-btn img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* Disabled state */
+.connect-btn-small:disabled,
+.request-sent-btn-small:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
 }
 
 /* Responsive Design */
@@ -580,14 +809,9 @@
     text-align: center;
   }
 
-  .profile-picture,
-  .profile-picture-placeholder {
-    width: 100px;
-    height: 100px;
-  }
-
-  .profile-picture-placeholder {
-    font-size: 2rem;
+  /* Match previous tablet avatar sizing for current user */
+  .current-user-profile .profile-picture-container {
+    --avatar-size: 140px;
   }
 
   .user-bio,
@@ -617,13 +841,25 @@
     padding: 1.25rem;
   }
 
-  .user-avatar {
-    width: 70px;
-    height: 70px;
+  .all-professionals-container .user-avatar {
+    width: 150px;
+    height: 150px;
+  }
+
+  /* Tablet name size */
+  .all-professionals-container .user-name,
+  .search-results .user-name,
+  .users-grid .user-card .user-name {
+    font-size: 24px;
   }
 
   .avatar-fallback {
     font-size: 1.75rem;
+  }
+
+  /* Ensure placeholders look balanced */
+  .current-user-profile .profile-picture-placeholder {
+    font-size: 2.2rem;
   }
 }
 
@@ -636,21 +872,28 @@
     font-size: 1.5rem;
   }
 
-  .profile-picture,
-  .profile-picture-placeholder {
-    width: 80px;
-    height: 80px;
+  /* Phone avatar sizing for current user */
+  .current-user-profile .profile-picture-container {
+    --avatar-size: 120px;
   }
 
-  .profile-picture-placeholder {
-    font-size: 1.75rem;
+  .current-user-profile .profile-picture-placeholder {
+    font-size: 1.9rem;
   }
+}
+
+/* Current user: make GitHub and LinkedIn two equal columns */
+.current-user-profile .social-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: stretch;
+}
 
   .auth-home-header {
     margin-bottom: 2rem;
     padding: 1rem 0;
   }
-
   .auth-home-title {
     font-size: 1.75rem;
   }
@@ -667,4 +910,19 @@
     padding: 0.6rem 1.2rem;
     font-size: 0.9rem;
   }
-}
+
+  /* Ensure professional avatars remain clearly visible on small screens */
+  .all-professionals-container .user-avatar {
+    width: 130px;
+    height: 130px;
+  }
+
+  /* Stack avatar row on narrow screens */
+  .profile-picture-row {
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .view-profile-side-btn {
+    width: 100%;
+  }

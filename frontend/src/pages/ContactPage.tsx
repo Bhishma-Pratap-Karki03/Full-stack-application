@@ -39,32 +39,12 @@ function ContactPage() {
       });
     }
   };
-
   const validateForm = () => {
-    if (!formData.name.trim()) {
-      alert("Name is required");
-      return false;
-    }
-    if (!formData.email.trim()) {
-      alert("Email is required");
-      return false;
-    }
-    if (!formData.phone.trim()) {
-      alert("Phone number is required");
-      return false;
-    }
-    if (formData.phone.length !== 10) {
-      alert("Phone number must be exactly 10 digits");
-      return false;
-    }
-    if (!formData.subject.trim()) {
-      alert("Subject is required");
-      return false;
-    }
-    if (!formData.message.trim()) {
-      alert("Message is required");
-      return false;
-    }
+    if (!formData.name.trim()) return false;
+    if (!formData.email.trim()) return false;
+    if (!formData.phone.trim()) return false;
+    if (formData.phone.length !== 10) return false;
+    if (!formData.message.trim()) return false;
     return true;
   };
 
@@ -92,19 +72,12 @@ function ContactPage() {
           success: true,
           message: "Message sent successfully! We'll get back to you soon.",
         });
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          subject: "",
-          message: "",
-        });
+        setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
       } else {
         const errorData = await response.json();
         setSubmitStatus({
           success: false,
-          message:
-            errorData.message || "Failed to send message. Please try again.",
+          message: errorData.message || "Failed to send message. Please try again.",
         });
       }
     } catch (error) {
@@ -127,47 +100,40 @@ function ContactPage() {
         </div>
 
         <div className="contact-content">
-          <div className="contact-info">
-            <div className="contact-card">
-              <h2>Contact Information</h2>
-              <div className="contact-detail">
-                <img src={PhoneIcon} alt="Phone" className="contact-icon" />
-                <span>456-7890</span>
-              </div>
-              <div className="contact-detail">
-                <img
-                  src={LocationIcon}
-                  alt="Location"
-                  className="contact-icon"
-                />
-                <span>Kamal Pokhari, Kathmandu, Nepal</span>
-              </div>
-              <div className="contact-detail">
-                <img src={EmailIcon} alt="Email" className="contact-icon" />
-                <span>contact@skillsync.com</span>
-              </div>
-            </div>
+          <div className="contact-info contact-left">
+            <h2 className="contact-title">Contact Us</h2>
+            <p className="contact-subtext">
+              We will contact you as soon as you fill up the details or text us
+              on <strong>+977- 9708555024</strong> | <strong>support@dajuvai.com</strong>
+            </p>
 
-            <div className="contact-hours">
-              <h3>Business Hours</h3>
-              <div className="contact-detail">
-                <div>
-                  <p>Sunday - Friday: 9:00 AM - 5:00 PM</p>
-                  <p>Saturday: Closed</p>
-                </div>
-              </div>
-            </div>
+            <ul className="contact-list">
+              <li className="contact-item">
+                <span className="contact-item-icon">
+                  <img src={PhoneIcon} alt="Phone" className="contact-icon" />
+                </span>
+                <span className="contact-item-text">+977- 9708555024</span>
+              </li>
+              <li className="contact-item">
+                <span className="contact-item-icon">
+                  <img src={EmailIcon} alt="Email" className="contact-icon" />
+                </span>
+                <span className="contact-item-text">support@dajuvai.com</span>
+              </li>
+              <li className="contact-item">
+                <span className="contact-item-icon">
+                  <img src={LocationIcon} alt="Location" className="contact-icon" />
+                </span>
+                <span className="contact-item-text">Kathmandu, Nepal</span>
+              </li>
+            </ul>
           </div>
 
           <div className="contact-form">
             <h2>Send us a Message</h2>
 
             {submitStatus && (
-              <div
-                className={`submit-message ${
-                  submitStatus.success ? "success" : "error"
-                }`}
-              >
+              <div className={`submit-message ${submitStatus.success ? "success" : "error"}`}>
                 {submitStatus.message}
               </div>
             )}
@@ -210,20 +176,17 @@ function ContactPage() {
                   maxLength={10}
                   required
                 />
-                <small className="form-help">
-                  Enter exactly 10 digits (e.g., 9823209901)
-                </small>
+                <small className="form-help">Enter exactly 10 digits (e.g., 9823209901)</small>
               </div>
               <div className="form-group">
-                <label htmlFor="subject">Subject *</label>
+                <label htmlFor="subject">Subject</label>
                 <input
                   type="text"
                   id="subject"
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  placeholder="Subject"
-                  required
+                  placeholder="Subject (optional)"
                 />
               </div>
               <div className="form-group">
@@ -238,11 +201,7 @@ function ContactPage() {
                   required
                 ></textarea>
               </div>
-              <button
-                type="submit"
-                className="submit-btn"
-                disabled={isSubmitting}
-              >
+              <button type="submit" className="submit-btn" disabled={isSubmitting}>
                 {isSubmitting ? "Sending..." : "Send Message"}
               </button>
             </form>

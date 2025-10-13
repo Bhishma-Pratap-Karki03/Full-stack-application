@@ -21,24 +21,18 @@
 
 .register-illustration {
   flex: 1;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column; /* stack image and text vertically */
   padding: 40px;
   position: relative;
   overflow: hidden;
 }
 
 .register-illustration::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 1;
+  display: none;
 }
 
 .register-illustration-img {
@@ -52,26 +46,26 @@
 }
 
 .register-illustration-text {
-  position: absolute;
-  bottom: 40px;
-  left: 40px;
-  right: 40px;
-  color: white;
+  position: static; /* remove overlay */
+  margin-top: 60px; /* reduced space between image and heading */
+  padding: 0 24px; /* small side padding for narrow screens */
+  color: #1f2937; /* gray-800 for readability on light bg */
   z-index: 3;
   text-align: center;
 }
 
 .register-illustration-text h2 {
+  margin-top: 0; /* prevent margin collapse with container */
   font-size: 32px;
   font-weight: bold;
   margin-bottom: 10px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: #4f46e5; /* brand purple */
 }
 
 .register-illustration-text p {
   font-size: 18px;
-  opacity: 0.9;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  opacity: 0.95;
+  color: #374151; /* gray-700 */
 }
 
 .register-form-section {
@@ -92,14 +86,13 @@
 
   .register-illustration {
     flex: none;
-    height: 200px;
+    height: auto; /* allow content height */
     padding: 20px;
   }
 
   .register-illustration-text {
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
+    margin-top: 16px; /* reduced gap on mobile */
+    padding: 0 16px;
   }
 
   .register-illustration-text h2 {
