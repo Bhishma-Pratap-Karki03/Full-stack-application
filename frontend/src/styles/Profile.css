@@ -820,6 +820,146 @@
   margin-bottom: 1rem;
 }
 
+/* Mutual Connections Styles */
+.mutual-connections {
+  margin: 1.5rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.mutual-connections h3 {
+  font-size: 1.2rem;
+  color: #1e293b;
+  margin-bottom: 0.75rem;
+}
+
+.mutual-count {
+  display: block;
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.mutual-avatars {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  max-width: 100%;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.mutual-avatars {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.mutual-avatar-link {
+  display: inline-block;
+  position: relative;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.mutual-avatar-link:hover {
+  transform: translateY(-2px);
+  z-index: 10;
+}
+
+.mutual-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid white;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4F46E5;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.mutual-avatar-link:hover .mutual-avatar {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Tooltip styles */
+.mutual-avatar-link::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  transform: translate(-50%, -8px);
+  z-index: 20;
+}
+
+.mutual-avatar-link:hover::after {
+  opacity: 1;
+  transform: translate(-50%, -12px);
+}
+
+.mutual-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mutual-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e0e7ff;
+  color: #4F46E5;
+  font-weight: 600;
+}
+
+.more-connections {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-left: -8px;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Connection status */
+.connection-status {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+  justify-content: center;
+}
+
 /* Connection actions styles */
 .connection-actions {
   display: flex;

@@ -103,25 +103,42 @@
 }
 
 .message-btn {
-  background: transparent; /* icon-only */
-  border: none;
-  padding: 0; /* remove button padding */
-  width: 40px; /* tappable area */
+  background: #f0f0f0;
+  border: 1px solid #e0e0e0;
+  padding: 0;
+  width: 40px;
   height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  box-shadow: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.message-btn:hover,
-.message-btn:focus,
+.message-btn:hover {
+  background: #e0e0e0;
+  transform: scale(1.05);
+}
+
 .message-btn:active {
-  background: transparent; /* no hover effect */
-  border: none;
-  color: inherit;
-  transform: none;
+  transform: scale(0.98);
+}
+
+.message-btn:focus {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+/* Ensure the link takes up the full button area */
+.message-btn > * {
+  pointer-events: none;
+}
+
+/* Make sure the button is always clickable */
+.message-btn,
+.message-btn * {
+  pointer-events: auto;
 }
 
 /* messenger image size */

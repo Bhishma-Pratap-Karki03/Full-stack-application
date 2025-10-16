@@ -274,6 +274,68 @@ async function checkConnection(req, res) {
   }
 }
 
+// Get mutual connections between two users
+async function getMutualConnections(req, res) {
+  try {
+    const { userId } = req.params;
+    const currentUserId = req.user.id;
+
+    if (!userId) {
+      return res.status(400).json({
+        message: "User ID is required",
+      });
+    }
+
+    // Get current user's connections
+    const currentUserConnections = await ConnectionRequest.find({
+      $or: [
+        { sender: currentUserId, status: 'accepted' },
+        { receiver: currentUserId, status: 'accepted' }
+      ]
+    });
+
+    // Get target user's connections
+    const targetUserConnections = await ConnectionRequest.find({
+      $or: [
+        { sender: userId, status: 'accepted' },
+        { receiver: userId, status: 'accepted' }
+      ]
+    });
+
+    // Extract user IDs
+    const currentUserConnectionsIds = currentUserConnections.map(conn => 
+      conn.sender.toString() === currentUserId ? conn.receiver.toString() : conn.sender.toString()
+    );
+
+    const targetUserConnectionsIds = targetUserConnections.map(conn => 
+      conn.sender.toString() === userId ? conn.receiver.toString() : conn.sender.toString()
+    );
+
+    // Find mutual connections (excluding current user and target user)
+    const mutualConnectionIds = currentUserConnectionsIds.filter(id => 
+      targetUserConnectionsIds.includes(id) && 
+      id !== userId && 
+      id !== currentUserId
+    );
+
+    // Get details of mutual connections
+    const mutualConnections = await User.find({
+      _id: { $in: mutualConnectionIds }
+    }).select('name profilePicture');
+
+    res.status(200).json({
+      message: "Mutual connections retrieved successfully",
+      mutualConnections,
+      count: mutualConnections.length
+    });
+  } catch (error) {
+    console.error("Error fetching mutual connections:", error);
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+}
+
 module.exports = {
   sendConnectionRequest,
   getPendingRequests,
@@ -282,4 +344,5 @@ module.exports = {
   rejectConnectionRequest,
   getConnections,
   checkConnection,
+  getMutualConnections
 };

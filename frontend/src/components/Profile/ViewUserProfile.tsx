@@ -55,8 +55,36 @@ function ViewUserProfile() {
   const [sendingRequest, setSendingRequest] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [connectionId, setConnectionId] = useState<string | null>(null);
+  const [mutualConnections, setMutualConnections] = useState<Array<{
+    _id: string;
+    name: string;
+    profilePicture?: string;
+  }>>([]);
   const { isAuth, roleState } = useContext(AuthContext);
   const { id } = useParams<{ id: string }>();
+
+  // Fetch mutual connections when component mounts or id changes
+  useEffect(() => {
+    if (!isAuth || !id || !currentUserId) return;
+
+    const fetchMutualConnections = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await axios.get(
+          `http://localhost:3000/api/connections/mutual/${id}`,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+        setMutualConnections(response.data.mutualConnections || []);
+      } catch (error) {
+        console.error("Error fetching mutual connections:", error);
+      }
+    };
+
+    // Only fetch mutual connections if viewing another user's profile
+    if (id !== currentUserId) {
+      fetchMutualConnections();
+    }
+  }, [isAuth, id, currentUserId]);
 
   useEffect(() => {
     if (!isAuth || !id) return;
@@ -183,12 +211,11 @@ function ViewUserProfile() {
       if (connectionStatus.isSender) {
         return (
           <button 
-            className="connect-btn-small pending" 
+            className="connect-btn-small" 
             disabled 
             title="Request Sent"
           >
-            <img src={pendingIcon} alt="Request Sent" className="action-icon" />
-            <span>Requested</span>
+            <img src={pendingIcon} alt="Request Sent" className="action-icon" style={{ filter: 'none' }} />
           </button>
         );
       }
@@ -220,11 +247,15 @@ function ViewUserProfile() {
       <button
         onClick={sendConnectionRequest}
         disabled={sendingRequest}
-        className="connect-btn"
+        className="connect-btn-small"
         title="Connect"
       >
-        <img src={addUserIcon} alt="Connect" className="action-icon" />
-        {sendingRequest ? 'Sending...' : 'Connect'}
+        <img 
+          src={addUserIcon} 
+          alt="Connect" 
+          className="action-icon" 
+          style={{ filter: 'none' }} 
+        />
       </button>
     );
   };
@@ -337,6 +368,53 @@ function ViewUserProfile() {
               <h2 className="user-name">{userData.name}</h2>
               <p className="user-email">{userData.email}</p>
               <p className={`user-role ${userData.role}`}>{userData.role}</p>
+
+              {/* Mutual Connections Section */}
+              {mutualConnections.length > 0 && id !== currentUserId && (
+                <div className="mutual-connections">
+                  <h3>Mutual Connections</h3>
+                  <p className="mutual-count">
+                    {mutualConnections.length} mutual connection
+                    {mutualConnections.length !== 1 ? 's' : ''}
+                  </p>
+                  <div className="mutual-avatars">
+                    {mutualConnections.slice(0, 5).map((conn, idx) => (
+                      <Link 
+                        to={`/profile/${conn._id}`}
+                        key={conn._id} 
+                        className="mutual-avatar-link"
+                        style={{ zIndex: 5 - idx, marginLeft: idx > 0 ? -8 : 0 }}
+                        title={conn.name}
+                      >
+                        <div className="mutual-avatar">
+                          {conn.profilePicture ? (
+                            <img 
+                              src={`http://localhost:3000/uploads/profile-pictures/${conn.profilePicture}`}
+                              alt={conn.name}
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                                const fallback = target.parentElement?.querySelector('.mutual-avatar-fallback') as HTMLElement;
+                                if (fallback) {
+                                  fallback.style.display = 'flex';
+                                }
+                              }}
+                            />
+                          ) : null}
+                          <div className="mutual-avatar-fallback">
+                            {conn.name.charAt(0).toUpperCase()}
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                    {mutualConnections.length > 5 && (
+                      <div className="more-connections" title={`${mutualConnections.length - 5} more connections`}>
+                        +{mutualConnections.length - 5}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {userData.bio && (
                 <div className="user-bio">

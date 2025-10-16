@@ -1,9 +1,10 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import "../styles/AllQuizResults.css";
 import "../styles/Profile.css"; // reuse profile detail styles
 import "../styles/AuthHomePage.css"; // reuse skills/social pill styles
+import { AuthContext } from "../App";
 
 interface IUserSkill {
   name: string;
@@ -35,12 +36,42 @@ interface IQuizResult {
   attemptedAt: string;
 }
 
+interface IMutualConnection {
+  _id: string;
+  name: string;
+  profilePicture?: string;
+}
+
 function QuizResultsAllPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<IUserProfile | null>(null);
   const [results, setResults] = useState<IQuizResult[]>([]);
+  const [mutualConnections, setMutualConnections] = useState<IMutualConnection[]>([]);
   const navigate = useNavigate();
   const { userId } = useParams();
+  const { isAuth } = useContext(AuthContext);
+  const accessToken = localStorage.getItem("accessToken");
+  
+  // Fetch mutual connections when component mounts or userId changes
+  const fetchMutualConnections = useCallback(async () => {
+    if (!isAuth || !userId || !accessToken) return;
+    
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/connections/mutual/${userId}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setMutualConnections(response.data.mutualConnections || []);
+    } catch (error) {
+      console.error("Error fetching mutual connections:", error);
+    }
+  }, [isAuth, userId, accessToken]);
+  
+  useEffect(() => {
+    if (userId && userId !== 'me') {
+      fetchMutualConnections();
+    }
+  }, [userId, fetchMutualConnections]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
@@ -121,6 +152,53 @@ function QuizResultsAllPage() {
               <h2 className="user-name">{user.name}</h2>
               <p className="user-email">{user.email}</p>
               <p className={`user-role ${user.role}`}>{user.role}</p>
+
+              {/* Mutual Connections Section */}
+              {mutualConnections.length > 0 && userId && userId !== 'me' && (
+                <div className="mutual-connections">
+                  <h3>Mutual Connections</h3>
+                  <p className="mutual-count">
+                    {mutualConnections.length} mutual connection
+                    {mutualConnections.length !== 1 ? 's' : ''}
+                  </p>
+                  <div className="mutual-avatars">
+                    {mutualConnections.slice(0, 5).map((conn, idx) => (
+                      <Link 
+                        to={`/profile/${conn._id}`}
+                        key={conn._id} 
+                        className="mutual-avatar-link"
+                        style={{ zIndex: 5 - idx, marginLeft: idx > 0 ? -8 : 0 }}
+                        title={conn.name}
+                      >
+                        <div className="mutual-avatar">
+                          {conn.profilePicture ? (
+                            <img 
+                              src={`http://localhost:3000/uploads/profile-pictures/${conn.profilePicture}`}
+                              alt={conn.name}
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                                const fallback = target.parentElement?.querySelector('.mutual-avatar-fallback') as HTMLElement;
+                                if (fallback) {
+                                  fallback.style.display = 'flex';
+                                }
+                              }}
+                            />
+                          ) : null}
+                          <div className="mutual-avatar-fallback">
+                            {conn.name.charAt(0).toUpperCase()}
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                    {mutualConnections.length > 5 && (
+                      <div className="more-connections" title={`${mutualConnections.length - 5} more connections`}>
+                        +{mutualConnections.length - 5}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {user.bio && (
                 <div className="user-bio">

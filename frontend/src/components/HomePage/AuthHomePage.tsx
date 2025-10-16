@@ -55,6 +55,13 @@ function AuthHomePage() {
       isReceiver: boolean;
     }
   }>({});
+  interface IMutualConnection {
+    _id: string;
+    name: string;
+    profilePicture?: string;
+  }
+
+  const [mutualConnections, setMutualConnections] = useState<Record<string, IMutualConnection[]>>({});
   const [sendingRequests, setSendingRequests] = useState<{[key: string]: boolean}>({});
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [connectionIds, setConnectionIds] = useState<{[key: string]: string}>({});
@@ -62,6 +69,36 @@ function AuthHomePage() {
   const accessToken = localStorage.getItem("accessToken");
   let currentRole: string | null = null;
   let currentUserId: string | null = null;
+
+  // Fetch mutual connections for a user
+  const fetchMutualConnections = useCallback(async (userId: string) => {
+    if (!accessToken) return;
+    
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/connections/mutual/${userId}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      
+      setMutualConnections(prev => ({
+        ...prev,
+        [userId]: response.data.mutualConnections || []
+      }));
+    } catch (error) {
+      console.error("Error fetching mutual connections:", error);
+    }
+  }, [accessToken]);
+
+  // When user data is loaded, fetch mutual connections for each user
+  useEffect(() => {
+    if (users.length > 0 && accessToken && currentUserId) {
+      users.forEach(user => {
+        if (user.role === 'professional' && user._id !== currentUserId) {
+          fetchMutualConnections(user._id);
+        }
+      });
+    }
+  }, [users, accessToken, currentUserId, fetchMutualConnections]);
 
   try {
     if (accessToken) {
@@ -552,6 +589,46 @@ function AuthHomePage() {
                         View Profile
                       </button>
                       
+                      {/* Mutual connections */}
+                      {mutualConnections[user._id]?.length > 0 && (
+                        <div className="mutual-connections">
+                          <span className="mutual-count">
+                            {mutualConnections[user._id].length} mutual connection
+                            {mutualConnections[user._id].length !== 1 ? 's' : ''}
+                          </span>
+                          <div className="mutual-avatars">
+                            {mutualConnections[user._id].slice(0, 3).map((conn, idx) => (
+                              <div key={conn._id} className="mutual-avatar" 
+                                style={{ zIndex: 3 - idx, marginLeft: idx > 0 ? -8 : 0 }}>
+                                {conn.profilePicture ? (
+                                  <img 
+                                    src={`http://localhost:3000/uploads/profile-pictures/${conn.profilePicture}`}
+                                    alt={conn.name}
+                                    onError={(e) => {
+                                      const target = e.target as HTMLImageElement;
+                                      target.style.display = 'none';
+                                      const fallback = document.createElement('div');
+                                      fallback.className = 'mutual-avatar-fallback';
+                                      fallback.textContent = conn.name.charAt(0).toUpperCase();
+                                      target.parentNode?.appendChild(fallback);
+                                    }}
+                                  />
+                                ) : (
+                                  <div className="mutual-avatar-fallback">
+                                    {conn.name.charAt(0).toUpperCase()}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                            {mutualConnections[user._id].length > 3 && (
+                              <div className="more-connections">
+                                +{mutualConnections[user._id].length - 3}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
                       {/* Connection and messaging actions for professionals */}
                       {currentRole === "professional" && user.role === "professional" && user._id !== currentUserId && (
                         <div className="connection-actions">
@@ -579,14 +656,14 @@ function AuthHomePage() {
                                   onClick={() => handleAcceptRequest(user._id)}
                                   title="Accept Request"
                                 >
-                                  ✓
+                                  <img src={acceptIcon} alt="Accept" className="action-icon" />
                                 </button>
                                 <button 
                                   className="reject-request-btn"
                                   onClick={() => handleRejectRequest(user._id)}
                                   title="Reject Request"
                                 >
-                                  ✕
+                                  <img src={rejectIcon} alt="Reject" className="action-icon" />
                                 </button>
                               </div>
                             )
