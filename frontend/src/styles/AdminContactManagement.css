@@ -2,20 +2,20 @@
   /* Vertical separator between left and right columns */
   content: "";
   position: absolute;
-  top: 8px;                    /* don’t touch outer stroke */
-  bottom: 8px;                 /* don’t touch outer stroke */
-  width: 2px;                  /* thin line */
-  background: #4F46E5;         /* brand color */
-  left: 52.4%;                 /* approx 1.1 / (1.1 + 1) */
+  top: 8px; /* don’t touch outer stroke */
+  bottom: 8px; /* don’t touch outer stroke */
+  width: 2px; /* thin line */
+  background: #4f46e5; /* brand color */
+  left: 52.4%; /* approx 1.1 / (1.1 + 1) */
   transform: translateX(-1px); /* center the 2px line exactly */
-  opacity: 0.7;                /* subtle */
+  opacity: 0.7; /* subtle */
   border-radius: 2px;
 }
 /* AdminContactManagement.css - Improved Layout */
 .admin-contact-container {
   max-width: 1760px; /* allow more horizontal space */
   margin: 0 auto;
-  padding: 1.25rem;  /* reduce side padding to free space */
+  padding: 1.25rem; /* reduce side padding to free space */
   min-height: 100vh;
   background-color: #f8f9fa;
 }
@@ -24,7 +24,7 @@
   text-align: center;
   margin-bottom: 2rem;
   padding: 2rem;
-  background: white;
+  background: rgb(255, 255, 255);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -50,11 +50,12 @@
 }
 
 .contact-list-section {
-  background: white;
+  background: rgb(255, 255, 255);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   display: flex;
+  border: 2px solid #c9c8c8;
   flex-direction: column;
   height: 82vh; /* more vertical room for list */
 }
@@ -84,7 +85,7 @@
 
 .filter-select {
   padding: 0.5rem 1rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid #c9c8c8;
   border-radius: 6px;
   background: white;
   font-size: 0.9rem;
@@ -98,20 +99,20 @@
 }
 
 .contact-item {
-  border: 1px solid #e5e7eb;
+  border: 1px solid #c9c8c8;
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
   background: white;
-  display: grid;               /* two columns: left (subject), right (details) */
+  display: grid; /* two columns: left (subject), right (details) */
   grid-template-columns: 1.1fr 1fr;
   grid-template-rows: auto auto; /* Row 1: label+status, Row 2: subject */
-  column-gap: 1.25rem;         /* more space between columns */
+  column-gap: 1.25rem; /* more space between columns */
   row-gap: 0.25rem;
   align-items: start;
-  position: relative;          /* enable separator positioning */
+  position: relative; /* enable separator positioning */
 }
 
 .contact-item:hover {
@@ -136,8 +137,8 @@
   align-items: flex-start;
   gap: 0.15rem;
   margin-bottom: 0.25rem;
-  grid-column: 1;             /* place header in LEFT column */
-  grid-row: 1;                /* lock to first row */
+  grid-column: 1; /* place header in LEFT column */
+  grid-row: 1; /* lock to first row */
 }
 
 /* Inject small heading label without changing markup */
@@ -151,28 +152,30 @@
 }
 
 .contact-subject {
-  font-size: 0.9rem;          /* decrease font size */
-  font-weight: 500;           /* not bold */
+  font-size: 0.9rem; /* decrease font size */
+  font-weight: 500; /* not bold */
   color: #1f2937;
   margin: 0;
   line-height: 1.35;
-  order: 3;                   /* below status */
-  text-align: left;           /* ensure left alignment */
-  padding-right: 14px;        /* more distance from separator */
-  overflow-wrap: anywhere;    /* wrap when nearing the separator */
+  order: 3; /* below status */
+  text-align: left; /* ensure left alignment */
+  padding-right: 14px; /* more distance from separator */
+  overflow-wrap: anywhere; /* wrap when nearing the separator */
 }
 
 /* Remove previous subject label approach */
-.contact-subject::before { content: none; }
+.contact-subject::before {
+  content: none;
+}
 
 .contact-status {
-  padding: 0.15rem 0.5rem;    /* compact badge */
+  padding: 0.15rem 0.5rem; /* compact badge */
   border-radius: 9999px;
-  font-size: 0.65rem;         /* smaller font */
+  font-size: 0.65rem; /* smaller font */
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  align-self: flex-start;     /* top-left above label */
+  align-self: flex-start; /* top-left above label */
   order: 1;
 }
 
@@ -193,16 +196,16 @@
 
 .contact-item-details {
   margin-bottom: 0.5rem;
-  grid-column: 2;             /* FIXED on the right side */
-  grid-row: 1 / span 2;       /* span both rows, always start at top */
-  align-self: start;          /* pin to top */
-  text-align: left;           /* left-align content */
-  padding-left: 14px;         /* add space from separator */
+  grid-column: 2; /* FIXED on the right side */
+  grid-row: 1 / span 2; /* span both rows, always start at top */
+  align-self: start; /* pin to top */
+  text-align: left; /* left-align content */
+  padding-left: 14px; /* add space from separator */
 }
 
 .contact-info-row {
   display: flex;
-  flex-direction: column;     /* vertical order */
+  flex-direction: column; /* vertical order */
   align-items: flex-start;
   margin-bottom: 0.25rem;
   gap: 0.25rem;
@@ -216,41 +219,41 @@
 
 .contact-email {
   color: #6b7280;
-  font-size: 0.85rem;         /* small font */
+  font-size: 0.85rem; /* small font */
   margin: 0.1rem 0;
 }
 
 .contact-phone {
   color: #6b7280;
-  font-size: 0.85rem;         /* small font */
+  font-size: 0.85rem; /* small font */
   margin: 0;
   font-weight: 500;
 }
 
 .contact-date {
   color: #9ca3af;
-  font-size: 0.75rem;         /* smaller */
+  font-size: 0.75rem; /* smaller */
   margin: 0.1rem 0;
 }
 
 .contact-item-actions {
-  display: flex;              /* same line */
+  display: flex; /* same line */
   gap: 0.5rem;
-  flex-wrap: nowrap;          /* keep in one row */
+  flex-wrap: nowrap; /* keep in one row */
   justify-content: space-between; /* balanced spacing left/right */
   margin-top: 0.5rem;
 }
 
 .action-btn {
-  padding: 0.45rem 0.75rem;   /* compact buttons */
-  border: 1px solid #d1d5db;
+  padding: 0.45rem 0.75rem; /* compact buttons */
+  border: 1px solid #c9c8c8;
   border-radius: 8px;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   background: white;
   color: #374151;
-  flex: 1 1 0;                /* equal widths in the row */
+  flex: 1 1 0; /* equal widths in the row */
   text-align: center;
 }
 
@@ -284,6 +287,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   display: flex;
+  border: 2px solid #c9c8c8;
   flex-direction: column;
   min-height: 78vh;
 }
@@ -405,7 +409,7 @@
   white-space: pre-wrap;
   font-size: 1rem;
   min-height: 120px;
-  border: 1px solid #e5e7eb; /* keep a subtle box only for text */
+  border: 1px solid #c9c8c8; /* keep a subtle box only for text */
 }
 
 /* ACTION BUTTONS SECTION - BOTTOM */
@@ -491,7 +495,7 @@
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #e5e7eb;
+  border: 4px solid #c9c8c8;
   border-top: 4px solid #4f46e5;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -515,9 +519,13 @@
     gap: 1.25rem;
   }
 
-  .contact-list-section { height: auto; }
+  .contact-list-section {
+    height: auto;
+  }
 
-  .contact-detail-section { min-height: 350px; }
+  .contact-detail-section {
+    min-height: 350px;
+  }
 }
 
 /* Extra-wide screens: give a bit more to the left column */

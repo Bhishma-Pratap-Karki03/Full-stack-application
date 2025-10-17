@@ -31,7 +31,7 @@
 
 .connection-card {
   background: white;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #c9c8c8;
   border-radius: 12px;
   padding: 24px;
   text-align: center;
@@ -49,7 +49,7 @@
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #e0e0e0;
+  border: 3px solid #c9c8c8;
   margin: 0 auto 16px;
   display: block;
   background-color: #f8f9fa;
@@ -104,7 +104,7 @@
 
 .message-btn {
   background: #f0f0f0;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #c9c8c8;
   padding: 0;
   width: 40px;
   height: 40px;

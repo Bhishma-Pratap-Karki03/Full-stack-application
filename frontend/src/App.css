@@ -8,6 +8,7 @@
 .main-content {
   flex: 1;
   padding: 20px;
+  background-color: #ffffff;
 }
 
 /* Loading spinner styles */

@@ -23,6 +23,9 @@ import ConnectionRequestsPage from "./pages/ConnectionRequestsPage";
 import ConnectionsPage from "./pages/ConnectionsPage";
 import MessagesPage from "./pages/MessagesPage";
 import ChatPage from "./pages/ChatPage";
+import OTPVerification from "./components/OTPVerification";
+import ResetPasswordOTP from "./components/ResetPasswordOTP";
+import ForgotPassword from "./components/ForgotPassword";
 
 export interface IAuthState {
   isAuth: boolean;
@@ -106,6 +109,12 @@ function App() {
               <>
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/verify-email" element={<OTPVerification />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route
+                  path="/reset-password-otp"
+                  element={<ResetPasswordOTP />}
+                />
               </>
             )}
 
@@ -135,10 +144,13 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
                 {/* Add this route for viewing other users' profiles */}
                 <Route path="/profile/:id" element={<ViewUserProfile />} />
-                
+
                 {/* Professional networking routes */}
                 <Route path="/connections" element={<ConnectionsPage />} />
-                <Route path="/connection-requests" element={<ConnectionRequestsPage />} />
+                <Route
+                  path="/connection-requests"
+                  element={<ConnectionRequestsPage />}
+                />
                 <Route path="/messages" element={<MessagesPage />} />
                 <Route path="/messages/:userId" element={<ChatPage />} />
               </>

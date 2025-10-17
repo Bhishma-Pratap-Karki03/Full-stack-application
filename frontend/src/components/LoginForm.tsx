@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 import "../styles/LoginForm.css";
 import skillSyncLogo from "../assets/images/SkillSync Logo Design.png";
@@ -8,39 +9,62 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const { setAuthState } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    const finalData = {
-      email,
-      password,
-    };
+    setError(""); // Clear previous errors
 
-    axios
-      .post("http://localhost:3000/users/login", finalData)
-      .then((response) => {
-        const token = response.data.accessToken;
-        localStorage.setItem("accessToken", token);
-        window.location.href = "/";
-      })
-      .catch((error) => {
-        console.log("error => ", error);
-        const errors = error?.response?.data?.message || "An error occurred";
-        console.error("Login error:", errors);
-      })
-      .finally(() => {
-        setIsLoading(false);
+    try {
+      const response = await axios.post("http://localhost:3000/users/login", {
+        email,
+        password,
       });
+
+      const token = response.data.accessToken;
+      localStorage.setItem("accessToken", token);
+      window.location.href = "/";
+    } catch (error: any) {
+      console.error("Login error:", error);
+
+      // Handle unverified user
+      if (
+        error.response?.status === 403 &&
+        error.response.data.requiresVerification
+      ) {
+        // Redirect to verification page with userId and email
+        navigate(
+          `/verify-email?userId=${
+            error.response.data.userId
+          }&email=${encodeURIComponent(email)}`
+        );
+        return;
+      }
+
+      setError(
+        error.response?.data?.message ||
+          "Invalid email or password. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Navigate to forgot password page
+  const handleForgotPassword = () => {
+    navigate("/forgot-password");
   };
 
   return (
@@ -90,9 +114,29 @@ function LoginForm() {
           <button type="submit" disabled={isLoading} className="login-button">
             {isLoading ? "Logging in..." : "Login"}
           </button>
+
+          {error && <div className="error-message">{error}</div>}
+
+          <div className="forgot-password-section">
+            <button
+              type="button"
+              onClick={handleForgotPassword}
+              className="forgot-password-link"
+            >
+              Forgot Password?
+            </button>
+          </div>
+
+          <div className="signup-redirect">
+            Don't have an account?{" "}
+            <a href="/register" className="signup-link">
+              Sign up
+            </a>
+          </div>
         </form>
       </div>
     </div>
   );
 }
+
 export default LoginForm;

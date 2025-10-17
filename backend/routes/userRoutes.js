@@ -7,6 +7,7 @@ const {
   updateProfileMeController,
   viewMyProfileController,
   viewProfileofUserController,
+  changePassword,
 } = require("../controller/userController");
 const { validateTokenMiddleware } = require("../middleware/AuthMiddleware");
 var router = express.Router();
@@ -19,6 +20,8 @@ router.get("/", function (req, res) {
 });
 router.post("/create", createUserController);
 router.post("/login", loginHandleController);
+// Add this route to your userRoutes.js
+router.post("/change-password", validateTokenMiddleware, changePassword);
 router.get("/list", validateTokenMiddleware, getUserListController);
 
 router.put("/profile", validateTokenMiddleware, updateProfileMeController);

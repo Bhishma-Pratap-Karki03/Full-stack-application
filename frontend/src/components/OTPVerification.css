@@ -1,0 +1,224 @@
+.otp-verification-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: #f9fafb;
+}
+
+.otp-verification-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.otp-header h2 {
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.otp-header p {
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.email-display {
+  color: #4f46e5 !important;
+  font-weight: 600;
+  margin-bottom: 1.5rem !important;
+}
+
+.otp-form {
+  margin: 1.5rem 0;
+}
+
+.otp-inputs {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.otp-input {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.otp-input:disabled {
+  background-color: #f9fafb;
+  cursor: not-allowed;
+}
+
+.timer-section {
+  margin-bottom: 1.5rem;
+}
+
+.timer {
+  color: #ef4444;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.timer-expired {
+  color: #dc2626;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.verify-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1rem;
+}
+
+.verify-button:hover:not(:disabled) {
+  background-color: #4338ca;
+  transform: translateY(-1px);
+}
+
+.verify-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.resend-section {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+}
+
+.resend-section p {
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.resend-button {
+  background: transparent;
+  color: #4f46e5;
+  border: 1px solid #4f46e5;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.resend-button:hover:not(:disabled) {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.resend-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  border: 1px solid #fecaca;
+}
+
+.success-message {
+  background-color: #f0fdf4;
+  color: #16a34a;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  border: 1px solid #bbf7d0;
+}
+
+.button-loader {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  display: inline-block;
+  margin-right: 8px;
+}
+/* Add to OTPVerification.css */
+.warning-message {
+  background-color: #fffbeb;
+  color: #d97706;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  border: 1px solid #fed7aa;
+}
+
+.back-to-login {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.back-button {
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.back-button:hover {
+  background-color: #f9fafb;
+  color: #374151;
+}
+
+.verification-help {
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.verification-link {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.verification-link:hover {
+  text-decoration: underline;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

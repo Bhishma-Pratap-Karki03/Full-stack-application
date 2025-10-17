@@ -50,7 +50,7 @@
   border-radius: 16px;
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e2e8f0;
+  border: 1px solid #c9c8c8;
   margin-bottom: 1.5rem;
 }
 
@@ -103,7 +103,7 @@
   padding: 1rem 1.25rem; /* slightly more horizontal breathing room */
   background-color: #f8f9fa;
   border-radius: 8px;
-  border: 1px solid #dee2e6;
+  border: 1px solid #c9c8c8;
 }
 
 .result-info { flex: 1; }

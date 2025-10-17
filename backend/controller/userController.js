@@ -146,6 +146,16 @@ async function loginHandleController(req, res) {
     });
   }
 
+  // Check if user is verified
+  if (!checkUser.isVerified) {
+    return res.status(403).json({
+      message: "Please verify your email address before logging in",
+      userId: checkUser._id,
+      email: checkUser.email,
+      requiresVerification: true,
+    });
+  }
+
   const comparePassword = await bcrypt.compare(password, checkUser.password);
   if (comparePassword) {
     const token = jwt.sign(
@@ -344,6 +354,60 @@ async function viewProfileofUserController(req, res) {
   }
 }
 
+// Change Password
+const changePassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { oldPassword, newPassword } = req.body;
+
+    console.log("🔑 Changing password for user:", userId);
+
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({
+        error: "Old password and new password are required",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        error: "New password must be at least 6 characters long",
+      });
+    }
+
+    // Find user with password selected
+    const user = await User.findById(userId).select('+password');
+    if (!user) {
+      console.log("❌ User not found:", userId);
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Verify old password
+    const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
+    if (!isOldPasswordValid) {
+      console.log("❌ Invalid old password for user:", userId);
+      return res.status(400).json({ error: "Current password is incorrect" });
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password
+    user.password = hashedPassword;
+    await user.save();
+
+    console.log("✅ Password changed successfully for:", user.email);
+
+    res.status(200).json({
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    console.error("💥 Password change error:", error);
+    res.status(500).json({
+      error: "Failed to change password. Please try again.",
+    });
+  }
+};
+
 module.exports = {
   createUserController,
   loginHandleController,
@@ -351,4 +415,5 @@ module.exports = {
   updateProfileMeController,
   viewMyProfileController,
   viewProfileofUserController,
+  changePassword,
 };

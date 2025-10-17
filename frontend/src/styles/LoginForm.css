@@ -129,6 +129,32 @@
   animation: spin 1s ease-in-out infinite;
 }
 
+/* Add to LoginForm.css */
+.forgot-password-section {
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+.forgot-password-link {
+  background: none;
+  border: none;
+  color: #4f46e5;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+}
+
+.forgot-password-link:hover {
+  color: #4338ca;
+}
+
+.signup-redirect {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

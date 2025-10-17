@@ -1,236 +1,170 @@
 import { useNavigate } from "react-router-dom";
 import "../../styles/UnAuthHomePage.css";
-import heroLearning from "../../assets/images/imageslider1.jpg";
-import onlineQuiz from "../../assets/images/Online Quiz.jpg";
+
+// images
+import logo from "../../assets/images/SkillSync Logo Design.png";
+import hero1 from "../../assets/images/hero1.jpg";
+import hero2 from "../../assets/images/hero2.jpg";
+import hero3 from "../../assets/images/hero3.jpg";
 import quizImg from "../../assets/images/Quiz.webp";
-import trackingImg from "../../assets/images/Tracking.jpg";
+import analyticsImg from "../../assets/images/Tracking.jpg";
 import communityImg from "../../assets/images/Community.png";
-import createAccountImg from "../../assets/images/Create Account.jpg";
-import professionalImg1 from "../../assets/images/Professional 1.jpg";
-import professionalImg2 from "../../assets/images/Diya.jpg";
-import heroimage from "../../assets/images/digital.png";
-import skillSyncLogo from "../../assets/images/SkillSync Logo Design.png";
+import user1 from "../../assets/images/Professional 1.jpg";
+import user2 from "../../assets/images/Diya.jpg";
 
 function UnAuthHomePage() {
   const navigate = useNavigate();
 
   return (
     <div className="unauth-home">
-      <section className="hero">
-        <div className="hero-content">
-          <div className="hero-text">
-            <div className="hero-logo">
-              <img
-                src={skillSyncLogo}
-                alt="SkillSync Logo"
-                className="hero-logo-img"
-              />
-            </div>
-            <h1 className="hero-title">
-              Master Your Skills with Professional Quizzes
-            </h1>
-            <p className="hero-subtitle">
-              Join thousands of professionals who use our curated question sets
-              to enhance their expertise, prepare for certifications, and stay
-              ahead in their careers.
-            </p>
-            <div className="hero-actions">
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate("/register")}
-              >
-                Start Learning
-              </button>
-              <button
-                className="btn btn-secondary"
-                onClick={() => navigate("/login")}
-              >
-                Sign In
-              </button>
-              <button
-                className="btn btn-ghost"
-                onClick={() => navigate("/register")}
-              >
-                Browse Questions
-              </button>
-            </div>
-            <div className="hero-stats">
-              <div className="stat">
-                <span className="stat-value">15k+</span>
-                <span className="stat-label">Questions</span>
-              </div>
-              <div className="stat">
-                <div className="stat-value">2.5k+</div>
-                <span className="stat-label">Professionals</span>
-              </div>
-              <div className="stat">
-                <span className="stat-value">4.9/5</span>
-                <span className="stat-label">Rating</span>
-              </div>
-            </div>
+      {/* HERO SECTION */}
+      <section className="hero colorful-hero">
+        <div className="hero-text">
+          <img src={logo} alt="SkillSync Logo" className="hero-logo" />
+          <h1>
+            Upskill with <span className="accent-text">Confidence</span>
+          </h1>
+          <p>
+            Build and validate your professional skills with expert-crafted
+            quizzes, smart insights, and a thriving learning community.
+          </p>
+          <div className="hero-actions">
+            <button
+              className="btn primary"
+              onClick={() => navigate("/register")}
+            >
+              Get Started Free
+            </button>
+            <button
+              className="btn secondary"
+              onClick={() => navigate("/login")}
+            >
+              Sign In
+            </button>
           </div>
-          <div className="hero-visual">
-            <div className="image-container">
-              <img
-                src={heroLearning}
-                alt="Professional learning platform"
-                className="hero-image"
-              />
-              <img
-                src={heroimage}
-                alt="Digital progress tracking"
-                className="hero-overlay"
-              />
-            </div>
-          </div>
+        </div>
+
+        <div className="hero-gallery">
+          <img src={hero1} alt="Professional team" className="hero-main" />
+          <img
+            src={hero2}
+            alt="Team collaboration"
+            className="hero-side left"
+          />
+          <img src={hero3} alt="Learning success" className="hero-side right" />
         </div>
       </section>
 
+      {/* FEATURES */}
       <section className="features">
-        <div className="container">
-          <h2 className="section-title">Why Professionals Choose Us</h2>
-          <div className="features-grid">
-            <div className="feature-card">
-              <div className="feature-icon">
-                <img
-                  src={quizImg}
-                  alt="Expert-curated quizzes"
-                  className="feature-image"
-                />
-              </div>
-              <h3 className="feature-title">Expert-Curated Content</h3>
-              <p className="feature-text">
-                Industry professionals design our question sets to match
-                real-world scenarios and current industry standards.
+        <h2 className="features-heading">
+          Everything You Need to Learn Smarter
+        </h2>
+        <div className="features-grid">
+          <div className="feature-card">
+            <div className="feature-left">
+              <img
+                src={quizImg}
+                alt="Curated Quizzes"
+                className="feature-img"
+              />
+              <h3>Curated Quizzes</h3>
+            </div>
+            <div className="feature-right">
+              <p>
+                Expert-crafted challenges designed to sharpen your practical
+                knowledge, strengthen decision-making skills, and make learning
+                more engaging.
               </p>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon">
-                <img
-                  src={trackingImg}
-                  alt="Advanced analytics"
-                  className="feature-image"
-                />
-              </div>
-              <h3 className="feature-title">Smart Analytics</h3>
-              <p className="feature-text">
-                Get detailed insights into your performance with comprehensive
-                progress tracking and personalized recommendations.
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-left">
+              <img
+                src={analyticsImg}
+                alt="Smart Analytics"
+                className="feature-img"
+              />
+              <h3>Smart Analytics</h3>
+            </div>
+            <div className="feature-right">
+              <p>
+                Gain insights through powerful analytics that track your
+                learning progress, highlight areas for improvement, and help you
+                stay focused on goals.
               </p>
             </div>
-            <div className="feature-card">
-              <div className="feature-icon">
-                <img
-                  src={communityImg}
-                  alt="Professional community"
-                  className="feature-image"
-                />
-              </div>
-              <h3 className="feature-title">Professional Network</h3>
-              <p className="feature-text">
-                Connect with peers, share knowledge, and learn from experienced
-                professionals in your field.
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-left">
+              <img
+                src={communityImg}
+                alt="Professional Network"
+                className="feature-img"
+              />
+              <h3>Professional Network</h3>
+            </div>
+            <div className="feature-right">
+              <p>
+                Connect with experts, mentors, and peers from around the world.
+                Build meaningful relationships and grow your network through a
+                thriving learning community.
+              </p>
+            </div>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-left">
+              <img
+                src={hero3}
+                alt="Continuous Growth"
+                className="feature-img"
+              />
+              <h3>Continuous Growth</h3>
+            </div>
+            <div className="feature-right">
+              <p>
+                Stay ahead with continuous learning resources, personalized
+                recommendations, and new challenges that keep your skills sharp
+                and relevant.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="how-it-works">
-        <div className="container">
-          <h2 className="section-title">Get Started in 3 Simple Steps</h2>
-          <div className="steps">
-            <div className="step">
-              <div className="step-number">1</div>
-              <div className="step-image">
-                <img src={createAccountImg} alt="Create your account" />
-              </div>
-              <h4>Create Account</h4>
-              <p>
-                Sign up in seconds and select your areas of interest and
-                expertise.
-              </p>
-            </div>
-            <div className="step">
-              <div className="step-number">2</div>
-              <div className="step-image">
-                <img src={onlineQuiz} alt="Take quizzes" />
-              </div>
-              <h4>Take Quizzes</h4>
-              <p>
-                Practice with our mobile-friendly quizzes designed for busy
-                professionals.
-              </p>
-            </div>
-            <div className="step">
-              <div className="step-number">3</div>
-              <div className="step-image">
-                <img src={trackingImg} alt="Track your progress" />
-              </div>
-              <h4>Track Progress</h4>
-              <p>
-                Monitor your improvement with detailed analytics and performance
-                insights.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      {/* TESTIMONIALS */}
       <section className="testimonials">
-        <div className="container">
-          <h2 className="section-title">Trusted by Industry Leaders</h2>
-          <div className="testimonials-grid">
-            <div className="testimonial">
-              <div className="testimonial-content">
-                <img
-                  src={professionalImg1}
-                  alt="Software Engineer"
-                  className="avatar"
-                />
-                <blockquote>
-                  "This platform transformed my interview preparation. The
-                  questions are spot-on and the analytics help me focus on my
-                  weak areas."
-                </blockquote>
-                <span className="name">Aarav, Senior Software Engineer</span>
-              </div>
-            </div>
-            <div className="testimonial">
-              <div className="testimonial-content">
-                <img
-                  src={professionalImg2}
-                  alt="Data Analyst"
-                  className="avatar"
-                />
-                <blockquote>
-                  "Perfect for continuous learning. I use it daily to keep my
-                  skills sharp and stay updated with industry trends."
-                </blockquote>
-                <span className="name">Diya, Lead Data Analyst</span>
-              </div>
-            </div>
+        <h2>What Professionals Say</h2>
+        <div className="testimonials-grid">
+          <div className="testimonial">
+            <img src={user1} alt="User 1" className="testimonial-img" />
+            <p>
+              “SkillSync gave me the structure I needed to grow my technical
+              skills efficiently.”
+            </p>
+            <span>- Aarav, Software Engineer</span>
+          </div>
+          <div className="testimonial">
+            <img src={user2} alt="User 2" className="testimonial-img" />
+            <p>
+              “The platform feels modern, intuitive, and motivating. The
+              analytics really help me stay on track.”
+            </p>
+            <span>- Diya, Data Analyst</span>
           </div>
         </div>
       </section>
 
-      <section className="cta">
-        <div className="container">
-          <div className="cta-card">
-            <h2>Ready to Elevate Your Skills?</h2>
-            <p>
-              Join thousands of professionals who are already learning smarter.
-            </p>
-            <div className="cta-actions">
-              <button
-                className="btn btn-primary"
-                onClick={() => navigate("/register")}
-              >
-                Start Free Today
-              </button>
-            </div>
-          </div>
-        </div>
+      {/* FINAL CTA */}
+      <section className="final-cta">
+        <h2>Start Building Skills That Matter</h2>
+        <p>Join professionals leveling up every day with SkillSync.</p>
+        <button className="btn primary" onClick={() => navigate("/register")}>
+          Get Started Free
+        </button>
       </section>
     </div>
   );

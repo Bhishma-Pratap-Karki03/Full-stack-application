@@ -14,6 +14,7 @@ var adminContactRouter = require("./routes/adminContactRoutes");
 var quizResultsRouter = require("./routes/quizResultsRoute");
 var connectionRouter = require("./routes/connectionRoutes");
 var messageRouter = require("./routes/messageRoutes");
+var authRouter = require("./routes/authRoutes");
 
 var app = express();
 app.use(cors());
@@ -35,6 +36,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/", indexRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/questions", questionRouter);
 app.use("/users", usersRouter);
 app.use("/api/admin", adminRouter);

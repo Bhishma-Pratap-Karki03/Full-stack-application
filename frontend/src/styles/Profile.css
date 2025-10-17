@@ -20,14 +20,14 @@
   text-align: center;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid #c9c8c8;
 }
 
 .profile-title {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: #4F46E5; /* brand indigo */
+  color: #4f46e5; /* brand indigo */
 }
 
 .profile-subtitle {
@@ -58,6 +58,133 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   height: 100%;
   box-sizing: border-box;
+  border: 2px solid #c9c8c8;
+}
+
+/* Change Password Styles */
+.change-password-card {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 2px solid #c9c8c8;
+  margin-top: 1.5rem;
+}
+
+.change-password-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.change-password-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4f46e5;
+  margin: 0;
+}
+
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.password-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.password-form-label {
+  font-weight: 600;
+  color: #212529;
+  font-size: 0.9rem;
+}
+
+.password-form-input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #c9c8c8;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #212529;
+  font-size: 0.9rem;
+}
+
+.password-form-input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+.password-message {
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.password-message.success {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.password-message.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.password-form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.btn-change-password {
+  padding: 0.6rem 1.5rem;
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-change-password:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.btn-cancel-password {
+  padding: 0.6rem 1.5rem;
+  background-color: #f8f9fa;
+  color: #495057;
+  border: 1px solid #c9c8c8;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.toggle-password-btn {
+  background: #ffffff;
+  color: #4f46e5;
+  border: 1.5px solid #4f46e5;
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.toggle-password-btn:hover {
+  background: #f8fafc;
 }
 
 /* Header row with title and action button aligned horizontally */
@@ -75,7 +202,7 @@
   margin: 0;
   font-size: 1.75rem;
   font-weight: 700;
-  color: #4F46E5;
+  color: #4f46e5;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -117,8 +244,8 @@
 
 .view-all-results-btn {
   background: #ffffff;
-  color: #4F46E5;
-  border: 1.5px solid #4F46E5;
+  color: #4f46e5;
+  border: 1.5px solid #4f46e5;
   border-radius: 8px;
   padding: 0.4rem 0.9rem;
   font-weight: 600;
@@ -159,7 +286,7 @@
   top: 12px;
   right: 12px;
   margin-top: 0; /* override any inherited spacing */
-  padding: 0;    /* keep minimal */
+  padding: 0; /* keep minimal */
 }
 
 /* Fixed circular container so 70% inner image centers reliably */
@@ -170,7 +297,7 @@
   height: var(--avatar-size);
   border-radius: 50%;
   overflow: hidden;
-  border: 4px solid #e9ecef;
+  border: 4px solid #c9c8c8;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -273,7 +400,7 @@
 .user-skills h3 {
   font-size: 1rem;
   margin-bottom: 0.75rem;
-  color: #4F46E5; /* subtle brand accent */
+  color: #4f46e5; /* subtle brand accent */
   font-weight: 700;
 }
 
@@ -289,15 +416,15 @@
   align-items: center;
   justify-content: flex-start;
   background: #ffffff; /* grouped card look */
-  border: 1px solid #eef2ff;
+  border: 1px solid #c9c8c8;
   border-radius: 12px;
   padding: 12px;
 }
 
 .skill-tag {
-  background-color: #F9FAFF; /* ultra light indigo tint */
-  color: #4F46E5;
-  border: 1px solid #E0E7FF; /* light indigo border */
+  background-color: #f9faff; /* ultra light indigo tint */
+  color: #4f46e5;
+  border: 1px solid #e0e7ff; /* light indigo border */
   padding: 0.35rem 0.6rem;
   border-radius: 9999px; /* pill */
   font-size: 0.85rem;
@@ -315,7 +442,7 @@
   content: "";
   width: 6px;
   height: 6px;
-  background: #4F46E5;
+  background: #4f46e5;
   border-radius: 50%;
   display: inline-block;
 }
@@ -364,7 +491,7 @@
   color: #111827; /* neutral dark for GitHub */
   border: 1.5px solid #111827;
   padding: 0.9rem 1.1rem 0.9rem 2.6rem; /* more space for larger logo */
-  background-image: url('../assets/images/Git Hub Logo.png');
+  background-image: url("../assets/images/Git Hub Logo.png");
   background-repeat: no-repeat;
   background-position: 14px center; /* align with content */
   background-size: 22px 22px; /* larger logo */
@@ -373,10 +500,10 @@
 /* LinkedIn button outlined to match brand feel */
 .social-link.linkedin {
   background: #ffffff;
-  color: #0A66C2; /* LinkedIn blue */
-  border: 1.5px solid #0A66C2; /* LinkedIn blue border */
+  color: #0a66c2; /* LinkedIn blue */
+  border: 1.5px solid #0a66c2; /* LinkedIn blue border */
   padding: 0.9rem 1.1rem 0.9rem 3rem; /* extra space for larger logo */
-  background-image: url('../assets/images/Linkedin logo.webp');
+  background-image: url("../assets/images/Linkedin logo.webp");
   background-repeat: no-repeat;
   background-position: 14px center; /* align logo with content */
   background-size: 30px 30px; /* larger to match GitHub's perceived size */
@@ -429,6 +556,7 @@
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 2px solid #c9c8c8;
 }
 
 .profile-form {
@@ -586,7 +714,7 @@
 }
 
 .btn-primary {
-  background-color: #4F46E5;
+  background-color: #4f46e5;
   color: #ffffff;
   margin-right: auto; /* Push to the left */
 }
@@ -615,9 +743,9 @@
 .form-actions .btn-primary:active,
 .form-actions .btn-primary:focus,
 .form-actions .btn-primary:focus-visible {
-  background-color: #4F46E5 !important;
+  background-color: #4f46e5 !important;
   color: #ffffff !important;
-  border: 1.5px solid #4F46E5 !important;
+  border: 1.5px solid #4f46e5 !important;
   background-image: none !important;
   box-shadow: none !important;
   transform: none !important;
@@ -632,8 +760,8 @@
 .form-actions .btn-secondary:focus,
 .form-actions .btn-secondary:focus-visible {
   background-color: #ffffff !important;
-  color: #4F46E5 !important;
-  border: 1.5px solid #4F46E5 !important;
+  color: #4f46e5 !important;
+  border: 1.5px solid #4f46e5 !important;
   box-shadow: none !important;
   transform: none !important;
   transition: none !important;
@@ -643,16 +771,16 @@
 /* Attractive Edit Profile button (scoped so it doesn't affect Save button) */
 .edit-controls .btn-primary {
   background: #ffffff; /* white background */
-  color: #4F46E5; /* indigo text */
+  color: #4f46e5; /* indigo text */
   padding: 0.45rem 0.9rem 0.45rem 2.1rem; /* tighter, with icon */
   border-radius: 6px; /* slightly smaller radius */
   letter-spacing: 0.1px;
   font-weight: 600;
   font-size: 0.85rem; /* smaller text */
   text-transform: none;
-  border: 1.5px solid #4F46E5; /* stroke */
+  border: 1.5px solid #4f46e5; /* stroke */
   transition: none; /* no hover animation */
-  background-image: url('../assets/images/Edit Icon.png');
+  background-image: url("../assets/images/Edit Icon.png");
   background-repeat: no-repeat;
   background-position: 10px center; /* closer to edge */
   background-size: 16px 16px; /* smaller icon */
@@ -667,8 +795,8 @@
 .edit-controls .btn-primary:focus,
 .edit-controls .btn-primary:focus-visible {
   background-color: #ffffff; /* do not reset background-image */
-  color: #4F46E5;
-  border: 1.5px solid #4F46E5;
+  color: #4f46e5;
+  border: 1.5px solid #4f46e5;
   box-shadow: none;
   transform: none;
   transition: none;
@@ -689,9 +817,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
   border-radius: 8px;
-  border: 1px solid #dee2e6;
+  border: 1px solid #c9c8c8;
 }
 
 .result-info {
@@ -733,7 +861,7 @@
 
 .circle-bg {
   fill: none;
-  stroke: #e9ecef;
+  stroke: #c9c8c8;
   stroke-width: 3.8;
 }
 
@@ -791,7 +919,7 @@
   align-items: center;
   justify-content: center;
   padding: 3rem;
-  background-color: #ffffff;
+  background-color: #c9c8c8;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
@@ -824,8 +952,8 @@
 .mutual-connections {
   margin: 1.5rem 0;
   padding: 1rem 0;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
+  border-top: 1px solid #c9c8c8;
+  border-bottom: 1px solid #c9c8c8;
   text-align: center;
 }
 
@@ -875,14 +1003,14 @@
   height: 36px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid white;
-  background: #f1f5f9;
+  border: 2px solid #c9c8c8;
+  background: #c9c8c8;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.8rem;
   font-weight: 600;
-  color: #4F46E5;
+  color: #4f46e5;
   position: relative;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
@@ -900,7 +1028,7 @@
   left: 50%;
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.8);
-  color: white;
+  color: #c9c8c8;
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.75rem;
@@ -930,7 +1058,7 @@
   align-items: center;
   justify-content: center;
   background: #e0e7ff;
-  color: #4F46E5;
+  color: #4f46e5;
   font-weight: 600;
 }
 
@@ -966,7 +1094,7 @@
   gap: 8px;
   margin-top: 20px;
   padding-top: 20px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid #c9c8c8;
   justify-content: center;
 }
 
@@ -1049,7 +1177,7 @@
   height: auto;
   padding: 8px 16px;
   border-radius: 8px;
-  background-color: #4F46E5;
+  background-color: #4f46e5;
   color: white;
   font-size: 14px;
   font-weight: 500;
@@ -1058,20 +1186,20 @@
 .connect-button.text-button:hover,
 .message-button.text-button:hover,
 .request-sent-button.text-button:hover {
-  background-color: #4338CA;
+  background-color: #4338ca;
   transform: none;
 }
 
 .request-sent-button.text-button {
-  background-color: #6B7280;
+  background-color: #6b7280;
 }
 
 .message-button.text-button {
-  background-color: #10B981;
+  background-color: #10b981;
 }
 
 .message-button.text-button:hover {
-  background-color: #0D9488;
+  background-color: #0d9488;
 }
 
 /* Responsive Design */
@@ -1146,6 +1274,22 @@
   .btn-remove-skill {
     align-self: center;
   }
+
+  /* Change Password Responsive */
+  .change-password-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .password-form-actions {
+    flex-direction: column;
+  }
+
+  .btn-change-password,
+  .btn-cancel-password {
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1206,7 +1350,7 @@
 
 /* Ensure Edit button doesn't touch the avatar/card edges on admin */
 .admin-content .edit-controls {
-  top: 40px;   /* push button farther from avatar */
+  top: 40px; /* push button farther from avatar */
   right: 28px; /* add breathing room from edge */
   z-index: 2;
 }
@@ -1224,7 +1368,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  border: 2px dashed #dee2e6;
+  border: 2px dashed #c9c8c8;
   border-radius: 12px;
   background-color: #f8f9fa;
 }
@@ -1253,7 +1397,7 @@
   color: white;
   font-size: 2.5rem;
   font-weight: bold;
-  border: 3px solid #e9ecef;
+  border: 3px solid #c9c8c8;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 

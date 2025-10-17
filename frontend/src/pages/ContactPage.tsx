@@ -104,7 +104,7 @@ function ContactPage() {
             <h2 className="contact-title">Contact Us</h2>
             <p className="contact-subtext">
               We will contact you as soon as you fill up the details or text us
-              on <strong>+977- 9708555024</strong> | <strong>support@dajuvai.com</strong>
+              on <strong>+977-9823220990</strong> | <strong>skillsyncnep2025@gmail.com</strong>
             </p>
 
             <ul className="contact-list">
@@ -112,13 +112,13 @@ function ContactPage() {
                 <span className="contact-item-icon">
                   <img src={PhoneIcon} alt="Phone" className="contact-icon" />
                 </span>
-                <span className="contact-item-text">+977- 9708555024</span>
+                <span className="contact-item-text">+977- 9823220990</span>
               </li>
               <li className="contact-item">
                 <span className="contact-item-icon">
                   <img src={EmailIcon} alt="Email" className="contact-icon" />
                 </span>
-                <span className="contact-item-text">support@dajuvai.com</span>
+                <span className="contact-item-text">skillsyncnep2025@gmail.com</span>
               </li>
               <li className="contact-item">
                 <span className="contact-item-icon">

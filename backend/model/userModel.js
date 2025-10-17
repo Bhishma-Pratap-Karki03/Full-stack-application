@@ -1,4 +1,4 @@
-const { mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
@@ -25,9 +25,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    // Add these OTP fields
+    otp: {
+      type: String,
+      default: null,
+    },
+    otpExpiry: {
+      type: Date,
+      default: null,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
-    timestamps: true, // Add timestamps for better tracking
+    timestamps: true,
   }
 );
 
