@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../App";
 import "./Footer.css";
 import skillSyncLogo from "../../assets/images/SkillSync Logo Design.png";

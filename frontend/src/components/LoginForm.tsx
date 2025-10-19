@@ -11,7 +11,7 @@ function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { setAuthState } = useContext(AuthContext);
+  useContext(AuthContext);
   const navigate = useNavigate();
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,4 +1,3 @@
-import React from "react";
 import PageTitle from "../components/PageTitle";
 import "../styles/AboutUs.css";
 import aboutProf1 from "../assets/images/About Professioanl 1.jpg";

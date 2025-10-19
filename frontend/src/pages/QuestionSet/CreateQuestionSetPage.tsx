@@ -1,4 +1,3 @@
-import React from "react";
 import CreateQuestionSetForm from "../../components/QuestionSet/CreateQuestionSetForm";
 
 function CreateQuestionSetPage() {

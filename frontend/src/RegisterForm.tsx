@@ -1,9 +1,7 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import "./styles/RegisterForm.css";
 import skillSyncLogo from "./assets/images/SkillSync Logo Design.png";
-import profileIcon from "./assets/images/Profile.png";
 import OTPVerification from "./components/OTPVerification";
 
 function RegisterForm() {
@@ -14,7 +12,6 @@ function RegisterForm() {
   const [showOTP, setShowOTP] = useState(false);
   const [userId, setUserId] = useState("");
   const [expiresIn, setExpiresIn] = useState(0);
-  const navigate = useNavigate();
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
