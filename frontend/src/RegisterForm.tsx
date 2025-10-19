@@ -3,6 +3,7 @@ import { useState } from "react";
 import "./styles/RegisterForm.css";
 import skillSyncLogo from "./assets/images/SkillSync Logo Design.png";
 import OTPVerification from "./components/OTPVerification";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function RegisterForm() {
   const [name, setName] = useState("");
@@ -39,7 +40,7 @@ function RegisterForm() {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/users/register`,
+        `${API_BASE_URL}/api/auth/register`,
         userData,
         {
           headers: {
