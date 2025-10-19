@@ -16,6 +16,8 @@ import smartSearch from "../assets/images/Smart Search.png";
 import secureConnections from "../assets/images/Secure Connections.png";
 import performanceTracking from "../assets/images/Performance Tracking.png";
 
+
+
 function AboutUsPage() {
   return (
     <>

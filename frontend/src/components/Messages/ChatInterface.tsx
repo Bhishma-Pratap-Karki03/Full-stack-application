@@ -24,6 +24,8 @@ interface Conversation {
   hasMore: boolean;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
 const ChatInterface: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const [conversation, setConversation] = useState<Conversation | null>(null);
@@ -48,7 +50,7 @@ const ChatInterface: React.FC = () => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        const payload = JSON.parse(atob(token.split(".")[1]));
         setCurrentUserId(payload.id);
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -60,14 +62,14 @@ const ChatInterface: React.FC = () => {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
-        `http://localhost:3000/api/messages/conversation/${userId}`,
+        `${API_BASE_URL}/api/messages/conversation/${userId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setConversation(response.data.conversation);
-      
+
       // Mark messages as read
       await axios.put(
-        `http://localhost:3000/api/messages/read/${userId}`,
+        `${API_BASE_URL}/api/messages/read/${userId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -86,7 +88,7 @@ const ChatInterface: React.FC = () => {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.post(
-        "http://localhost:3000/api/messages/send",
+        `${API_BASE_URL}/api/messages/send`,
         {
           receiverId: userId,
           content: newMessage.trim(),
@@ -96,12 +98,12 @@ const ChatInterface: React.FC = () => {
 
       // Add the new message to the conversation
       if (conversation) {
-        setConversation(prev => ({
+        setConversation((prev) => ({
           ...prev!,
           messages: [...prev!.messages, response.data.messageData],
         }));
       }
-      
+
       setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
@@ -113,7 +115,6 @@ const ChatInterface: React.FC = () => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -140,7 +141,7 @@ const ChatInterface: React.FC = () => {
 
   // Group messages by date
   const groupedMessages: { [key: string]: Message[] } = {};
-  conversation.messages.forEach(message => {
+  conversation.messages.forEach((message) => {
     const dateKey = formatDate(message.createdAt);
     if (!groupedMessages[dateKey]) {
       groupedMessages[dateKey] = [];
@@ -155,7 +156,7 @@ const ChatInterface: React.FC = () => {
           <img
             src={
               conversation.otherUser.profilePicture
-                ? `http://localhost:3000/uploads/profile-pictures/${conversation.otherUser.profilePicture}`
+                ? `${API_BASE_URL}/uploads/profile-pictures/${conversation.otherUser.profilePicture}`
                 : "/default-avatar.png"
             }
             alt={conversation.otherUser.name}

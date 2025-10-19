@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./OTPVerification.css";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 type OTPVerificationProps = {
   userId?: string;
@@ -45,7 +46,7 @@ const OTPVerification: React.FC<OTPVerificationProps> = (props) => {
   const checkOTPStatus = async (effectiveEmail: string) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/check-verification",
+        `${API_BASE_URL}/api/auth/check-verification`,
         { email: effectiveEmail }
       );
 
@@ -114,7 +115,7 @@ const OTPVerification: React.FC<OTPVerificationProps> = (props) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/verify-otp",
+        `${API_BASE_URL}/api/auth/verify-otp`,
         {
           userId: initialUserId,
           otp: otpString,
@@ -145,7 +146,7 @@ const OTPVerification: React.FC<OTPVerificationProps> = (props) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/resend-otp",
+        `${API_BASE_URL}/api/auth/resend-otp`,
         {
           email: initialEmail,
         }

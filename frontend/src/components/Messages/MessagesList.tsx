@@ -23,6 +23,10 @@ interface Conversation {
   conversationId: string;
 }
 
+// Use environment variable for API base URL
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
+
 const MessagesList: React.FC = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +38,7 @@ const MessagesList: React.FC = () => {
   const fetchConversations = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      const response = await axios.get("http://localhost:3000/api/messages/conversations", {
+      const response = await axios.get(`${API_BASE_URL}/api/messages/conversations`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setConversations(response.data.conversations);
@@ -82,7 +86,7 @@ const MessagesList: React.FC = () => {
                 <img
                   src={
                     conversation.otherUser.profilePicture
-                      ? `http://localhost:3000/uploads/profile-pictures/${conversation.otherUser.profilePicture}`
+                      ? `${API_BASE_URL}/uploads/profile-pictures/${conversation.otherUser.profilePicture}`
                       : "/default-avatar.png"
                   }
                   alt={conversation.otherUser.name}

@@ -26,6 +26,7 @@ import ChatPage from "./pages/ChatPage";
 import OTPVerification from "./components/OTPVerification";
 import ResetPasswordOTP from "./components/ResetPasswordOTP";
 import ForgotPassword from "./components/ForgotPassword";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export interface IAuthState {
   isAuth: boolean;
@@ -63,7 +64,7 @@ function App() {
 
     async function fetchData() {
       axios
-        .get("http://localhost:3000/users/list", {
+        .get(`${API_BASE_URL}/users/list`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },

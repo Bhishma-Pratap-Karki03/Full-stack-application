@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import "../../styles/AuthHomePage.css"; // Import the CSS file
-import "../../styles/Profile.css"; // Reuse profile page styles for consistency
+import "../../styles/AuthHomePage.css";
+import "../../styles/Profile.css";
 import { useNavigate, Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import addUserIcon from "../../assets/images/add-user.png";
@@ -38,6 +38,8 @@ interface IUserProfile {
   createdAt: string;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
 function AuthHomePage() {
   const [users, setUsers] = useState<IAuthUserList[]>([]);
   const [currentUserProfile, setCurrentUserProfile] =
@@ -53,7 +55,7 @@ function AuthHomePage() {
       isPending: boolean;
       isSender: boolean;
       isReceiver: boolean;
-    }
+    };
   }>({});
   interface IMutualConnection {
     _id: string;
@@ -61,39 +63,48 @@ function AuthHomePage() {
     profilePicture?: string;
   }
 
-  const [mutualConnections, setMutualConnections] = useState<Record<string, IMutualConnection[]>>({});
-  const [sendingRequests, setSendingRequests] = useState<{[key: string]: boolean}>({});
+  const [mutualConnections, setMutualConnections] = useState<
+    Record<string, IMutualConnection[]>
+  >({});
+  const [sendingRequests, setSendingRequests] = useState<{
+    [key: string]: boolean;
+  }>({});
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [connectionIds, setConnectionIds] = useState<{[key: string]: string}>({});
+  const [connectionIds, setConnectionIds] = useState<{ [key: string]: string }>(
+    {}
+  );
   const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
   let currentRole: string | null = null;
   let currentUserId: string | null = null;
 
   // Fetch mutual connections for a user
-  const fetchMutualConnections = useCallback(async (userId: string) => {
-    if (!accessToken) return;
-    
-    try {
-      const response = await axios.get(
-        `http://localhost:3000/api/connections/mutual/${userId}`,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      
-      setMutualConnections(prev => ({
-        ...prev,
-        [userId]: response.data.mutualConnections || []
-      }));
-    } catch (error) {
-      console.error("Error fetching mutual connections:", error);
-    }
-  }, [accessToken]);
+  const fetchMutualConnections = useCallback(
+    async (userId: string) => {
+      if (!accessToken) return;
+
+      try {
+        const response = await axios.get(
+          `${API_BASE_URL}/api/connections/mutual/${userId}`,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+
+        setMutualConnections((prev) => ({
+          ...prev,
+          [userId]: response.data.mutualConnections || [],
+        }));
+      } catch (error) {
+        console.error("Error fetching mutual connections:", error);
+      }
+    },
+    [accessToken]
+  );
 
   // When user data is loaded, fetch mutual connections for each user
   useEffect(() => {
     if (users.length > 0 && accessToken && currentUserId) {
-      users.forEach(user => {
-        if (user.role === 'professional' && user._id !== currentUserId) {
+      users.forEach((user) => {
+        if (user.role === "professional" && user._id !== currentUserId) {
           fetchMutualConnections(user._id);
         }
       });
@@ -116,11 +127,10 @@ function AuthHomePage() {
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
+      axios;
       axios
-        .get("http://localhost:3000/users/list", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+        .get(`${API_BASE_URL}/users/list`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
         })
         .then((response) => {
           const userList: IAuthUserList[] = response?.data?.users || [];
@@ -143,16 +153,10 @@ function AuthHomePage() {
         setIsProfileLoading(false);
         return;
       }
-
       try {
-        const response = await axios.get(
-          "http://localhost:3000/users/profile/me",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const response = await axios.get(`${API_BASE_URL}/users/profile/me`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
         setCurrentUserProfile(response.data.user);
       } catch (error) {
         console.error("Error fetching current user profile:", error);
@@ -167,7 +171,7 @@ function AuthHomePage() {
 
   const handleViewProfile = (userId: string) => {
     if (userId === currentUserId) {
-      navigate('/profile');
+      navigate("/profile");
     } else {
       navigate(`/profile/${userId}`);
     }
@@ -181,11 +185,12 @@ function AuthHomePage() {
       return;
     }
 
-    const filtered = users.filter((user) =>
-      user.name.toLowerCase().includes(query.toLowerCase()) ||
-      user.email.toLowerCase().includes(query.toLowerCase())
+    const filtered = users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(query.toLowerCase()) ||
+        user.email.toLowerCase().includes(query.toLowerCase())
     );
-    
+
     setFilteredUsers(filtered);
     setShowSearchResults(true);
   };
@@ -193,7 +198,7 @@ function AuthHomePage() {
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
-    
+
     // Debounce search
     if (query.trim()) {
       const timeoutId = setTimeout(() => {
@@ -219,71 +224,69 @@ function AuthHomePage() {
   const sendConnectionRequest = async (userId: string, userName: string) => {
     if (sendingRequests[userId]) return;
 
-    setSendingRequests(prev => ({ ...prev, [userId]: true }));
+    setSendingRequests((prev) => ({ ...prev, [userId]: true }));
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/connections/send",
-        { 
-          receiverId: userId, 
+        `${API_BASE_URL}/api/connections/send`,
+        {
+          receiverId: userId,
           message: `Hi ${userName}, I'd like to connect with you!`,
-          senderId: currentUserId
+          senderId: currentUserId,
         },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
-      
       // Update the connection status for this user
-      setConnectionStatuses(prev => ({
+      setConnectionStatuses((prev) => ({
         ...prev,
-        [userId]: { 
+        [userId]: {
           connected: false,
           isPending: true,
           isSender: true,
-          isReceiver: false
-        }
+          isReceiver: false,
+        },
       }));
 
       // Store the connection ID if available
       if (response.data.connectionRequest?._id) {
-        setConnectionIds(prev => ({
+        setConnectionIds((prev) => ({
           ...prev,
-          [userId]: response.data.connectionRequest._id
+          [userId]: response.data.connectionRequest._id,
         }));
       }
     } catch (error) {
       console.error("Error sending connection request:", error);
       // Optionally show error to user
     } finally {
-      setSendingRequests(prev => ({ ...prev, [userId]: false }));
+      setSendingRequests((prev) => ({ ...prev, [userId]: false }));
     }
   };
 
   // Handle accepting a connection request
   const handleAcceptRequest = async (userId: string) => {
     if (!connectionIds[userId]) return;
-    
+
     try {
       const response = await axios.put(
-        `http://localhost:3000/api/connections/accept/${connectionIds[userId]}`,
+        `${API_BASE_URL}/api/connections/accept/${connectionIds[userId]}`,
         {},
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
-      
       // Update the connection status to connected
-      setConnectionStatuses(prev => ({
+      setConnectionStatuses((prev) => ({
         ...prev,
-        [userId]: { 
+        [userId]: {
           connected: true,
           isPending: false,
           isSender: false,
-          isReceiver: false
-        }
+          isReceiver: false,
+        },
       }));
-      
+
       // Update the connection ID if a new connection was created
       if (response.data.connection?._id) {
-        setConnectionIds(prev => ({
+        setConnectionIds((prev) => ({
           ...prev,
-          [userId]: response.data.connection._id
+          [userId]: response.data.connection._id,
         }));
       }
     } catch (error) {
@@ -291,27 +294,27 @@ function AuthHomePage() {
       // Optionally show error to user
     }
   };
-  
+
   // Handle rejecting a connection request
   const handleRejectRequest = async (userId: string) => {
     if (!connectionIds[userId]) return;
-    
+
     try {
       await axios.put(
-        `http://localhost:3000/api/connections/reject/${connectionIds[userId]}`,
+        `${API_BASE_URL}/api/connections/reject/${connectionIds[userId]}`,
         {},
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
-      
+
       // Remove the connection status
-      setConnectionStatuses(prev => {
+      setConnectionStatuses((prev) => {
         const newStatuses = { ...prev };
         delete newStatuses[userId];
         return newStatuses;
       });
-      
+
       // Remove the connection ID
-      setConnectionIds(prev => {
+      setConnectionIds((prev) => {
         const newIds = { ...prev };
         delete newIds[userId];
         return newIds;
@@ -323,32 +326,39 @@ function AuthHomePage() {
   };
 
   // Check connection status with a specific user
-  const checkConnectionStatus = useCallback(async (userId: string) => {
-    if (!currentUserId || currentUserId === userId) return;
-    
-    try {
-      const response = await axios.get(
-        `http://localhost:3000/api/connections/check/${userId}`,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      
-      const { connected, isPending, isSender, isReceiver, connection } = response.data;
-      
-      setConnectionStatuses(prev => ({
-        ...prev,
-        [userId]: { connected, isPending, isSender, isReceiver }
-      }));
-      
-      if (connection?._id) {
-        setConnectionIds(prev => ({
+  const checkConnectionStatus = useCallback(
+    async (userId: string) => {
+      if (!currentUserId || currentUserId === userId) return;
+
+      try {
+        const response = await axios.get(
+          `${API_BASE_URL}/api/connections/check/${userId}`,
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+
+        const { connected, isPending, isSender, isReceiver, connection } =
+          response.data;
+
+        setConnectionStatuses((prev) => ({
           ...prev,
-          [userId]: connection._id
+          [userId]: { connected, isPending, isSender, isReceiver },
         }));
+
+        if (connection?._id) {
+          setConnectionIds((prev) => ({
+            ...prev,
+            [userId]: connection._id,
+          }));
+        }
+      } catch (error) {
+        console.error(
+          `Error checking connection status with user ${userId}:`,
+          error
+        );
       }
-    } catch (error) {
-      console.error(`Error checking connection status with user ${userId}:`, error);
-    }
-  }, [accessToken, currentUserId]);
+    },
+    [accessToken, currentUserId]
+  );
 
   // Load connection statuses for all users
   const loadConnectionStatuses = useCallback(async () => {
@@ -358,8 +368,8 @@ function AuthHomePage() {
       // Check connection status for each user
       await Promise.all(
         users
-          .filter(user => user._id !== currentUserId) // Don't check connection with self
-          .map(user => checkConnectionStatus(user._id))
+          .filter((user) => user._id !== currentUserId) // Don't check connection with self
+          .map((user) => checkConnectionStatus(user._id))
       );
     } catch (error) {
       console.error("Error loading connection statuses:", error);
@@ -399,36 +409,37 @@ function AuthHomePage() {
             <p className="profile-subtitle">Your Profile Overview</p>
           </div>
 
-            <div className="profile-card">
-              {/* Match Profile page: top-right controls inside card */}
-              {(currentUserProfile.role === "professional" || currentUserProfile.role === "admin") && (
-                <div className="edit-controls">
-                  <button
-                    type="button"
-                    className="btn-primary"
-                    onClick={() => navigate("/profile")}
-                  >
-                    View Profile
-                  </button>
-                </div>
-              )}
+          <div className="profile-card">
+            {/* Match Profile page: top-right controls inside card */}
+            {(currentUserProfile.role === "professional" ||
+              currentUserProfile.role === "admin") && (
+              <div className="edit-controls">
+                <button
+                  type="button"
+                  className="btn-primary"
+                  onClick={() => navigate("/profile")}
+                >
+                  View Profile
+                </button>
+              </div>
+            )}
 
-              <div className="profile-info">
-                <div className="profile-picture-row">
-                  <div className="profile-picture-container">
-                    {currentUserProfile.profilePicture ? (
-                      <img
-                        src={`http://localhost:3000/uploads/profile-pictures/${currentUserProfile.profilePicture}`}
-                        alt="Profile"
-                        className="profile-picture"
-                      />
-                    ) : (
+            <div className="profile-info">
+              <div className="profile-picture-row">
+                <div className="profile-picture-container">
+                  {currentUserProfile.profilePicture ? (
+                    <img
+                      src={`${API_BASE_URL}/uploads/profile-pictures/${currentUserProfile.profilePicture}`}
+                      alt="Profile"
+                      className="profile-picture"
+                    />
+                  ) : (
                     <div className="profile-picture-placeholder">
                       {currentUserProfile.name.charAt(0).toUpperCase()}
                     </div>
-                    )}
-                  </div>
+                  )}
                 </div>
+              </div>
 
               <div className="profile-details">
                 <h3 className="user-name">{currentUserProfile.name}</h3>
@@ -440,7 +451,10 @@ function AuthHomePage() {
                 {currentUserProfile.bio && (
                   <div className="user-bio">
                     <h4>About Me</h4>
-                    <div className="bio-content" style={{ whiteSpace: 'pre-line', color: '#495057' }}>
+                    <div
+                      className="bio-content"
+                      style={{ whiteSpace: "pre-line", color: "#495057" }}
+                    >
                       {currentUserProfile.bio}
                     </div>
                   </div>
@@ -512,7 +526,7 @@ function AuthHomePage() {
           <h2 className="search-title">Search Professionals</h2>
           <p className="search-subtitle">Find professionals by name or email</p>
         </div>
-        
+
         <div className="search-container">
           <div className="search-input-wrapper">
             <input
@@ -532,7 +546,11 @@ function AuthHomePage() {
                 type="button"
                 title="Clear"
               >
-                <img src={xIcon} alt="Clear" style={{ width: 16, height: 16 }} />
+                <img
+                  src={xIcon}
+                  alt="Clear"
+                  style={{ width: 16, height: 16 }}
+                />
               </button>
             ) : (
               <span className="search-icon" aria-hidden="true"></span>
@@ -545,9 +563,12 @@ function AuthHomePage() {
           <div className="search-results">
             <div className="search-results-header">
               <h3>Search Results</h3>
-              <p>{filteredUsers.length} professional{filteredUsers.length !== 1 ? "s" : ""} found</p>
+              <p>
+                {filteredUsers.length} professional
+                {filteredUsers.length !== 1 ? "s" : ""} found
+              </p>
             </div>
-            
+
             {filteredUsers.length > 0 ? (
               <div className="users-grid">
                 {filteredUsers.map((user) => (
@@ -555,7 +576,7 @@ function AuthHomePage() {
                     <div className="user-avatar">
                       {user.profilePicture ? (
                         <img
-                          src={`http://localhost:3000/uploads/profile-pictures/${user.profilePicture}`}
+                          src={`${API_BASE_URL}/uploads/profile-pictures/${user.profilePicture}`}
                           alt={user.name}
                           className="profile-picture"
                           onError={(e) => {
@@ -564,7 +585,9 @@ function AuthHomePage() {
                             target.style.display = "none";
                             const fallback = document.createElement("div");
                             fallback.className = "avatar-fallback";
-                            fallback.textContent = user.name.charAt(0).toUpperCase();
+                            fallback.textContent = user.name
+                              .charAt(0)
+                              .toUpperCase();
                             target.parentNode?.appendChild(fallback);
                           }}
                         />
@@ -578,7 +601,9 @@ function AuthHomePage() {
                     <div className="user-info">
                       <h3 className="user-name">{user.name}</h3>
                       <p className="user-email">{user.email}</p>
-                      <span className={`user-role ${user.role}`}>{user.role}</span>
+                      <span className={`user-role ${user.role}`}>
+                        {user.role}
+                      </span>
                     </div>
 
                     <div className="user-actions">
@@ -588,38 +613,56 @@ function AuthHomePage() {
                       >
                         View Profile
                       </button>
-                      
+
                       {/* Mutual connections */}
                       {mutualConnections[user._id]?.length > 0 && (
                         <div className="mutual-connections">
                           <span className="mutual-count">
-                            {mutualConnections[user._id].length} mutual connection
-                            {mutualConnections[user._id].length !== 1 ? 's' : ''}
+                            {mutualConnections[user._id].length} mutual
+                            connection
+                            {mutualConnections[user._id].length !== 1
+                              ? "s"
+                              : ""}
                           </span>
                           <div className="mutual-avatars">
-                            {mutualConnections[user._id].slice(0, 3).map((conn, idx) => (
-                              <div key={conn._id} className="mutual-avatar" 
-                                style={{ zIndex: 3 - idx, marginLeft: idx > 0 ? -8 : 0 }}>
-                                {conn.profilePicture ? (
-                                  <img 
-                                    src={`http://localhost:3000/uploads/profile-pictures/${conn.profilePicture}`}
-                                    alt={conn.name}
-                                    onError={(e) => {
-                                      const target = e.target as HTMLImageElement;
-                                      target.style.display = 'none';
-                                      const fallback = document.createElement('div');
-                                      fallback.className = 'mutual-avatar-fallback';
-                                      fallback.textContent = conn.name.charAt(0).toUpperCase();
-                                      target.parentNode?.appendChild(fallback);
-                                    }}
-                                  />
-                                ) : (
-                                  <div className="mutual-avatar-fallback">
-                                    {conn.name.charAt(0).toUpperCase()}
-                                  </div>
-                                )}
-                              </div>
-                            ))}
+                            {mutualConnections[user._id]
+                              .slice(0, 3)
+                              .map((conn, idx) => (
+                                <div
+                                  key={conn._id}
+                                  className="mutual-avatar"
+                                  style={{
+                                    zIndex: 3 - idx,
+                                    marginLeft: idx > 0 ? -8 : 0,
+                                  }}
+                                >
+                                  {conn.profilePicture ? (
+                                    <img
+                                      src={`${API_BASE_URL}/uploads/profile-pictures/${conn.profilePicture}`}
+                                      alt={conn.name}
+                                      onError={(e) => {
+                                        const target =
+                                          e.target as HTMLImageElement;
+                                        target.style.display = "none";
+                                        const fallback =
+                                          document.createElement("div");
+                                        fallback.className =
+                                          "mutual-avatar-fallback";
+                                        fallback.textContent = conn.name
+                                          .charAt(0)
+                                          .toUpperCase();
+                                        target.parentNode?.appendChild(
+                                          fallback
+                                        );
+                                      }}
+                                    />
+                                  ) : (
+                                    <div className="mutual-avatar-fallback">
+                                      {conn.name.charAt(0).toUpperCase()}
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
                             {mutualConnections[user._id].length > 3 && (
                               <div className="more-connections">
                                 +{mutualConnections[user._id].length - 3}
@@ -628,60 +671,89 @@ function AuthHomePage() {
                           </div>
                         </div>
                       )}
-                      
+
                       {/* Connection and messaging actions for professionals */}
-                      {currentRole === "professional" && user.role === "professional" && user._id !== currentUserId && (
-                        <div className="connection-actions">
-                          {connectionStatuses[user._id]?.connected ? (
-                            <Link
-                              to={`/messages/${user._id}`}
-                              className="message-btn-small"
-                              title="Send Message"
-                            >
-                              <img src={messengerIcon} alt="Message" className="action-icon" />
-                            </Link>
-                          ) : connectionStatuses[user._id]?.isPending ? (
-                            connectionStatuses[user._id]?.isSender ? (
-                              <button 
-                                className="request-sent-btn-small" 
-                                disabled 
-                                title="Request Pending"
+                      {currentRole === "professional" &&
+                        user.role === "professional" &&
+                        user._id !== currentUserId && (
+                          <div className="connection-actions">
+                            {connectionStatuses[user._id]?.connected ? (
+                              <Link
+                                to={`/messages/${user._id}`}
+                                className="message-btn-small"
+                                title="Send Message"
                               >
-                                <img src={pendingIcon} alt="Pending" className="action-icon" />
-                              </button>
+                                <img
+                                  src={messengerIcon}
+                                  alt="Message"
+                                  className="action-icon"
+                                />
+                              </Link>
+                            ) : connectionStatuses[user._id]?.isPending ? (
+                              connectionStatuses[user._id]?.isSender ? (
+                                <button
+                                  className="request-sent-btn-small"
+                                  disabled
+                                  title="Request Pending"
+                                >
+                                  <img
+                                    src={pendingIcon}
+                                    alt="Pending"
+                                    className="action-icon"
+                                  />
+                                </button>
+                              ) : (
+                                <div className="connection-request-actions">
+                                  <button
+                                    className="accept-request-btn"
+                                    onClick={() =>
+                                      handleAcceptRequest(user._id)
+                                    }
+                                    title="Accept Request"
+                                  >
+                                    <img
+                                      src={acceptIcon}
+                                      alt="Accept"
+                                      className="action-icon"
+                                    />
+                                  </button>
+                                  <button
+                                    className="reject-request-btn"
+                                    onClick={() =>
+                                      handleRejectRequest(user._id)
+                                    }
+                                    title="Reject Request"
+                                  >
+                                    <img
+                                      src={rejectIcon}
+                                      alt="Reject"
+                                      className="action-icon"
+                                    />
+                                  </button>
+                                </div>
+                              )
                             ) : (
-                              <div className="connection-request-actions">
-                                <button 
-                                  className="accept-request-btn"
-                                  onClick={() => handleAcceptRequest(user._id)}
-                                  title="Accept Request"
-                                >
-                                  <img src={acceptIcon} alt="Accept" className="action-icon" />
-                                </button>
-                                <button 
-                                  className="reject-request-btn"
-                                  onClick={() => handleRejectRequest(user._id)}
-                                  title="Reject Request"
-                                >
-                                  <img src={rejectIcon} alt="Reject" className="action-icon" />
-                                </button>
-                              </div>
-                            )
-                          ) : (
-                            <button
-                              className="connect-btn-small"
-                              onClick={() => sendConnectionRequest(user._id, user.name)}
-                              disabled={sendingRequests[user._id]}
-                              title="Send Connection Request"
-                            >
-                              {sendingRequests[user._id] ? 
-                                "..." : 
-                                <img src={addUserIcon} alt="Connect" className="action-icon" />
-                              }
-                            </button>
-                          )}
-                        </div>
-                      )}
+                              <button
+                                className="connect-btn-small"
+                                onClick={() =>
+                                  sendConnectionRequest(user._id, user.name)
+                                }
+                                disabled={sendingRequests[user._id]}
+                                title="Send Connection Request"
+                              >
+                                {sendingRequests[user._id] ? (
+                                  "..."
+                                ) : (
+                                  <img
+                                    src={addUserIcon}
+                                    alt="Connect"
+                                    className="action-icon"
+                                  />
+                                )}
+                              </button>
+                            )}
+                          </div>
+                        )}
                     </div>
                   </div>
                 ))}
@@ -700,15 +772,15 @@ function AuthHomePage() {
         <h2 className="professionals-title">All Professionals</h2>
         <div className="users-grid">
           {users.map((user) => (
-            <div 
-              key={user._id} 
+            <div
+              key={user._id}
               className="user-card"
               onClick={() => handleUserClick(user._id)}
             >
               <div className="user-avatar">
                 {user.profilePicture ? (
                   <img
-                    src={`http://localhost:3000/uploads/profile-pictures/${user.profilePicture}`}
+                    src={`${API_BASE_URL}/uploads/profile-pictures/${user.profilePicture}`}
                     alt={user.name}
                     className="profile-picture"
                     onError={(e) => {
@@ -744,59 +816,87 @@ function AuthHomePage() {
                 >
                   View Profile
                 </button>
-                
-                {currentRole === "professional" && user.role === "professional" && user._id !== currentUserId && (
-                  <div className="connection-actions" onClick={(e) => e.stopPropagation()}>
-                    {connectionStatuses[user._id]?.connected ? (
-                      <Link
-                        to={`/messages/${user._id}`}
-                        className="message-btn-small"
-                        title="Send Message"
-                      >
-                        <img src={messengerIcon} alt="Message" className="action-icon" />
-                      </Link>
-                    ) : connectionStatuses[user._id]?.isPending ? (
-                      connectionStatuses[user._id]?.isSender ? (
-                        <button 
-                          className="request-sent-btn-small" 
-                          disabled 
-                          title="Request Pending"
+
+                {currentRole === "professional" &&
+                  user.role === "professional" &&
+                  user._id !== currentUserId && (
+                    <div
+                      className="connection-actions"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {connectionStatuses[user._id]?.connected ? (
+                        <Link
+                          to={`/messages/${user._id}`}
+                          className="message-btn-small"
+                          title="Send Message"
                         >
-                          <img src={pendingIcon} alt="Pending" className="action-icon" />
-                        </button>
+                          <img
+                            src={messengerIcon}
+                            alt="Message"
+                            className="action-icon"
+                          />
+                        </Link>
+                      ) : connectionStatuses[user._id]?.isPending ? (
+                        connectionStatuses[user._id]?.isSender ? (
+                          <button
+                            className="request-sent-btn-small"
+                            disabled
+                            title="Request Pending"
+                          >
+                            <img
+                              src={pendingIcon}
+                              alt="Pending"
+                              className="action-icon"
+                            />
+                          </button>
+                        ) : (
+                          <div className="connection-request-actions">
+                            <button
+                              className="accept-request-btn"
+                              onClick={() => handleAcceptRequest(user._id)}
+                              title="Accept Request"
+                            >
+                              <img
+                                src={acceptIcon}
+                                alt="Accept"
+                                className="action-icon"
+                              />
+                            </button>
+                            <button
+                              className="reject-request-btn"
+                              onClick={() => handleRejectRequest(user._id)}
+                              title="Reject Request"
+                            >
+                              <img
+                                src={rejectIcon}
+                                alt="Reject"
+                                className="action-icon"
+                              />
+                            </button>
+                          </div>
+                        )
                       ) : (
-                        <div className="connection-request-actions">
-                          <button 
-                            className="accept-request-btn"
-                            onClick={() => handleAcceptRequest(user._id)}
-                            title="Accept Request"
-                          >
-                            <img src={acceptIcon} alt="Accept" className="action-icon" />
-                          </button>
-                          <button 
-                            className="reject-request-btn"
-                            onClick={() => handleRejectRequest(user._id)}
-                            title="Reject Request"
-                          >
-                            <img src={rejectIcon} alt="Reject" className="action-icon" />
-                          </button>
-                        </div>
-                      )
-                    ) : (
-                      <button
-                        className="connect-btn-small"
-                        onClick={() => sendConnectionRequest(user._id, user.name)}
-                        disabled={sendingRequests[user._id]}
-                        title="Send Connection Request"
-                      >
-                        {sendingRequests[user._id] ? 
-                          "..." : 
-                          <img src={addUserIcon} alt="Connect" className="action-icon" />
-                        }
-                      </button>
-                    )}
-                  </div>
-                )}
+                        <button
+                          className="connect-btn-small"
+                          onClick={() =>
+                            sendConnectionRequest(user._id, user.name)
+                          }
+                          disabled={sendingRequests[user._id]}
+                          title="Send Connection Request"
+                        >
+                          {sendingRequests[user._id] ? (
+                            "..."
+                          ) : (
+                            <img
+                              src={addUserIcon}
+                              alt="Connect"
+                              className="action-icon"
+                            />
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  )}
               </div>
             </div>
           ))}

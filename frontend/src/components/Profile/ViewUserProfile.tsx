@@ -36,6 +36,8 @@ interface IUserProfile {
   portfolioUrl?: string;
   createdAt: string;
 }
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
 
 function ViewUserProfile() {
   const [userData, setUserData] = useState<IUserProfile | null>(null);
@@ -71,7 +73,7 @@ function ViewUserProfile() {
       try {
         const accessToken = localStorage.getItem("accessToken");
         const response = await axios.get(
-          `http://localhost:3000/api/connections/mutual/${id}`,
+          `${API_BASE_URL}/api/connections/mutual/${id}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         setMutualConnections(response.data.mutualConnections || []);
@@ -97,10 +99,10 @@ function ViewUserProfile() {
 
     // Fetch user profile data and connection status
     const requests = [
-      axios.get(`http://localhost:3000/users/profile/${id}`, {
+      axios.get(`${API_BASE_URL}/users/profile/${id}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
-      axios.get(`http://localhost:3000/api/quiz/results/${id}`, {
+      axios.get(`${API_BASE_URL}/api/quiz/results/${id}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     ];
@@ -108,7 +110,7 @@ function ViewUserProfile() {
     // Add connection check for professionals
     if (roleState === "professional" && currentId !== id) {
       requests.push(
-        axios.get(`http://localhost:3000/api/connections/check/${id}`, {
+        axios.get(`${API_BASE_URL}/api/connections/check/${id}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
       );
@@ -163,7 +165,7 @@ function ViewUserProfile() {
       const token = localStorage.getItem("accessToken");
       const currentUserId = getCurrentUserId();
       const response = await axios.post(
-        "http://localhost:3000/api/connections/send",
+        `${API_BASE_URL}/api/connections/send`,
         { 
           receiverId: id, 
           senderId: currentUserId, 
@@ -266,7 +268,7 @@ function ViewUserProfile() {
     try {
       const token = localStorage.getItem("accessToken");
       await axios.put(
-        `http://localhost:3000/api/connections/accept/${connectionId}`,
+        `${API_BASE_URL}/api/connections/accept/${connectionId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -289,7 +291,7 @@ function ViewUserProfile() {
     try {
       const token = localStorage.getItem("accessToken");
       await axios.put(
-        `http://localhost:3000/api/connections/reject/${connectionId}`,
+        `${API_BASE_URL}/api/connections/reject/${connectionId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -353,7 +355,7 @@ function ViewUserProfile() {
             <div className="profile-picture-container">
               {userData.profilePicture ? (
                 <img
-                  src={`http://localhost:3000/uploads/profile-pictures/${userData.profilePicture}`}
+                  src={`${API_BASE_URL}/uploads/profile-pictures/${userData.profilePicture}`}
                   alt="Profile"
                   className="profile-picture"
                 />
@@ -389,7 +391,7 @@ function ViewUserProfile() {
                         <div className="mutual-avatar">
                           {conn.profilePicture ? (
                             <img 
-                              src={`http://localhost:3000/uploads/profile-pictures/${conn.profilePicture}`}
+                              src={`${API_BASE_URL}/uploads/profile-pictures/${conn.profilePicture}`}
                               alt={conn.name}
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement;

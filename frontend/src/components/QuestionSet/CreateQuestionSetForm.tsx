@@ -16,6 +16,9 @@ interface QuestionSetForm {
   }[];
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
+
 function CreateQuestionSetForm() {
   const navigate = useNavigate();
   const defaultValues: QuestionSetForm = {
@@ -60,7 +63,7 @@ function CreateQuestionSetForm() {
 
     const accessToken = localStorage.getItem("accessToken");
     axios
-      .post("http://localhost:3000/api/admin/questionset/create", data, {
+      .post(`${API_BASE_URL}/api/admin/questionset/create`, data, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

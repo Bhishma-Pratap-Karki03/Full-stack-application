@@ -7,6 +7,7 @@ import axios from "axios";
 import menuIcon from "../assets/images/Menu.png";
 import requestIcon from "../assets/images/Request.png";
 import messageFriendIcon from "../assets/images/MessageFriend.png";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,8 +32,8 @@ function Navbar() {
       const headers = { Authorization: `Bearer ${token}` };
 
       const [pendingResponse, unreadResponse] = await Promise.all([
-        axios.get("http://localhost:3000/api/connections/pending", { headers }),
-        axios.get("http://localhost:3000/api/messages/unread-count", {
+        axios.get(`${API_BASE_URL}/api/connections/pending`, { headers }),
+        axios.get(`${API_BASE_URL}/api/messages/unread-count`, {
           headers,
         }),
       ]);

@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../App";
 import axios from "axios";
 import "../styles/AdminContactManagement.css";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 interface ContactSubmission {
   _id: string;
@@ -36,7 +37,7 @@ function AdminContactManagementPage() {
     try {
       const accessToken = localStorage.getItem("accessToken");
       const response = await axios.get(
-        "http://localhost:3000/api/admin/contacts",
+        `${API_BASE_URL}/api/admin/contacts`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -55,7 +56,7 @@ function AdminContactManagementPage() {
     try {
       const accessToken = localStorage.getItem("accessToken");
       await axios.patch(
-        `http://localhost:3000/api/admin/contacts/${contactId}/status`,
+        `${API_BASE_URL}/api/admin/contacts/${contactId}/status`,
         { status: "read" },
         {
           headers: {
@@ -77,7 +78,7 @@ function AdminContactManagementPage() {
     try {
       const accessToken = localStorage.getItem("accessToken");
       await axios.patch(
-        `http://localhost:3000/api/admin/contacts/${contactId}/status`,
+        `${API_BASE_URL}/api/admin/contacts/${contactId}/status`,
         { status: "replied" },
         {
           headers: {
@@ -107,7 +108,7 @@ function AdminContactManagementPage() {
     try {
       const accessToken = localStorage.getItem("accessToken");
       await axios.delete(
-        `http://localhost:3000/api/admin/contacts/${contactId}`,
+        `${API_BASE_URL}/api/admin/contacts/${contactId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

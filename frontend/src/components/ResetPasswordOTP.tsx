@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../styles/ResetPasswordOTP.css";
 import skillSyncLogo from "../assets/images/SkillSync Logo Design.png";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const ResetPasswordOTP: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -92,7 +93,7 @@ const ResetPasswordOTP: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/check-verification",
+        `${API_BASE_URL}/api/auth/check-verification`,
         { email }
       );
 
@@ -127,7 +128,7 @@ const ResetPasswordOTP: React.FC = () => {
 
       // Verify the reset OTP
       const response = await axios.post(
-        "http://localhost:3000/api/auth/verify-reset-otp",
+        `${API_BASE_URL}/api/auth/verify-reset-otp`,
         {
           userId: userUserId,
           otp: otpString,
@@ -175,7 +176,7 @@ const ResetPasswordOTP: React.FC = () => {
       // Get userId (from URL or by email lookup)
       const userUserId = await getUserIdByEmail();
 
-      await axios.post("http://localhost:3000/api/auth/reset-password", {
+      await axios.post(`${API_BASE_URL}/api/auth/reset-password`, {
         userId: userUserId,
         otp: otpString,
         newPassword,
@@ -207,7 +208,7 @@ const ResetPasswordOTP: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/forgot-password",
+        `${API_BASE_URL}/api/auth/forgot-password`,
         { email }
       );
 

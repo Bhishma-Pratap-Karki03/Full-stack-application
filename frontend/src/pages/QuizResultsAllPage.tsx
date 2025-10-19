@@ -5,6 +5,7 @@ import "../styles/AllQuizResults.css";
 import "../styles/Profile.css"; // reuse profile detail styles
 import "../styles/AuthHomePage.css"; // reuse skills/social pill styles
 import { AuthContext } from "../App";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 interface IUserSkill {
   name: string;
@@ -58,7 +59,7 @@ function QuizResultsAllPage() {
     
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/connections/mutual/${userId}`,
+        `${API_BASE_URL}/api/connections/mutual/${userId}`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setMutualConnections(response.data.mutualConnections || []);
@@ -82,11 +83,11 @@ function QuizResultsAllPage() {
     const fetchAll = async () => {
       try {
         const profileUrl = userId
-          ? `http://localhost:3000/users/profile/${userId}`
-          : "http://localhost:3000/users/profile/me";
+          ? `${API_BASE_URL}/users/profile/${userId}`
+          : `${API_BASE_URL}/users/profile/me`;
         const resultsUrl = userId
-          ? `http://localhost:3000/api/quiz/results/${userId}`
-          : "http://localhost:3000/api/quiz/results";
+          ? `${API_BASE_URL}/api/quiz/results/${userId}`
+          : `${API_BASE_URL}/api/quiz/results`;
 
         const [profileRes, resultsRes] = await Promise.all([
           axios.get(profileUrl, {

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import AttemptQuizForm from "../../components/QuestionSet/AttemptQuizForm";
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export interface IAttempQuestionForm {
   _id: string;
@@ -56,7 +57,7 @@ function AttemptQuizPage() {
     async function fetchData() {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/questions/set/${id}`,
+          `${API_BASE_URL}/api/questions/set/${id}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
