@@ -1,44 +1,40 @@
 import axios from "axios";
-import { useState, useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 import "../styles/LoginForm.css";
 import skillSyncLogo from "../assets/images/SkillSync Logo Design.png";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL;
-
-const LoginForm: React.FC = () => {
-  const [email, setEmail] = useState("");
+function LoginForm() {
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useContext(AuthContext); // If you want to update context later
+  const { setAuthState } = useContext(AuthContext);
   const navigate = useNavigate();
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
+    setError(""); // Clear previous errors
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/users/login`, {
+      const response = await axios.post("http://localhost:3000/users/login", {
         email,
         password,
       });
 
       const token = response.data.accessToken;
       localStorage.setItem("accessToken", token);
-
-      // Redirect to home page
       window.location.href = "/";
     } catch (error: any) {
       console.error("Login error:", error);
@@ -48,6 +44,7 @@ const LoginForm: React.FC = () => {
         error.response?.status === 403 &&
         error.response.data.requiresVerification
       ) {
+        // Redirect to verification page with userId and email
         navigate(
           `/verify-email?userId=${
             error.response.data.userId
@@ -65,6 +62,7 @@ const LoginForm: React.FC = () => {
     }
   };
 
+  // Navigate to forgot password page
   const handleForgotPassword = () => {
     navigate("/forgot-password");
   };
@@ -79,7 +77,6 @@ const LoginForm: React.FC = () => {
             className="login-logo-img"
           />
         </div>
-
         <h1 className="login-title">Welcome Back</h1>
         <p className="login-subtitle">Login to Continue</p>
 
@@ -90,6 +87,7 @@ const LoginForm: React.FC = () => {
             </label>
             <input
               type="email"
+              name="search_email"
               placeholder="Enter your email"
               value={email}
               onChange={handleEmailChange}
@@ -104,6 +102,7 @@ const LoginForm: React.FC = () => {
             </label>
             <input
               type="password"
+              name="search_password"
               placeholder="Enter your password"
               value={password}
               onChange={handlePasswordChange}
@@ -138,6 +137,6 @@ const LoginForm: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default LoginForm;

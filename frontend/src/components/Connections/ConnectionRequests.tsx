@@ -25,7 +25,6 @@ const ConnectionRequests: React.FC = () => {
   const [sentRequests, setSentRequests] = useState<ConnectionRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"received" | "sent">("received");
-  const baseURL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     fetchConnectionRequests();
@@ -37,8 +36,8 @@ const ConnectionRequests: React.FC = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       const [pendingResponse, sentResponse] = await Promise.all([
-        axios.get(`${baseURL}/api/connections/pending`, { headers }),
-        axios.get(`${baseURL}/api/connections/sent`, { headers }),
+        axios.get("http://localhost:3000/api/connections/pending", { headers }),
+        axios.get("http://localhost:3000/api/connections/sent", { headers }),
       ]);
 
       setPendingRequests(pendingResponse.data.requests);
@@ -54,13 +53,12 @@ const ConnectionRequests: React.FC = () => {
     try {
       const token = localStorage.getItem("accessToken");
       await axios.put(
-        `${baseURL}/api/connections/accept/${requestId}`,
+        `http://localhost:3000/api/connections/accept/${requestId}`,
         {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      // Remove from pending requests
       setPendingRequests((prev) => prev.filter((req) => req._id !== requestId));
     } catch (error) {
       console.error("Error accepting request:", error);
@@ -71,13 +69,12 @@ const ConnectionRequests: React.FC = () => {
     try {
       const token = localStorage.getItem("accessToken");
       await axios.put(
-        `${baseURL}/api/connections/reject/${requestId}`,
+        `http://localhost:3000/api/connections/reject/${requestId}`,
         {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      // Remove from pending requests
       setPendingRequests((prev) => prev.filter((req) => req._id !== requestId));
     } catch (error) {
       console.error("Error rejecting request:", error);
@@ -119,7 +116,7 @@ const ConnectionRequests: React.FC = () => {
                     <img
                       src={
                         request.sender.profilePicture
-                          ? `${baseURL}/uploads/profile-pictures/${request.sender.profilePicture}`
+                          ? `http://localhost:3000/uploads/profile-pictures/${request.sender.profilePicture}`
                           : "/default-avatar.png"
                       }
                       alt={request.sender.name}
@@ -168,7 +165,7 @@ const ConnectionRequests: React.FC = () => {
                     <img
                       src={
                         request.receiver.profilePicture
-                          ? `${baseURL}/uploads/profile-pictures/${request.receiver.profilePicture}`
+                          ? `http://localhost:3000/uploads/profile-pictures/${request.receiver.profilePicture}`
                           : "/default-avatar.png"
                       }
                       alt={request.receiver.name}

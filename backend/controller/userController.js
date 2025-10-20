@@ -375,7 +375,7 @@ const changePassword = async (req, res) => {
     }
 
     // Find user with password selected
-    const user = await User.findById(userId).select('+password');
+    const user = await User.findById(userId).select("+password");
     if (!user) {
       console.log("❌ User not found:", userId);
       return res.status(404).json({ error: "User not found" });

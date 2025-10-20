@@ -37,9 +37,6 @@ interface ISkill {
   level: string;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL;
-
-
 function Profile() {
   const [userData, setUserData] = useState<IUserProfile | null>(null);
   const [quizResults, setQuizResults] = useState<IQuizResult[]>([]);
@@ -73,7 +70,7 @@ function Profile() {
     const accessToken = localStorage.getItem("accessToken");
 
     axios
-      .get(`${API_BASE_URL}/users/profile/me`, {
+      .get("http://localhost:3000/users/profile/me", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -82,7 +79,7 @@ function Profile() {
         setUserData(response.data.user);
 
         if (roleState !== "admin") {
-          return axios.get(`${API_BASE_URL}/api/quiz/results`, {
+          return axios.get("http://localhost:3000/api/quiz/results", {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
@@ -212,7 +209,7 @@ function Profile() {
       }
 
       const response = await axios.put(
-        `${API_BASE_URL}/users/profile`,
+        "http://localhost:3000/users/profile",
         formData,
         {
           headers: {
@@ -269,7 +266,7 @@ function Profile() {
 
       const accessToken = localStorage.getItem("accessToken");
       const response = await axios.post(
-        `${API_BASE_URL}/users/change-password`,
+        "http://localhost:3000/users/change-password",
         {
           oldPassword,
           newPassword,
@@ -365,7 +362,7 @@ function Profile() {
             <div className="profile-picture-container">
               {userData?.profilePicture ? (
                 <img
-                  src={`${API_BASE_URL}/uploads/profile-pictures/${userData.profilePicture}`}
+                  src={`http://localhost:3000/uploads/profile-pictures/${userData.profilePicture}`}
                   alt="Profile"
                   className="profile-picture"
                 />
@@ -475,7 +472,7 @@ function Profile() {
                       />
                     ) : userData?.profilePicture ? (
                       <img
-                        src={`${API_BASE_URL}/uploads/profile-pictures/${userData.profilePicture}`}
+                        src={`http://localhost:3000/uploads/profile-pictures/${userData.profilePicture}`}
                         alt="Current Profile"
                         className="profile-picture-preview"
                       />

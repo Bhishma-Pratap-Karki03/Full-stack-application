@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/ListQuestionSet.css"; // We'll create this CSS file
 import { AuthContext } from "../../App";
 import xIcon from "../../assets/images/X Icon.png";
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+
 export interface IListQuestionSet {
   _id: string;
   title: string;
@@ -42,9 +42,7 @@ function ListQuestionSet() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isProfileLoading, setIsProfileLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredQuestionSets, setFilteredQuestionSets] = useState<
-    IListQuestionSet[]
-  >([]);
+  const [filteredQuestionSets, setFilteredQuestionSets] = useState<IListQuestionSet[]>([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const navigate = useNavigate();
@@ -87,7 +85,7 @@ function ListQuestionSet() {
     const filtered = questionSets.filter((questionSet) =>
       questionSet.title.toLowerCase().includes(query.toLowerCase())
     );
-
+    
     setFilteredQuestionSets(filtered);
     setShowSearchResults(true);
   };
@@ -95,7 +93,7 @@ function ListQuestionSet() {
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
-
+    
     // Debounce search
     if (query.trim()) {
       const timeoutId = setTimeout(() => {
@@ -178,7 +176,7 @@ function ListQuestionSet() {
       try {
         // Fetch question sets
         const questionSetsResponse = await axios.get(
-          `${API_BASE_URL}/api/questions/set/list`,
+          "http://localhost:3000/api/questions/set/list",
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -212,7 +210,7 @@ function ListQuestionSet() {
 
       try {
         const profileResponse = await axios.get(
-          `${API_BASE_URL}/users/profile/me`,
+          "http://localhost:3000/users/profile/me",
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -274,7 +272,7 @@ function ListQuestionSet() {
                   if (!accessToken) return;
                   const next = e.currentTarget.checked;
                   await axios.patch(
-                    `${API_BASE_URL}/api/admin/questionset/${questionSet._id}/status`,
+                    `http://localhost:3000/api/admin/questionset/${questionSet._id}/status`,
                     { isActive: next },
                     {
                       headers: {
@@ -283,7 +281,7 @@ function ListQuestionSet() {
                     }
                   );
                   const res = await axios.get(
-                    `${API_BASE_URL}/api/questions/set/list`,
+                    "http://localhost:3000/api/questions/set/list",
                     {
                       headers: {
                         Authorization: `Bearer ${accessToken}`,
@@ -312,10 +310,7 @@ function ListQuestionSet() {
           </div>
         ) : questionSet.attempted ? (
           <div className="attempt-summary">
-            <div
-              className="score-circle"
-              aria-label={`Score ${questionSet.percentage}%`}
-            >
+            <div className="score-circle" aria-label={`Score ${questionSet.percentage}%`}>
               <svg
                 className="circle-chart"
                 viewBox="0 0 36 36"
@@ -344,7 +339,7 @@ function ListQuestionSet() {
               <button className="take-quiz-button" disabled>
                 Attempted
               </button>
-              <button
+              <button 
                 className="take-quiz-button"
                 onClick={() => navigate(`/quiz/result/${questionSet._id}`)}
               >
@@ -382,14 +377,7 @@ function ListQuestionSet() {
             <p className="quiz-subtitle">
               Create and review question sets with answers
             </p>
-            <div
-              style={{
-                display: "flex",
-                gap: "1rem",
-                marginTop: "1rem",
-                justifyContent: "center",
-              }}
-            >
+            <div style={{ display: "flex", gap: "1rem", marginTop: "1rem", justifyContent: "center" }}>
               <button
                 className="take-quiz-button create-set-btn"
                 onClick={() => navigate("/admin/question/set/create")}
@@ -466,14 +454,7 @@ function ListQuestionSet() {
         )}
 
         {isAdmin && (
-          <div
-            style={{
-              display: "flex",
-              gap: "1rem",
-              marginTop: "1rem",
-              justifyContent: "center",
-            }}
-          >
+          <div style={{ display: "flex", gap: "1rem", marginTop: "1rem", justifyContent: "center" }}>
             <button
               className="take-quiz-button create-set-btn"
               onClick={() => navigate("/admin/question/set/create")}
@@ -490,7 +471,7 @@ function ListQuestionSet() {
           <h2 className="search-title">Search Question Sets</h2>
           <p className="search-subtitle">Find question sets by title</p>
         </div>
-
+        
         <div className="search-container">
           <div className="search-input-wrapper">
             <input
@@ -510,11 +491,7 @@ function ListQuestionSet() {
                 type="button"
                 title="Clear"
               >
-                <img
-                  src={xIcon}
-                  alt="Clear"
-                  style={{ width: 16, height: 16 }}
-                />
+                <img src={xIcon} alt="Clear" style={{ width: 16, height: 16 }} />
               </button>
             ) : (
               <span className="search-icon" aria-hidden="true"></span>
@@ -527,12 +504,9 @@ function ListQuestionSet() {
           <div className="search-results">
             <div className="search-results-header">
               <h3>Search Results</h3>
-              <p>
-                {filteredQuestionSets.length} question set
-                {filteredQuestionSets.length !== 1 ? "s" : ""} found
-              </p>
+              <p>{filteredQuestionSets.length} question set{filteredQuestionSets.length !== 1 ? "s" : ""} found</p>
             </div>
-
+            
             {filteredQuestionSets.length > 0 ? (
               <div className="sets-grid">
                 {filteredQuestionSets.map(renderQuestionSetCard)}

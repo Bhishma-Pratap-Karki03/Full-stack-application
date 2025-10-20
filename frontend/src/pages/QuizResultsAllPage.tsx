@@ -5,7 +5,6 @@ import "../styles/AllQuizResults.css";
 import "../styles/Profile.css"; // reuse profile detail styles
 import "../styles/AuthHomePage.css"; // reuse skills/social pill styles
 import { AuthContext } from "../App";
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 interface IUserSkill {
   name: string;
@@ -47,19 +46,21 @@ function QuizResultsAllPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<IUserProfile | null>(null);
   const [results, setResults] = useState<IQuizResult[]>([]);
-  const [mutualConnections, setMutualConnections] = useState<IMutualConnection[]>([]);
+  const [mutualConnections, setMutualConnections] = useState<
+    IMutualConnection[]
+  >([]);
   const navigate = useNavigate();
   const { userId } = useParams();
   const { isAuth } = useContext(AuthContext);
   const accessToken = localStorage.getItem("accessToken");
-  
+
   // Fetch mutual connections when component mounts or userId changes
   const fetchMutualConnections = useCallback(async () => {
     if (!isAuth || !userId || !accessToken) return;
-    
+
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/api/connections/mutual/${userId}`,
+        `http://localhost:3000/api/connections/mutual/${userId}`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       setMutualConnections(response.data.mutualConnections || []);
@@ -67,9 +68,9 @@ function QuizResultsAllPage() {
       console.error("Error fetching mutual connections:", error);
     }
   }, [isAuth, userId, accessToken]);
-  
+
   useEffect(() => {
-    if (userId && userId !== 'me') {
+    if (userId && userId !== "me") {
       fetchMutualConnections();
     }
   }, [userId, fetchMutualConnections]);
@@ -83,11 +84,11 @@ function QuizResultsAllPage() {
     const fetchAll = async () => {
       try {
         const profileUrl = userId
-          ? `${API_BASE_URL}/users/profile/${userId}`
-          : `${API_BASE_URL}/users/profile/me`;
+          ? `http://localhost:3000/users/profile/${userId}`
+          : "http://localhost:3000/users/profile/me";
         const resultsUrl = userId
-          ? `${API_BASE_URL}/api/quiz/results/${userId}`
-          : `${API_BASE_URL}/api/quiz/results`;
+          ? `http://localhost:3000/api/quiz/results/${userId}`
+          : "http://localhost:3000/api/quiz/results";
 
         const [profileRes, resultsRes] = await Promise.all([
           axios.get(profileUrl, {
@@ -125,12 +126,19 @@ function QuizResultsAllPage() {
         <div className="title-row">
           <h1 className="all-results-title">All Quiz Results</h1>
           <div className="header-actions">
-            <button className="btn-secondary" onClick={() => navigate(userId ? `/profile/${userId}` : "/profile")}>
+            <button
+              className="btn-secondary"
+              onClick={() =>
+                navigate(userId ? `/profile/${userId}` : "/profile")
+              }
+            >
               {userId ? "Back to User Profile" : "Back to My Profile"}
             </button>
           </div>
         </div>
-        <p className="all-results-subtitle">Full summary of your attempts with your profile details</p>
+        <p className="all-results-subtitle">
+          Full summary of your attempts with your profile details
+        </p>
       </div>
       {user && (
         <div className="profile-summary-card">
@@ -155,33 +163,39 @@ function QuizResultsAllPage() {
               <p className={`user-role ${user.role}`}>{user.role}</p>
 
               {/* Mutual Connections Section */}
-              {mutualConnections.length > 0 && userId && userId !== 'me' && (
+              {mutualConnections.length > 0 && userId && userId !== "me" && (
                 <div className="mutual-connections">
                   <h3>Mutual Connections</h3>
                   <p className="mutual-count">
                     {mutualConnections.length} mutual connection
-                    {mutualConnections.length !== 1 ? 's' : ''}
+                    {mutualConnections.length !== 1 ? "s" : ""}
                   </p>
                   <div className="mutual-avatars">
                     {mutualConnections.slice(0, 5).map((conn, idx) => (
-                      <Link 
+                      <Link
                         to={`/profile/${conn._id}`}
-                        key={conn._id} 
+                        key={conn._id}
                         className="mutual-avatar-link"
-                        style={{ zIndex: 5 - idx, marginLeft: idx > 0 ? -8 : 0 }}
+                        style={{
+                          zIndex: 5 - idx,
+                          marginLeft: idx > 0 ? -8 : 0,
+                        }}
                         title={conn.name}
                       >
                         <div className="mutual-avatar">
                           {conn.profilePicture ? (
-                            <img 
+                            <img
                               src={`http://localhost:3000/uploads/profile-pictures/${conn.profilePicture}`}
                               alt={conn.name}
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement;
-                                target.style.display = 'none';
-                                const fallback = target.parentElement?.querySelector('.mutual-avatar-fallback') as HTMLElement;
+                                target.style.display = "none";
+                                const fallback =
+                                  target.parentElement?.querySelector(
+                                    ".mutual-avatar-fallback"
+                                  ) as HTMLElement;
                                 if (fallback) {
-                                  fallback.style.display = 'flex';
+                                  fallback.style.display = "flex";
                                 }
                               }}
                             />
@@ -193,7 +207,12 @@ function QuizResultsAllPage() {
                       </Link>
                     ))}
                     {mutualConnections.length > 5 && (
-                      <div className="more-connections" title={`${mutualConnections.length - 5} more connections`}>
+                      <div
+                        className="more-connections"
+                        title={`${
+                          mutualConnections.length - 5
+                        } more connections`}
+                      >
                         +{mutualConnections.length - 5}
                       </div>
                     )}
@@ -204,7 +223,10 @@ function QuizResultsAllPage() {
               {user.bio && (
                 <div className="user-bio">
                   <h3>About Me</h3>
-                  <div className="bio-content" style={{ whiteSpace: 'pre-line', color: '#495057' }}>
+                  <div
+                    className="bio-content"
+                    style={{ whiteSpace: "pre-line", color: "#495057" }}
+                  >
                     {user.bio}
                   </div>
                 </div>
@@ -216,7 +238,8 @@ function QuizResultsAllPage() {
                   <div className="skills-list">
                     {user.skills.map((skill, idx) => (
                       <span key={idx} className="skill-tag">
-                        {skill.name} <span className="skill-level">({skill.level})</span>
+                        {skill.name}{" "}
+                        <span className="skill-level">({skill.level})</span>
                       </span>
                     ))}
                   </div>
@@ -225,13 +248,34 @@ function QuizResultsAllPage() {
 
               <div className="social-links">
                 {user.github && (
-                  <a href={user.github} target="_blank" rel="noopener noreferrer" className="social-link github">GitHub Link</a>
+                  <a
+                    href={user.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link github"
+                  >
+                    GitHub Link
+                  </a>
                 )}
                 {user.linkedin && (
-                  <a href={user.linkedin} target="_blank" rel="noopener noreferrer" className="social-link linkedin">LinkedIn Link</a>
+                  <a
+                    href={user.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link linkedin"
+                  >
+                    LinkedIn Link
+                  </a>
                 )}
                 {user.portfolioUrl && (
-                  <a href={user.portfolioUrl} target="_blank" rel="noopener noreferrer" className="social-link">Portfolio</a>
+                  <a
+                    href={user.portfolioUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-link"
+                  >
+                    Portfolio
+                  </a>
                 )}
               </div>
             </div>
@@ -247,7 +291,9 @@ function QuizResultsAllPage() {
         {results.length === 0 ? (
           <div className="no-results">
             <p>No attempts yet.</p>
-            <a href="/questionset/list" className="take-quiz-button">Take a Quiz</a>
+            <a href="/questionset/list" className="take-quiz-button">
+              Take a Quiz
+            </a>
           </div>
         ) : (
           <div className="results-list">
@@ -255,11 +301,22 @@ function QuizResultsAllPage() {
               <div key={index} className="result-item">
                 <div className="result-info">
                   <h3 className="quiz-title">{result.questionSet.title}</h3>
-                  <p className="quiz-date">Attempted on: {new Date(result.attemptedAt).toLocaleDateString()}</p>
+                  <p className="quiz-date">
+                    Attempted on:{" "}
+                    {new Date(result.attemptedAt).toLocaleDateString()}
+                  </p>
                 </div>
                 <div className="result-stats">
-                  <div className="score-circle" aria-label={`Score ${result.percentage}%`}>
-                    <svg className="circle-chart" viewBox="0 0 36 36" width="80" height="80">
+                  <div
+                    className="score-circle"
+                    aria-label={`Score ${result.percentage}%`}
+                  >
+                    <svg
+                      className="circle-chart"
+                      viewBox="0 0 36 36"
+                      width="80"
+                      height="80"
+                    >
                       <path
                         className="circle-bg"
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
@@ -269,13 +326,16 @@ function QuizResultsAllPage() {
                         strokeDasharray={`${result.percentage}, 100`}
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                       />
-                      <text x="18" y="20.35" className="percentage">{result.percentage}%</text>
+                      <text x="18" y="20.35" className="percentage">
+                        {result.percentage}%
+                      </text>
                     </svg>
                   </div>
                   <div className="score-details">
                     <p className="score-text">
-                      <span className="score-number">{result.score}</span> out of {" "}
-                      <span className="total-number">{result.total}</span> questions
+                      <span className="score-number">{result.score}</span> out
+                      of <span className="total-number">{result.total}</span>{" "}
+                      questions
                     </p>
                   </div>
                 </div>

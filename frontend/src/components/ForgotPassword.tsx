@@ -4,16 +4,12 @@ import { useNavigate } from "react-router-dom";
 import "../styles/ForgotPassword.css";
 import skillSyncLogo from "../assets/images/SkillSync Logo Design.png";
 
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
-
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
-  
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -27,7 +23,7 @@ const ForgotPassword: React.FC = () => {
 
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/auth/forgot-password`,
+        "http://localhost:3000/api/auth/forgot-password",
         { email }
       );
 

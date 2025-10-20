@@ -36,8 +36,6 @@ interface IUserProfile {
   portfolioUrl?: string;
   createdAt: string;
 }
-const API_BASE_URL = import.meta.env.VITE_API_URL;
-
 
 function ViewUserProfile() {
   const [userData, setUserData] = useState<IUserProfile | null>(null);
@@ -48,20 +46,22 @@ function ViewUserProfile() {
     isPending: boolean;
     isSender: boolean;
     isReceiver: boolean;
-  }>({ 
-    connected: false, 
-    isPending: false, 
-    isSender: false, 
-    isReceiver: false 
+  }>({
+    connected: false,
+    isPending: false,
+    isSender: false,
+    isReceiver: false,
   });
   const [sendingRequest, setSendingRequest] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [connectionId, setConnectionId] = useState<string | null>(null);
-  const [mutualConnections, setMutualConnections] = useState<Array<{
-    _id: string;
-    name: string;
-    profilePicture?: string;
-  }>>([]);
+  const [mutualConnections, setMutualConnections] = useState<
+    Array<{
+      _id: string;
+      name: string;
+      profilePicture?: string;
+    }>
+  >([]);
   const { isAuth, roleState } = useContext(AuthContext);
   const { id } = useParams<{ id: string }>();
 
@@ -73,7 +73,7 @@ function ViewUserProfile() {
       try {
         const accessToken = localStorage.getItem("accessToken");
         const response = await axios.get(
-          `${API_BASE_URL}/api/connections/mutual/${id}`,
+          `http://localhost:3000/api/connections/mutual/${id}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
         setMutualConnections(response.data.mutualConnections || []);
@@ -92,17 +92,17 @@ function ViewUserProfile() {
     if (!isAuth || !id) return;
 
     const accessToken = localStorage.getItem("accessToken");
-    
+
     // Get current user ID
     const currentId = getCurrentUserId();
     setCurrentUserId(currentId);
 
     // Fetch user profile data and connection status
     const requests = [
-      axios.get(`${API_BASE_URL}/users/profile/${id}`, {
+      axios.get(`http://localhost:3000/users/profile/${id}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
-      axios.get(`${API_BASE_URL}/api/quiz/results/${id}`, {
+      axios.get(`http://localhost:3000/api/quiz/results/${id}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       }),
     ];
@@ -110,7 +110,7 @@ function ViewUserProfile() {
     // Add connection check for professionals
     if (roleState === "professional" && currentId !== id) {
       requests.push(
-        axios.get(`${API_BASE_URL}/api/connections/check/${id}`, {
+        axios.get(`http://localhost:3000/api/connections/check/${id}`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
       );
@@ -121,7 +121,7 @@ function ViewUserProfile() {
         const [profileRes, resultsRes] = responses;
         setUserData(profileRes.data.user);
         setQuizResults(resultsRes.data.results || []);
-        
+
         if (responses[2] && roleState === "professional") {
           const connectionData = responses[2].data;
           setConnectionStatus({
@@ -147,7 +147,7 @@ function ViewUserProfile() {
     const token = localStorage.getItem("accessToken");
     if (token) {
       try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        const payload = JSON.parse(atob(token.split(".")[1]));
         setCurrentUserId(payload.id);
         return payload.id;
       } catch (error) {
@@ -165,23 +165,23 @@ function ViewUserProfile() {
       const token = localStorage.getItem("accessToken");
       const currentUserId = getCurrentUserId();
       const response = await axios.post(
-        `${API_BASE_URL}/api/connections/send`,
-        { 
-          receiverId: id, 
-          senderId: currentUserId, 
-          message: `Hi ${userData?.name}, I'd like to connect with you!` 
+        "http://localhost:3000/api/connections/send",
+        {
+          receiverId: id,
+          senderId: currentUserId,
+          message: `Hi ${userData?.name}, I'd like to connect with you!`,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       // Update connection status to show pending state
       setConnectionStatus({
         connected: false,
         isPending: true,
         isSender: true,
-        isReceiver: false
+        isReceiver: false,
       });
-      
+
       if (response.data.connectionRequest) {
         setConnectionId(response.data.connectionRequest._id);
       }
@@ -206,18 +206,19 @@ function ViewUserProfile() {
         </Link>
       );
     }
-    
+
     // If there's a pending request
     if (connectionStatus.isPending) {
       // If current user is the sender, show pending state
       if (connectionStatus.isSender) {
         return (
-          <button 
-            className="connect-btn-small" 
-            disabled 
-            title="Request Sent"
-          >
-            <img src={pendingIcon} alt="Request Sent" className="action-icon" style={{ filter: 'none' }} />
+          <button className="connect-btn-small" disabled title="Request Sent">
+            <img
+              src={pendingIcon}
+              alt="Request Sent"
+              className="action-icon"
+              style={{ filter: "none" }}
+            />
           </button>
         );
       }
@@ -225,14 +226,14 @@ function ViewUserProfile() {
       else if (connectionStatus.isReceiver) {
         return (
           <div className="connection-actions">
-            <button 
+            <button
               className="accept-request-btn"
               onClick={() => handleAcceptRequest()}
               title="Accept Request"
             >
               <img src={acceptIcon} alt="Accept" className="action-icon" />
             </button>
-            <button 
+            <button
               className="reject-request-btn"
               onClick={() => handleRejectRequest()}
               title="Reject Request"
@@ -243,7 +244,7 @@ function ViewUserProfile() {
         );
       }
     }
-    
+
     // Default: show connect button
     return (
       <button
@@ -252,56 +253,56 @@ function ViewUserProfile() {
         className="connect-btn-small"
         title="Connect"
       >
-        <img 
-          src={addUserIcon} 
-          alt="Connect" 
-          className="action-icon" 
-          style={{ filter: 'none' }} 
+        <img
+          src={addUserIcon}
+          alt="Connect"
+          className="action-icon"
+          style={{ filter: "none" }}
         />
       </button>
     );
   };
-  
+
   const handleAcceptRequest = async () => {
     if (!connectionId) return;
-    
+
     try {
       const token = localStorage.getItem("accessToken");
       await axios.put(
-        `${API_BASE_URL}/api/connections/accept/${connectionId}`,
+        `http://localhost:3000/api/connections/accept/${connectionId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       // Update connection status to connected
       setConnectionStatus({
         connected: true,
         isPending: false,
         isSender: false,
-        isReceiver: false
+        isReceiver: false,
       });
     } catch (error) {
       console.error("Error accepting connection request:", error);
     }
   };
-  
+
   const handleRejectRequest = async () => {
     if (!connectionId) return;
-    
+
     try {
       const token = localStorage.getItem("accessToken");
       await axios.put(
-        `${API_BASE_URL}/api/connections/reject/${connectionId}`,
+        `http://localhost:3000/api/connections/reject/${connectionId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       // Reset connection status
       setConnectionStatus({
         connected: false,
         isPending: false,
         isSender: false,
-        isReceiver: false
+        isReceiver: false,
       });
       setConnectionId(null);
     } catch (error) {
@@ -355,7 +356,7 @@ function ViewUserProfile() {
             <div className="profile-picture-container">
               {userData.profilePicture ? (
                 <img
-                  src={`${API_BASE_URL}/uploads/profile-pictures/${userData.profilePicture}`}
+                  src={`http://localhost:3000/uploads/profile-pictures/${userData.profilePicture}`}
                   alt="Profile"
                   className="profile-picture"
                 />
@@ -377,28 +378,34 @@ function ViewUserProfile() {
                   <h3>Mutual Connections</h3>
                   <p className="mutual-count">
                     {mutualConnections.length} mutual connection
-                    {mutualConnections.length !== 1 ? 's' : ''}
+                    {mutualConnections.length !== 1 ? "s" : ""}
                   </p>
                   <div className="mutual-avatars">
                     {mutualConnections.slice(0, 5).map((conn, idx) => (
-                      <Link 
+                      <Link
                         to={`/profile/${conn._id}`}
-                        key={conn._id} 
+                        key={conn._id}
                         className="mutual-avatar-link"
-                        style={{ zIndex: 5 - idx, marginLeft: idx > 0 ? -8 : 0 }}
+                        style={{
+                          zIndex: 5 - idx,
+                          marginLeft: idx > 0 ? -8 : 0,
+                        }}
                         title={conn.name}
                       >
                         <div className="mutual-avatar">
                           {conn.profilePicture ? (
-                            <img 
-                              src={`${API_BASE_URL}/uploads/profile-pictures/${conn.profilePicture}`}
+                            <img
+                              src={`http://localhost:3000/uploads/profile-pictures/${conn.profilePicture}`}
                               alt={conn.name}
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement;
-                                target.style.display = 'none';
-                                const fallback = target.parentElement?.querySelector('.mutual-avatar-fallback') as HTMLElement;
+                                target.style.display = "none";
+                                const fallback =
+                                  target.parentElement?.querySelector(
+                                    ".mutual-avatar-fallback"
+                                  ) as HTMLElement;
                                 if (fallback) {
-                                  fallback.style.display = 'flex';
+                                  fallback.style.display = "flex";
                                 }
                               }}
                             />
@@ -410,7 +417,12 @@ function ViewUserProfile() {
                       </Link>
                     ))}
                     {mutualConnections.length > 5 && (
-                      <div className="more-connections" title={`${mutualConnections.length - 5} more connections`}>
+                      <div
+                        className="more-connections"
+                        title={`${
+                          mutualConnections.length - 5
+                        } more connections`}
+                      >
                         +{mutualConnections.length - 5}
                       </div>
                     )}
@@ -421,7 +433,9 @@ function ViewUserProfile() {
               {userData.bio && (
                 <div className="user-bio">
                   <h3>About Me</h3>
-                  <p style={{ whiteSpace: 'pre-line', fontSize: '0.9rem' }}>{userData.bio}</p>
+                  <p style={{ whiteSpace: "pre-line", fontSize: "0.9rem" }}>
+                    {userData.bio}
+                  </p>
                 </div>
               )}
 
@@ -473,11 +487,13 @@ function ViewUserProfile() {
               </div>
 
               {/* Connection and messaging actions for professionals */}
-              {roleState === "professional" && userData.role === "professional" && currentUserId !== id && (
-                <div className="connection-actions">
-                  {renderConnectionButton()}
-                </div>
-              )}
+              {roleState === "professional" &&
+                userData.role === "professional" &&
+                currentUserId !== id && (
+                  <div className="connection-actions">
+                    {renderConnectionButton()}
+                  </div>
+                )}
             </div>
           </div>
         </div>

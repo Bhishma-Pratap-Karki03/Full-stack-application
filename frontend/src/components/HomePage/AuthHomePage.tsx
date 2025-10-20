@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import "../../styles/AuthHomePage.css";
-import "../../styles/Profile.css";
+import "../../styles/AuthHomePage.css"; // Import the CSS file
+import "../../styles/Profile.css"; // Reuse profile page styles for consistency
 import { useNavigate, Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import addUserIcon from "../../assets/images/add-user.png";
@@ -37,8 +37,6 @@ interface IUserProfile {
   portfolioUrl?: string;
   createdAt: string;
 }
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function AuthHomePage() {
   const [users, setUsers] = useState<IAuthUserList[]>([]);
@@ -85,7 +83,7 @@ function AuthHomePage() {
 
       try {
         const response = await axios.get(
-          `${API_BASE_URL}/api/connections/mutual/${userId}`,
+          `http://localhost:3000/api/connections/mutual/${userId}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
 
@@ -127,10 +125,11 @@ function AuthHomePage() {
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
-      axios;
       axios
-        .get(`${API_BASE_URL}/users/list`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
+        .get("http://localhost:3000/users/list", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         })
         .then((response) => {
           const userList: IAuthUserList[] = response?.data?.users || [];
@@ -153,10 +152,16 @@ function AuthHomePage() {
         setIsProfileLoading(false);
         return;
       }
+
       try {
-        const response = await axios.get(`${API_BASE_URL}/users/profile/me`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
+        const response = await axios.get(
+          "http://localhost:3000/users/profile/me",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
         setCurrentUserProfile(response.data.user);
       } catch (error) {
         console.error("Error fetching current user profile:", error);
@@ -227,7 +232,7 @@ function AuthHomePage() {
     setSendingRequests((prev) => ({ ...prev, [userId]: true }));
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/connections/send`,
+        "http://localhost:3000/api/connections/send",
         {
           receiverId: userId,
           message: `Hi ${userName}, I'd like to connect with you!`,
@@ -235,6 +240,7 @@ function AuthHomePage() {
         },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
+
       // Update the connection status for this user
       setConnectionStatuses((prev) => ({
         ...prev,
@@ -267,10 +273,11 @@ function AuthHomePage() {
 
     try {
       const response = await axios.put(
-        `${API_BASE_URL}/api/connections/accept/${connectionIds[userId]}`,
+        `http://localhost:3000/api/connections/accept/${connectionIds[userId]}`,
         {},
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
+
       // Update the connection status to connected
       setConnectionStatuses((prev) => ({
         ...prev,
@@ -301,7 +308,7 @@ function AuthHomePage() {
 
     try {
       await axios.put(
-        `${API_BASE_URL}/api/connections/reject/${connectionIds[userId]}`,
+        `http://localhost:3000/api/connections/reject/${connectionIds[userId]}`,
         {},
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -332,7 +339,7 @@ function AuthHomePage() {
 
       try {
         const response = await axios.get(
-          `${API_BASE_URL}/api/connections/check/${userId}`,
+          `http://localhost:3000/api/connections/check/${userId}`,
           { headers: { Authorization: `Bearer ${accessToken}` } }
         );
 
@@ -429,7 +436,7 @@ function AuthHomePage() {
                 <div className="profile-picture-container">
                   {currentUserProfile.profilePicture ? (
                     <img
-                      src={`${API_BASE_URL}/uploads/profile-pictures/${currentUserProfile.profilePicture}`}
+                      src={`http://localhost:3000/uploads/profile-pictures/${currentUserProfile.profilePicture}`}
                       alt="Profile"
                       className="profile-picture"
                     />
@@ -576,7 +583,7 @@ function AuthHomePage() {
                     <div className="user-avatar">
                       {user.profilePicture ? (
                         <img
-                          src={`${API_BASE_URL}/uploads/profile-pictures/${user.profilePicture}`}
+                          src={`http://localhost:3000/uploads/profile-pictures/${user.profilePicture}`}
                           alt={user.name}
                           className="profile-picture"
                           onError={(e) => {
@@ -638,7 +645,7 @@ function AuthHomePage() {
                                 >
                                   {conn.profilePicture ? (
                                     <img
-                                      src={`${API_BASE_URL}/uploads/profile-pictures/${conn.profilePicture}`}
+                                      src={`http://localhost:3000/uploads/profile-pictures/${conn.profilePicture}`}
                                       alt={conn.name}
                                       onError={(e) => {
                                         const target =
@@ -780,7 +787,7 @@ function AuthHomePage() {
               <div className="user-avatar">
                 {user.profilePicture ? (
                   <img
-                    src={`${API_BASE_URL}/uploads/profile-pictures/${user.profilePicture}`}
+                    src={`http://localhost:3000/uploads/profile-pictures/${user.profilePicture}`}
                     alt={user.name}
                     className="profile-picture"
                     onError={(e) => {

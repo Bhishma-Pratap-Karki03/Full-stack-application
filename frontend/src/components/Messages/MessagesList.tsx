@@ -23,10 +23,6 @@ interface Conversation {
   conversationId: string;
 }
 
-// Use environment variable for API base URL
-const API_BASE_URL = import.meta.env.VITE_API_URL;
-
-
 const MessagesList: React.FC = () => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,9 +34,12 @@ const MessagesList: React.FC = () => {
   const fetchConversations = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      const response = await axios.get(`${API_BASE_URL}/api/messages/conversations`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(
+        "http://localhost:3000/api/messages/conversations",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setConversations(response.data.conversations);
     } catch (error) {
       console.error("Error fetching conversations:", error);
@@ -55,11 +54,14 @@ const MessagesList: React.FC = () => {
     const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
 
     if (diffInHours < 24) {
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     } else if (diffInHours < 24 * 7) {
-      return date.toLocaleDateString([], { weekday: 'short' });
+      return date.toLocaleDateString([], { weekday: "short" });
     } else {
-      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+      return date.toLocaleDateString([], { month: "short", day: "numeric" });
     }
   };
 
@@ -86,7 +88,7 @@ const MessagesList: React.FC = () => {
                 <img
                   src={
                     conversation.otherUser.profilePicture
-                      ? `${API_BASE_URL}/uploads/profile-pictures/${conversation.otherUser.profilePicture}`
+                      ? `http://localhost:3000/uploads/profile-pictures/${conversation.otherUser.profilePicture}`
                       : "/default-avatar.png"
                   }
                   alt={conversation.otherUser.name}
@@ -95,7 +97,9 @@ const MessagesList: React.FC = () => {
               </div>
               <div className="conversation-info">
                 <div className="conversation-top">
-                  <span className="user-name">{conversation.otherUser.name}</span>
+                  <span className="user-name">
+                    {conversation.otherUser.name}
+                  </span>
                   {conversation.latestMessage && (
                     <span className="message-time">
                       {formatTime(conversation.latestMessage.createdAt)}
@@ -103,14 +107,19 @@ const MessagesList: React.FC = () => {
                   )}
                 </div>
                 <div className="conversation-bottom">
-                  <span className={`latest-message ${conversation.unreadCount > 0 ? "unread" : ""}`}>
-                    {conversation.latestMessage ? (
-                      conversation.latestMessage.content.length > 35
-                        ? `${conversation.latestMessage.content.substring(0, 35)}...`
+                  <span
+                    className={`latest-message ${
+                      conversation.unreadCount > 0 ? "unread" : ""
+                    }`}
+                  >
+                    {conversation.latestMessage
+                      ? conversation.latestMessage.content.length > 35
+                        ? `${conversation.latestMessage.content.substring(
+                            0,
+                            35
+                          )}...`
                         : conversation.latestMessage.content
-                    ) : (
-                      "No messages yet"
-                    )}
+                      : "No messages yet"}
                   </span>
                   {conversation.unreadCount > 0 && (
                     <div className="unread-indicator"></div>

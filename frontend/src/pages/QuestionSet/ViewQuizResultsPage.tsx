@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../../styles/ViewQuizResults.css";
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 interface IResultChoice {
   _id: string;
@@ -47,7 +46,7 @@ function ViewQuizResultsPage() {
     }
 
     axios
-      .get(`${API_BASE_URL}/api/quiz/result/${questionSetId}`, {
+      .get(`http://localhost:3000/api/quiz/result/${questionSetId}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       })
       .then((res) => {
@@ -86,7 +85,7 @@ function ViewQuizResultsPage() {
       <div className="results-header">
         <h1 className="results-title">{result.questionSet.title}</h1>
         <p className="results-subtitle">Your Quiz Results</p>
-
+        
         <div className="score-summary">
           <div className="score-card">
             <div className="score-main">
@@ -97,7 +96,7 @@ function ViewQuizResultsPage() {
             <div className="score-percentage">{result.percentage}%</div>
             <div className="score-label">Final Score</div>
           </div>
-
+          
           <div className="attempt-info">
             <p className="attempt-date">
               Attempted on: {new Date(result.attemptedAt).toLocaleDateString()}
@@ -108,9 +107,7 @@ function ViewQuizResultsPage() {
 
       <div className="questions-container">
         {result.questionSet.questions.map((question, index) => {
-          const userChoice = question.choices.find(
-            (choice) => choice.userSelected
-          );
+          const userChoice = question.choices.find(choice => choice.userSelected);
           const isCorrect = userChoice?.correctAnswer || false;
 
           return (
@@ -119,27 +116,23 @@ function ViewQuizResultsPage() {
                 <h3 className="question-text">
                   Q{index + 1}: {question.questionText}
                 </h3>
-                <div
-                  className={`result-indicator ${
-                    isCorrect ? "correct" : "incorrect"
-                  }`}
-                >
-                  {isCorrect ? "Correct" : "Incorrect"}
+                <div className={`result-indicator ${isCorrect ? 'correct' : 'incorrect'}`}>
+                  {isCorrect ? 'Correct' : 'Incorrect'}
                 </div>
               </div>
-
+              
               <div className="choices-container">
                 {question.choices.map((choice) => {
                   let choiceClass = "choice-item";
-
+                  
                   if (choice.correctAnswer) {
                     choiceClass += " choice-correct";
                   }
-
+                  
                   if (choice.userSelected && !choice.correctAnswer) {
                     choiceClass += " choice-incorrect";
                   }
-
+                  
                   if (choice.userSelected) {
                     choiceClass += " choice-selected";
                   }
@@ -149,21 +142,11 @@ function ViewQuizResultsPage() {
                       <span className="choice-text">{choice.text}</span>
                       <div className="choice-indicators">
                         {choice.correctAnswer && (
-                          <span className="badge badge-success">
-                            Correct Answer
-                          </span>
+                          <span className="badge badge-success">Correct Answer</span>
                         )}
                         {choice.userSelected && (
-                          <span
-                            className={`badge ${
-                              choice.correctAnswer
-                                ? "badge-success"
-                                : "badge-error"
-                            }`}
-                          >
-                            {choice.correctAnswer
-                              ? "Your Answer"
-                              : "Your Answer"}
+                          <span className={`badge ${choice.correctAnswer ? 'badge-success' : 'badge-error'}`}>
+                            {choice.correctAnswer ? 'Your Answer' : 'Your Answer'}
                           </span>
                         )}
                       </div>

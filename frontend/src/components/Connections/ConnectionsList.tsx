@@ -20,7 +20,6 @@ interface Connection {
 const ConnectionsList: React.FC = () => {
   const [connections, setConnections] = useState<Connection[]>([]);
   const [loading, setLoading] = useState(true);
-  const baseURL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     fetchConnections();
@@ -29,7 +28,7 @@ const ConnectionsList: React.FC = () => {
   const fetchConnections = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      const response = await axios.get(`${baseURL}/api/connections`, {
+      const response = await axios.get("http://localhost:3000/api/connections", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setConnections(response.data.connections);
@@ -46,10 +45,8 @@ const ConnectionsList: React.FC = () => {
 
   return (
     <div className="connections-list">
-      <h2 style={{ color: "#4f46e5" }}>
-        My Connections ({connections.length})
-      </h2>
-
+      <h2 style={{ color: '#4f46e5' }}>My Connections ({connections.length})</h2>
+      
       {connections.length === 0 ? (
         <div className="no-connections">
           <p>You haven't connected with any professionals yet.</p>
@@ -62,7 +59,7 @@ const ConnectionsList: React.FC = () => {
               <img
                 src={
                   connection.user.profilePicture
-                    ? `${baseURL}/uploads/profile-pictures/${connection.user.profilePicture}`
+                    ? `http://localhost:3000/uploads/profile-pictures/${connection.user.profilePicture}`
                     : "/default-avatar.png"
                 }
                 alt={connection.user.name}
@@ -72,8 +69,7 @@ const ConnectionsList: React.FC = () => {
                 <h3>{connection.user.name}</h3>
                 <p className="email">{connection.user.email}</p>
                 <p className="connected-date">
-                  Connected on{" "}
-                  {new Date(connection.connectedAt).toLocaleDateString()}
+                  Connected on {new Date(connection.connectedAt).toLocaleDateString()}
                 </p>
               </div>
               <div className="connection-actions">
@@ -89,11 +85,7 @@ const ConnectionsList: React.FC = () => {
                   title="Message"
                   aria-label={`Message ${connection.user.name}`}
                 >
-                  <img
-                    src={messengerIcon}
-                    alt="Message"
-                    className="message-icon"
-                  />
+                  <img src={messengerIcon} alt="Message" className="message-icon" />
                 </Link>
               </div>
             </div>

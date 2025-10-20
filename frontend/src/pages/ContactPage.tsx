@@ -4,7 +4,6 @@ import "../styles/ContactPage.css";
 import PhoneIcon from "../assets/images/telephone-call.png";
 import LocationIcon from "../assets/images/location.png";
 import EmailIcon from "../assets/images/email.png";
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function ContactPage() {
   const [formData, setFormData] = useState({
@@ -60,7 +59,7 @@ function ContactPage() {
     setSubmitStatus(null);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/contact`, {
+      const response = await fetch("http://localhost:3000/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -73,12 +72,19 @@ function ContactPage() {
           success: true,
           message: "Message sent successfully! We'll get back to you soon.",
         });
-        setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+        });
       } else {
         const errorData = await response.json();
         setSubmitStatus({
           success: false,
-          message: errorData.message || "Failed to send message. Please try again.",
+          message:
+            errorData.message || "Failed to send message. Please try again.",
         });
       }
     } catch (error) {
@@ -105,7 +111,8 @@ function ContactPage() {
             <h2 className="contact-title">Contact Us</h2>
             <p className="contact-subtext">
               We will contact you as soon as you fill up the details or text us
-              on <strong>+977-9823220990</strong> | <strong>skillsyncnep2025@gmail.com</strong>
+              on <strong>+977-9823220990</strong> |{" "}
+              <strong>skillsyncnep2025@gmail.com</strong>
             </p>
 
             <ul className="contact-list">
@@ -119,11 +126,17 @@ function ContactPage() {
                 <span className="contact-item-icon">
                   <img src={EmailIcon} alt="Email" className="contact-icon" />
                 </span>
-                <span className="contact-item-text">skillsyncnep2025@gmail.com</span>
+                <span className="contact-item-text">
+                  skillsyncnep2025@gmail.com
+                </span>
               </li>
               <li className="contact-item">
                 <span className="contact-item-icon">
-                  <img src={LocationIcon} alt="Location" className="contact-icon" />
+                  <img
+                    src={LocationIcon}
+                    alt="Location"
+                    className="contact-icon"
+                  />
                 </span>
                 <span className="contact-item-text">Kathmandu, Nepal</span>
               </li>
@@ -134,7 +147,11 @@ function ContactPage() {
             <h2>Send us a Message</h2>
 
             {submitStatus && (
-              <div className={`submit-message ${submitStatus.success ? "success" : "error"}`}>
+              <div
+                className={`submit-message ${
+                  submitStatus.success ? "success" : "error"
+                }`}
+              >
                 {submitStatus.message}
               </div>
             )}
@@ -177,7 +194,9 @@ function ContactPage() {
                   maxLength={10}
                   required
                 />
-                <small className="form-help">Enter exactly 10 digits (e.g., 9823209901)</small>
+                <small className="form-help">
+                  Enter exactly 10 digits (e.g., 9823209901)
+                </small>
               </div>
               <div className="form-group">
                 <label htmlFor="subject">Subject</label>
@@ -202,7 +221,11 @@ function ContactPage() {
                   required
                 ></textarea>
               </div>
-              <button type="submit" className="submit-btn" disabled={isSubmitting}>
+              <button
+                type="submit"
+                className="submit-btn"
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? "Sending..." : "Send Message"}
               </button>
             </form>

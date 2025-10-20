@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../../styles/AttemptQuizForm.css";
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 interface IAdminChoice {
   label: string;
@@ -37,7 +36,7 @@ function AdminViewQuestionSetPage() {
     }
 
     axios
-      .get(`${API_BASE_URL}/api/admin/questionset/${id}`, {
+      .get(`http://localhost:3000/api/admin/questionset/${id}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       })
       .then((res) => {
@@ -68,12 +67,12 @@ function AdminViewQuestionSetPage() {
               if (!accessToken || !id) return;
               const next = e.currentTarget.checked;
               await axios.patch(
-                `${API_BASE_URL}/api/admin/questionset/${id}/status`,
+                `http://localhost:3000/api/admin/questionset/${id}/status`,
                 { isActive: next },
                 { headers: { Authorization: `Bearer ${accessToken}` } }
               );
               const res = await axios.get(
-                `${API_BASE_URL}/api/admin/questionset/${id}`,
+                `http://localhost:3000/api/admin/questionset/${id}`,
                 { headers: { Authorization: `Bearer ${accessToken}` } }
               );
               setData(res.data.questionSet);

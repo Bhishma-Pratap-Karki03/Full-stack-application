@@ -24,8 +24,6 @@ interface Conversation {
   hasMore: boolean;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL;
-
 const ChatInterface: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const [conversation, setConversation] = useState<Conversation | null>(null);
@@ -62,14 +60,14 @@ const ChatInterface: React.FC = () => {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(
-        `${API_BASE_URL}/api/messages/conversation/${userId}`,
+        `http://localhost:3000/api/messages/conversation/${userId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setConversation(response.data.conversation);
 
       // Mark messages as read
       await axios.put(
-        `${API_BASE_URL}/api/messages/read/${userId}`,
+        `http://localhost:3000/api/messages/read/${userId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -88,7 +86,7 @@ const ChatInterface: React.FC = () => {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.post(
-        `${API_BASE_URL}/api/messages/send`,
+        "http://localhost:3000/api/messages/send",
         {
           receiverId: userId,
           content: newMessage.trim(),
@@ -156,7 +154,7 @@ const ChatInterface: React.FC = () => {
           <img
             src={
               conversation.otherUser.profilePicture
-                ? `${API_BASE_URL}/uploads/profile-pictures/${conversation.otherUser.profilePicture}`
+                ? `http://localhost:3000/uploads/profile-pictures/${conversation.otherUser.profilePicture}`
                 : "/default-avatar.png"
             }
             alt={conversation.otherUser.name}

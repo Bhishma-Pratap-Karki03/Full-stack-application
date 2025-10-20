@@ -1,9 +1,10 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./styles/RegisterForm.css";
 import skillSyncLogo from "./assets/images/SkillSync Logo Design.png";
+import profileIcon from "./assets/images/Profile.png";
 import OTPVerification from "./components/OTPVerification";
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 function RegisterForm() {
   const [name, setName] = useState("");
@@ -13,6 +14,7 @@ function RegisterForm() {
   const [showOTP, setShowOTP] = useState(false);
   const [userId, setUserId] = useState("");
   const [expiresIn, setExpiresIn] = useState(0);
+  const navigate = useNavigate();
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -40,7 +42,7 @@ function RegisterForm() {
 
     try {
       const response = await axios.post(
-        `${API_BASE_URL}/api/auth/register`,
+        "http://localhost:3000/api/auth/register",
         userData,
         {
           headers: {

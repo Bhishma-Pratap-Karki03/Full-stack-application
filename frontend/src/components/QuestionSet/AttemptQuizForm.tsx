@@ -21,9 +21,6 @@ export interface IAttemptQuizFinalData {
   }[];
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_URL;
-
-
 function AttemptQuizForm({
   questionSet,
 }: {
@@ -122,7 +119,7 @@ function AttemptQuizForm({
       };
 
       const response = await axios.post(
-        `${API_BASE_URL}/api/questions/answer/attempt`,
+        "http://localhost:3000/api/questions/answer/attempt",
         finalData,
         {
           headers: {
